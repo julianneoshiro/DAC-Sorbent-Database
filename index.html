@@ -8,661 +8,690 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
 :root{
-  --bg:#fff;--surface:#f8f7f4;--border:#e8e5de;--text:#111;--muted:#6b6860;
-  --accent:#1f4d30;--accent-light:#e6f0ea;--accent-dark:#142e1e;
-  --mono:'DM Mono',monospace;--sans:'Inter',sans-serif;--serif:'Source Serif 4',serif;
-  --nav-h:56px;
-  --amine:#1a9e7e;--mof:#c89a0a;--moxide:#c0391c;--other:#5b3fa0;
+  --bg:#fff;--sf:#f8f7f4;--bo:#e8e5de;--tx:#111;--mu:#6b6860;
+  --ac:#1f4d30;--al:#e6f0ea;--ad:#142e1e;
+  --mo:'DM Mono',monospace;--sa:'Inter',sans-serif;--se:'Source Serif 4',serif;
+  --nh:56px;
+  --am:#1a9e7e;--mf:#c89a0a;--mx:#c0391c;--ot:#5b3fa0;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;opacity:0;transition:opacity .55s ease}
+body{font-family:var(--sa);background:var(--bg);color:var(--tx);overflow-x:hidden;opacity:0;transition:opacity .5s}
 body.loaded{opacity:1}
-
-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 3.5rem;z-index:300;transition:background .3s,border-color .3s}
-nav.dark{background:rgba(20,46,30,.9);border-color:rgba(255,255,255,.08)}
-nav.dark .nav-link{color:rgba(255,255,255,.6)}
-nav.dark .nav-link:hover{color:#fff;background:rgba(255,255,255,.08)}
-nav.dark .nav-link.active{color:#7ddbb8;font-weight:600}
-nav.dark .nav-badge{color:rgba(255,255,255,.3);border-color:rgba(255,255,255,.15)}
-nav.dark .nav-dd{background:#1a3224;border-color:rgba(255,255,255,.12)}
-nav.dark .nav-dd a{color:rgba(255,255,255,.65)}
-nav.dark .nav-dd a:hover{color:#fff;background:rgba(255,255,255,.06)}
-.nav-links{display:flex;gap:0;flex:1;align-items:center}
-.nav-item{position:relative}
-.nav-link{padding:.4rem .75rem;font-size:.77rem;color:var(--muted);border-radius:5px;transition:all .15s;cursor:pointer;background:none;border:none;font-family:var(--sans);display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
-.nav-link:hover{color:var(--text);background:#f0ede6}
-.nav-link.active{color:var(--accent);font-weight:600}
-.nav-arrow{font-size:.52rem;opacity:.4}
-.nav-dd{position:absolute;top:calc(100%+6px);left:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.1);min-width:190px;padding:.4rem 0;display:none;z-index:400}
-.nav-item:hover .nav-dd{display:block}
-.nav-dd a{display:block;padding:.48rem 1rem;font-size:.76rem;color:var(--muted);text-decoration:none;cursor:pointer;transition:all .1s}
-.nav-dd a:hover{color:var(--text);background:#f8f7f4}
-.nav-badge{margin-left:auto;font-family:var(--mono);font-size:.62rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:3px;letter-spacing:.06em;flex-shrink:0}
-
-.page{display:none}.page.active{display:block}
-#scroll-home{display:block}
-
+nav{position:fixed;top:0;left:0;right:0;height:var(--nh);background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bo);display:flex;align-items:center;padding:0 3rem;z-index:300;transition:background .3s}
+nav.dk{background:rgba(20,46,30,.9);border-color:rgba(255,255,255,.08)}
+nav.dk .nl{color:rgba(255,255,255,.6)}
+nav.dk .nl:hover{color:#fff;background:rgba(255,255,255,.08)}
+nav.dk .nl.act{color:#7ddbb8;font-weight:600}
+nav.dk .nb{color:rgba(255,255,255,.3);border-color:rgba(255,255,255,.15)}
+nav.dk .ndd{background:#1a3224;border-color:rgba(255,255,255,.1)}
+nav.dk .ndd a{color:rgba(255,255,255,.65)}
+nav.dk .ndd a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.nls{display:flex;gap:0;flex:1;align-items:center}
+.ni{position:relative}
+.nl{padding:.4rem .75rem;font-size:.77rem;color:var(--mu);border-radius:5px;transition:all .15s;cursor:pointer;background:none;border:none;font-family:var(--sa);display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.nl:hover{color:var(--tx);background:#f0ede6}
+.nl.act{color:var(--ac);font-weight:600}
+.na{font-size:.5rem;opacity:.4}
+.ndd{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--bo);border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.1);min-width:185px;padding:.4rem 0;display:none;z-index:400}
+.ni:hover .ndd{display:block}
+.ndd a{display:block;padding:.46rem 1rem;font-size:.75rem;color:var(--mu);text-decoration:none;cursor:pointer;transition:all .1s}
+.ndd a:hover{color:var(--tx);background:#f8f7f4}
+.nb{margin-left:auto;font-family:var(--mo);font-size:.62rem;color:var(--mu);border:1px solid var(--bo);padding:2px 8px;border-radius:3px;letter-spacing:.06em;flex-shrink:0}
+.page{display:none}.page.act{display:block}
+/* BUTTONS */
+.bw{padding:.6rem 1.25rem;background:#fff;color:var(--ac);border:none;border-radius:6px;font-family:var(--sa);font-size:.8rem;font-weight:600;cursor:pointer;transition:opacity .15s}
+.bw:hover{opacity:.88}
+.bol{padding:.6rem 1.25rem;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.38);border-radius:6px;font-family:var(--sa);font-size:.8rem;cursor:pointer;transition:all .15s}
+.bol:hover{border-color:#fff;background:rgba(255,255,255,.07)}
+.ba{padding:.52rem 1.05rem;background:var(--ac);color:#fff;border:none;border-radius:6px;font-family:var(--sa);font-size:.78rem;font-weight:500;cursor:pointer;transition:opacity .15s;display:inline-flex;align-items:center;gap:.3rem}
+.ba:hover{opacity:.85}
+.bao{padding:.52rem 1.05rem;background:transparent;color:var(--ac);border:1.5px solid var(--ac);border-radius:6px;font-family:var(--sa);font-size:.78rem;font-weight:500;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:.3rem;margin-left:.5rem}
+.bao:hover{background:var(--al)}
+.bs{padding:5px 10px;border:1px solid var(--bo);border-radius:5px;font-family:var(--sa);font-size:.71rem;background:#fff;color:var(--mu);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:3px}
+.bs:hover{border-color:var(--tx);color:var(--tx)}
+.bs.ac2{background:var(--ac);color:#fff;border-color:var(--ac)}
+.bs.ac2:hover{opacity:.85}
+.bb{padding:.4rem .85rem;background:transparent;color:var(--ac);border:1px solid var(--al);border-radius:5px;font-family:var(--sa);font-size:.72rem;cursor:pointer;transition:all .15s}
+.bb:hover{background:var(--al)}
 /* HERO */
-#sec-hero{background:var(--accent-dark);min-height:100vh;display:flex;flex-direction:column}
-.hero-inner{flex:1;display:flex;align-items:center;padding:3rem 3.5rem;max-width:1300px;width:100%;margin:0 auto;gap:4rem;padding-top:calc(var(--nav-h)+1.5rem)}
-.hero-left{flex:1;min-width:0}
-.hero-eyebrow{font-family:var(--mono);font-size:.68rem;color:#7ddbb8;letter-spacing:.14em;text-transform:uppercase;margin-bottom:1.1rem}
-.hero-h1{font-family:var(--serif);font-size:3rem;font-weight:300;line-height:1.18;color:#fff;margin-bottom:1.35rem;letter-spacing:-.02em}
-.hero-h1 strong{font-weight:600;color:#7ddbb8}
-.hero-p{font-family:var(--serif);font-size:.98rem;line-height:1.82;color:rgba(255,255,255,.72);max-width:520px;margin-bottom:.6rem;font-weight:300}
-.hero-p strong{color:rgba(255,255,255,.88);font-weight:500}
-.hero-cta{display:flex;gap:.7rem;margin-top:1.75rem;flex-wrap:wrap}
-.btn-white{padding:.62rem 1.3rem;background:#fff;color:var(--accent);border:none;border-radius:6px;font-family:var(--sans);font-size:.8rem;font-weight:600;cursor:pointer;transition:opacity .15s}
-.btn-white:hover{opacity:.88}
-.btn-ol{padding:.62rem 1.3rem;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.38);border-radius:6px;font-family:var(--sans);font-size:.8rem;cursor:pointer;transition:all .15s}
-.btn-ol:hover{border-color:#fff;background:rgba(255,255,255,.07)}
-.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;flex-shrink:0;width:275px}
-.sc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.88rem 1rem}
-.sc-n{font-family:var(--mono);font-size:1.5rem;font-weight:500;color:#7ddbb8;display:block}
-.sc-l{font-size:.64rem;color:rgba(255,255,255,.5);margin-top:.12rem;line-height:1.4}
-.hero-scroll{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:1.3rem 0;color:rgba(255,255,255,.35);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}
-.bounce{animation:bounce 2s infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}55%{transform:translateY(5px)}}
-
+.hero{background:var(--ad);min-height:100vh;display:flex;flex-direction:column;padding-top:var(--nh)}
+.hrin{flex:1;display:flex;align-items:center;padding:2.5rem 3.5rem;max-width:1300px;width:100%;margin:0 auto;gap:4rem}
+.hrl{flex:1;min-width:0}
+.hrey{font-family:var(--mo);font-size:.67rem;color:#7ddbb8;letter-spacing:.14em;text-transform:uppercase;margin-bottom:1rem}
+.hrh1{font-family:var(--se);font-size:2.9rem;font-weight:300;line-height:1.18;color:#fff;margin-bottom:1.3rem;letter-spacing:-.02em}
+.hrh1 strong{font-weight:600;color:#7ddbb8}
+.hrp{font-family:var(--se);font-size:.97rem;line-height:1.82;color:rgba(255,255,255,.72);max-width:520px;margin-bottom:.6rem;font-weight:300}
+.hrp strong{color:rgba(255,255,255,.88);font-weight:500}
+.hrcta{display:flex;gap:.65rem;margin-top:1.75rem;flex-wrap:wrap}
+.hrstats{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;flex-shrink:0;width:270px}
+.sc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.85rem 1rem}
+.scn{font-family:var(--mo);font-size:1.5rem;font-weight:500;color:#7ddbb8;display:block}
+.scl{font-size:.64rem;color:rgba(255,255,255,.5);margin-top:.12rem;line-height:1.4}
+.hrscroll{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:1.2rem 0;color:rgba(255,255,255,.32);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase}
+.bn{animation:bnc 2s infinite}
+@keyframes bnc{0%,100%{transform:translateY(0)}55%{transform:translateY(5px)}}
 /* HOME SECTIONS */
-.hs{padding:5rem 3.5rem;max-width:1300px;margin:0 auto}
-.hs-alt{background:var(--surface)}
-.eyebrow{font-family:var(--mono);font-size:.66rem;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.85rem}
-.sh2{font-family:var(--serif);font-size:2.3rem;font-weight:300;line-height:1.22;margin-bottom:.85rem;letter-spacing:-.015em}
+.hs{padding:4.5rem 3.5rem;max-width:1300px;margin:0 auto}
+.hsbg{background:var(--sf)}
+.ey{font-family:var(--mo);font-size:.66rem;color:var(--ac);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.8rem}
+.sh2{font-family:var(--se);font-size:2.2rem;font-weight:300;line-height:1.22;margin-bottom:.8rem;letter-spacing:-.015em}
 .sh2 strong{font-weight:600}
-.slead{font-family:var(--serif);font-size:.95rem;line-height:1.82;color:var(--muted);font-weight:300;max-width:620px;margin-bottom:1.65rem}
-.pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:.95rem;margin-bottom:1.4rem}
-.pc{background:#fff;border:1px solid var(--border);border-radius:9px;padding:1.2rem;transition:border-color .15s,box-shadow .15s;cursor:pointer}
-.pc:hover{border-color:var(--accent);box-shadow:0 4px 20px rgba(31,77,48,.07)}
-.pc-icon{font-size:1.3rem;margin-bottom:.5rem}
-.pc h4{font-size:.81rem;font-weight:600;margin-bottom:.28rem}
-.pc p{font-size:.73rem;color:var(--muted);line-height:1.55;font-weight:300}
-.pchw{background:#fff;border:1px solid var(--border);border-radius:10px;padding:1.4rem;margin-bottom:1.4rem}
-.pchw-title{font-size:.71rem;color:var(--muted);margin-bottom:.6rem}
-.rmbtn{display:inline-flex;align-items:center;gap:.4rem;padding:.52rem 1.05rem;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:var(--sans);font-size:.77rem;font-weight:500;cursor:pointer;transition:opacity .15s}
-.rmbtn:hover{opacity:.85}
-.rmbtn-ol{display:inline-flex;align-items:center;gap:.4rem;padding:.52rem 1.05rem;background:transparent;color:var(--accent);border:1.5px solid var(--accent);border-radius:6px;font-family:var(--sans);font-size:.77rem;font-weight:500;cursor:pointer;transition:all .15s;margin-left:.5rem}
-.rmbtn-ol:hover{background:var(--accent-light)}
-.sf{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease}
-.sf.in{opacity:1;transform:translateY(0)}
-.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 15%,var(--border) 85%,transparent)}
-
-/* PARAMS */
-#section-params{padding:5rem 3.5rem;max-width:1300px;margin:0 auto}
-.ptwo{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1.4rem}
-.pb{margin-bottom:1.3rem}
-.pb h4{font-size:.78rem;font-weight:600;margin-bottom:.16rem}
-.pb p{font-family:var(--serif);font-size:.82rem;line-height:1.7;color:var(--muted);font-weight:300}
-
-/* SHARED PAGE */
-.po{padding-top:var(--nav-h);min-height:100vh}
-.phdr{padding:1.5rem 3.5rem .9rem;border-bottom:1px solid var(--border);background:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
-.phdr h2{font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:.12rem}
-.phdr p{font-size:.72rem;color:var(--muted)}
-.phdr-r{display:flex;gap:.45rem;flex-shrink:0;margin-top:.15rem}
-.back{padding:.4rem .85rem;background:transparent;color:var(--accent);border:1px solid var(--accent-light);border-radius:5px;font-family:var(--sans);font-size:.72rem;cursor:pointer;transition:all .15s}
-.back:hover{background:var(--accent-light)}
-.bsm{padding:5px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.71rem;background:#fff;color:var(--muted);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:3px}
-.bsm:hover{border-color:var(--text);color:var(--text)}
-.bsm.acc{background:var(--accent);color:#fff;border-color:var(--accent)}
-.bsm.acc:hover{opacity:.85}
-
-/* ARTICLE */
-.ao{padding:2rem 3.5rem 3.5rem}
-.art{max-width:820px;margin:0 auto}
-.art h2{font-family:var(--serif);font-size:1.62rem;font-weight:400;margin-bottom:1.25rem}
-.art h3{font-family:var(--serif);font-size:1.08rem;font-weight:600;margin:1.8rem 0 .48rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
-.art h4{font-family:var(--serif);font-size:.92rem;font-weight:600;margin:.95rem 0 .28rem}
-.art p{font-family:var(--serif);font-size:.89rem;line-height:1.82;color:#2a2820;font-weight:300;margin-bottom:.62rem}
-.art ul{margin:.28rem 0 .62rem 1.3rem}
-.art ul li{font-family:var(--serif);font-size:.87rem;line-height:1.7;color:#2a2820;font-weight:300;margin-bottom:.16rem}
-.art strong{font-weight:600}.art em{font-style:italic}
-.hlb{background:var(--accent-light);border-left:3px solid var(--accent);padding:.8rem 1.05rem;margin:.8rem 0 .95rem;border-radius:0 6px 6px 0}
-.hlb p{font-size:.83rem;line-height:1.62;color:#1a3324;font-family:var(--sans);margin:0}
-.infob{background:#e8eef8;border-left:3px solid #1a3460;padding:.8rem 1.05rem;margin:.8rem 0 .95rem;border-radius:0 6px 6px 0}
-.infob p{font-size:.83rem;line-height:1.62;color:#1a2e5a;font-family:var(--sans);margin:0}
-.warnb{background:#f5ece8;border-left:3px solid #5c2010;padding:.8rem 1.05rem;margin:.8rem 0 .95rem;border-radius:0 6px 6px 0}
-.warnb p{font-size:.83rem;line-height:1.62;color:#4a2015;font-family:var(--sans);margin:0}
-.ctbl{width:100%;border-collapse:collapse;font-size:.78rem;margin:.8rem 0 1rem;font-family:var(--sans)}
-.ctbl th{padding:7px 11px;background:#f2f0eb;font-size:.61rem;font-weight:600;color:var(--muted);border:1px solid var(--border);text-align:left}
-.ctbl td{padding:7px 11px;border:1px solid var(--border);color:var(--text)}
-.ctbl td:first-child{font-weight:500}
-.ctbl .val{color:var(--accent);font-size:.75rem}
-.bmg{display:grid;grid-template-columns:repeat(auto-fit,minmax(188px,1fr));gap:.82rem;margin:.8rem 0}
-.bmc{background:#fff;border:1px solid var(--border);border-radius:8px;padding:.95rem}
-.bmc-n{font-family:var(--serif);font-size:.9rem;font-weight:600;margin-bottom:.2rem}
-.bmc-t{display:inline-block;padding:2px 6px;border-radius:3px;font-size:.62rem;margin-bottom:.4rem;font-family:var(--mono)}
-.bmc-d{font-family:var(--serif);font-size:.77rem;line-height:1.55;color:var(--muted);font-weight:300}
-.gtabs{display:flex;border-bottom:1px solid var(--border);padding:0 3.5rem;background:#fff;position:sticky;top:var(--nav-h);z-index:10}
-.gtab{padding:.52rem .92rem;font-size:.76rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:all .15s}
-.gtab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
-.gs{display:none}.gs.active{display:block}
-
-/* ABOUT */
-.abto{padding:2rem 3.5rem 3.5rem;max-width:1100px;margin:0 auto}
-.abtg{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;margin-top:1.4rem}
-.abtc h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;margin-bottom:.85rem}
-.abtc p{font-family:var(--serif);font-size:.86rem;line-height:1.78;color:var(--muted);font-weight:300;margin-bottom:.55rem}
-.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.58rem;margin-top:.42rem}
-.tc{background:#fff;border:1px solid var(--border);border-radius:7px;padding:.72rem}
-.tc .tn{font-size:.78rem;font-weight:500}
-.tc .tr{font-size:.68rem;color:var(--muted);margin-top:2px}
-.citeb{background:#f2f0eb;border-radius:6px;padding:.72rem .95rem;font-family:var(--mono);font-size:.67rem;line-height:1.6;color:var(--text);word-break:break-word;margin-top:.42rem}
-.fr{margin-bottom:.8rem}
-.fr label{display:block;font-size:.72rem;font-weight:500;margin-bottom:.2rem}
-.fr input,.fr textarea,.fr select{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.76rem;background:#fff;color:var(--text);outline:none}
-.fr input:focus,.fr textarea:focus{border-color:var(--accent)}
-.fr textarea{resize:vertical;min-height:85px;line-height:1.5}
-.bac{padding:.48rem .95rem;background:var(--accent);color:#fff;border:none;border-radius:5px;font-family:var(--sans);font-size:.76rem;font-weight:500;cursor:pointer;transition:opacity .15s}
-.bac:hover{opacity:.85}
-
-/* TRENDS PAGE */
-#page-trends .tcs{display:flex;align-items:flex-start;padding:2rem 3.5rem;gap:0;border-bottom:1px solid var(--border);min-height:92vh}
-#page-trends .tcs:last-child{border-bottom:none}
-#page-trends .tcs:nth-child(even){background:var(--surface)}
-.tcs-l{width:255px;flex-shrink:0;padding-right:1.75rem;position:sticky;top:calc(var(--nav-h)+.75rem);max-height:calc(100vh - var(--nav-h) - 1.5rem);overflow-y:auto}
-.tcs-intro h3{font-family:var(--serif);font-size:1.25rem;font-weight:400;margin-bottom:.55rem}
-.tcs-intro p{font-family:var(--serif);font-size:.84rem;line-height:1.8;color:var(--muted);font-weight:300;margin-bottom:.45rem}
-.tcs-math{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:.7rem .9rem;margin:.45rem 0 .55rem;font-family:var(--serif);font-size:.9rem;line-height:2}
-.tcs-math .eq{font-style:italic}.calc-b{font-family:var(--mono);font-size:.63rem;color:#9a6010;margin-left:.28rem;vertical-align:middle}
-.tcs-math .note{font-size:.73rem;color:var(--muted);margin-top:.28rem;font-style:normal;line-height:1.38}
-.tcs-filters{margin-top:1.1rem;border-top:1px solid var(--border);padding-top:.8rem}
-.tcs-ft{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:.5rem}
-/* accordion */
-.sfi{border-bottom:1px solid var(--border)}
-.sfh{display:flex;align-items:center;justify-content:space-between;padding:.32rem .1rem;cursor:pointer;user-select:none}
-.sfh-l{font-size:.68rem;color:var(--text)}
-.sfh-r{display:flex;align-items:center;gap:3px}
-.sfd{width:5px;height:5px;border-radius:50%;background:var(--accent);display:none}.sfd.on{display:block}
-.sfc{font-size:.53rem;color:var(--muted);transition:transform .15s}.sfc.open{transform:rotate(180deg)}
+.slead{font-family:var(--se);font-size:.94rem;line-height:1.82;color:var(--mu);font-weight:300;max-width:620px;margin-bottom:1.5rem}
+.pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.9rem;margin-bottom:1.35rem}
+.pc{background:#fff;border:1px solid var(--bo);border-radius:9px;padding:1.15rem;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.pc:hover{border-color:var(--ac);box-shadow:0 4px 20px rgba(31,77,48,.07)}
+.pcico{font-size:1.3rem;margin-bottom:.48rem}
+.pc h4{font-size:.8rem;font-weight:600;margin-bottom:.26rem}
+.pc p{font-size:.72rem;color:var(--mu);line-height:1.55;font-weight:300}
+.dv{height:1px;background:linear-gradient(90deg,transparent,var(--bo) 15%,var(--bo) 85%,transparent)}
+.sf2{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.sf2.in{opacity:1;transform:translateY(0)}
+/* HOME CHART */
+.hcw{background:#fff;border:1px solid var(--bo);border-radius:10px;padding:1.4rem;margin-bottom:1.35rem}
+.hcl{font-size:.7rem;color:var(--mu);margin-bottom:.6rem}
+/* HOME INLINE FILTERS */
+.hfrow{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-start;margin-bottom:.85rem}
+.hfg{position:relative}
+.hfb{padding:5px 10px;border:1px solid var(--bo);border-radius:5px;font-family:var(--sa);font-size:.72rem;background:#fff;color:var(--mu);cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s}
+.hfb:hover,.hfb.on{border-color:var(--ac);color:var(--ac);background:var(--al)}
+.hfdot{width:5px;height:5px;border-radius:50%;background:var(--ac);display:none}
+.hfdot.on{display:inline-block}
+.hfpanel{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid var(--bo);border-radius:7px;box-shadow:0 6px 24px rgba(0,0,0,.1);padding:.85rem;min-width:200px;z-index:30}
+.hfpanel.open{display:block}
+.hflbl{font-size:.7rem;font-weight:600;margin-bottom:.35rem;display:block}
+.hfrr{display:flex;gap:4px;align-items:center;margin-bottom:3px}
+.hfrr input[type=number]{width:65px;padding:3px 5px;border:1px solid var(--bo);border-radius:4px;font-family:var(--sa);font-size:.69rem;background:#fff;color:var(--tx);outline:none}
+.hfrr input[type=number]:focus{border-color:var(--ac)}
+.hfrr span{font-size:.6rem;color:var(--mu)}
+.hfsds{position:relative;height:16px;margin-top:3px}
+.hfsdt{position:absolute;top:6px;left:0;right:0;height:3px;background:var(--bo);border-radius:2px}
+.hfsdf{position:absolute;top:6px;height:3px;background:var(--ac);border-radius:2px}
+.hfsdth{position:absolute;top:1px;width:13px;height:13px;border-radius:50%;background:var(--ac);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;transform:translateX(-50%);z-index:2}
+.hfcat select{width:100%;padding:4px 16px 4px 6px;border:1px solid var(--bo);border-radius:4px;font-family:var(--sa);font-size:.69rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%236b6860' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 4px center;color:var(--tx);appearance:none;outline:none;cursor:pointer}
+.hftags{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px}
+.hftag{display:inline-flex;align-items:center;gap:2px;background:var(--al);color:var(--ac);font-size:.61rem;font-family:var(--mo);padding:1px 5px;border-radius:3px}
+.hftag .rm{cursor:pointer;font-size:.67rem;opacity:.7}.hftag .rm:hover{opacity:1}
+.hfpf{display:flex;gap:.3rem;margin-top:.6rem;border-top:1px solid var(--bo);padding-top:.5rem}
+.chips{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:.5rem}
+.chip{display:inline-flex;align-items:center;gap:3px;background:var(--al);color:var(--ac);font-size:.64rem;font-family:var(--mo);padding:2px 7px;border-radius:3px}
+.chip .rm{cursor:pointer;font-size:.68rem;opacity:.7}.chip .rm:hover{opacity:1}
+.cleg{display:flex;gap:.9rem;flex-wrap:wrap;align-items:center;margin-bottom:.4rem}
+.cli{display:flex;align-items:center;gap:5px;font-size:.73rem;font-weight:500}
+.ccnt{font-family:var(--mo);font-size:.62rem;color:var(--mu);margin-bottom:.3rem}
+/* HOME FOOTER */
+.hfoot{background:var(--ad);padding:2.5rem 3.5rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.hfoot p{font-family:var(--se);font-size:.88rem;color:rgba(255,255,255,.62);font-weight:300;max-width:500px;line-height:1.7}
+.hfoot p strong{color:#7ddbb8;font-weight:500}
+/* PAGE HEADER */
+.phdr{padding:1.5rem 3.5rem .9rem;border-bottom:1px solid var(--bo);background:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.phdr h2{font-family:var(--se);font-size:1.3rem;font-weight:400;margin-bottom:.12rem}
+.phdr p{font-size:.72rem;color:var(--mu)}
+.phdrr{display:flex;gap:.45rem;flex-shrink:0;margin-top:.15rem}
+.po{padding-top:var(--nh);min-height:100vh}
+/* METRICS PAGE */
+.mtcs{display:flex;align-items:flex-start;padding:2rem 3.5rem;gap:0;border-bottom:1px solid var(--bo);min-height:90vh}
+.mtcs:last-child{border-bottom:none}
+.mtcs:nth-child(even){background:var(--sf)}
+.mtcsl{width:255px;flex-shrink:0;padding-right:1.75rem;position:sticky;top:calc(var(--nh) + .75rem);max-height:calc(100vh - var(--nh) - 1.5rem);overflow-y:auto}
+.mtcsintro h3{font-family:var(--se);font-size:1.22rem;font-weight:400;margin-bottom:.55rem}
+.mtcsintro p{font-family:var(--se);font-size:.83rem;line-height:1.8;color:var(--mu);font-weight:300;margin-bottom:.42rem}
+.mathbox{background:var(--sf);border:1px solid var(--bo);border-radius:5px;padding:.7rem .9rem;margin:.42rem 0 .52rem;font-family:var(--se);font-size:.9rem;line-height:2}
+.mathbox .eq{font-style:italic}
+.mathbox .note{font-size:.72rem;color:var(--mu);margin-top:.28rem;font-style:normal;line-height:1.38}
+.cb{font-family:var(--mo);font-size:.62rem;color:#9a6010;margin-left:.28rem;vertical-align:middle}
+.mfw{margin-top:1.1rem;border-top:1px solid var(--bo);padding-top:.8rem}
+.mftitle{font-family:var(--mo);font-size:.58rem;text-transform:uppercase;letter-spacing:.11em;color:var(--mu);margin-bottom:.5rem}
+/* ACCORDION */
+.sfi{border-bottom:1px solid var(--bo)}
+.sfh{display:flex;align-items:center;justify-content:space-between;padding:.3rem .1rem;cursor:pointer;user-select:none}
+.sfh span:first-child{font-size:.68rem;color:var(--tx)}
+.sfhr{display:flex;align-items:center;gap:3px}
+.sfd{width:5px;height:5px;border-radius:50%;background:var(--ac);display:none}.sfd.on{display:block}
+.sfc{font-size:.53rem;color:var(--mu);transition:transform .15s}.sfc.open{transform:rotate(180deg)}
 .sfb{display:none;padding:.18rem .1rem .42rem}.sfb.open{display:block}
 .srr{display:flex;gap:4px;align-items:center;margin-bottom:3px}
-.srr input[type=number]{width:57px;padding:3px 4px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:.66rem;background:#fff;color:var(--text);outline:none}
-.srr input[type=number]:focus{border-color:var(--accent)}
-.srr span{font-size:.59rem;color:var(--muted)}
+.srr input[type=number]{width:57px;padding:3px 4px;border:1px solid var(--bo);border-radius:4px;font-family:var(--sa);font-size:.66rem;background:#fff;color:var(--tx);outline:none}
+.srr input[type=number]:focus{border-color:var(--ac)}
+.srr span{font-size:.59rem;color:var(--mu)}
 .sds{position:relative;height:16px;margin-top:2px}
-.sdt{position:absolute;top:6px;left:0;right:0;height:3px;background:var(--border);border-radius:2px}
-.sdf{position:absolute;top:6px;height:3px;background:var(--accent);border-radius:2px}
-.sdth{position:absolute;top:1px;width:13px;height:13px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;transform:translateX(-50%);z-index:2}
-.scat select{width:100%;padding:3px 14px 3px 5px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:.66rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%236b6860' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 4px center;color:var(--text);appearance:none;outline:none;cursor:pointer}
+.sdt{position:absolute;top:6px;left:0;right:0;height:3px;background:var(--bo);border-radius:2px}
+.sdf{position:absolute;top:6px;height:3px;background:var(--ac);border-radius:2px}
+.sdth{position:absolute;top:1px;width:13px;height:13px;border-radius:50%;background:var(--ac);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;transform:translateX(-50%);z-index:2}
+.scat select{width:100%;padding:3px 14px 3px 5px;border:1px solid var(--bo);border-radius:4px;font-family:var(--sa);font-size:.66rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%236b6860' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 4px center;color:var(--tx);appearance:none;outline:none;cursor:pointer}
 .stags{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px}
-.stag{display:inline-flex;align-items:center;gap:2px;background:var(--accent-light);color:var(--accent);font-size:.58rem;font-family:var(--mono);padding:1px 4px;border-radius:3px}
+.stag{display:inline-flex;align-items:center;gap:2px;background:var(--al);color:var(--ac);font-size:.58rem;font-family:var(--mo);padding:1px 4px;border-radius:3px}
 .stag .rm{cursor:pointer;font-size:.64rem;opacity:.7}.stag .rm:hover{opacity:1}
-.tcs-ff{display:flex;gap:.28rem;margin-top:.5rem}
-.tcs-r{flex:1;min-width:0;padding-top:.1rem}
-.chips{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:.4rem}
-.chip{display:inline-flex;align-items:center;gap:3px;background:var(--accent-light);color:var(--accent);font-size:.63rem;font-family:var(--mono);padding:2px 6px;border-radius:3px}
-.chip .rm{cursor:pointer;font-size:.68rem;opacity:.7}.chip .rm:hover{opacity:1}
-.cleg{display:flex;gap:.95rem;flex-wrap:wrap;align-items:center;margin-bottom:.42rem}
-.cli{display:flex;align-items:center;gap:5px;font-size:.73rem;font-weight:500}
-.ctlbl{font-size:.68rem;color:var(--muted);margin-bottom:.24rem}
-.cntlbl{font-family:var(--mono);font-size:.61rem;color:var(--muted);margin-bottom:.32rem}
-.tooltip{position:fixed;background:#111;color:#fff;border-radius:7px;padding:.56rem .78rem;font-size:.69rem;pointer-events:none;z-index:500;max-width:240px;box-shadow:0 4px 20px rgba(0,0,0,.22);display:none;font-family:var(--sans)}
+.mff{display:flex;gap:.28rem;margin-top:.5rem}
+.mtcsr{flex:1;min-width:0;padding-top:.1rem}
+/* TOOLTIP */
+.tooltip{position:fixed;background:#111;color:#fff;border-radius:7px;padding:.56rem .78rem;font-size:.69rem;pointer-events:none;z-index:500;max-width:240px;box-shadow:0 4px 20px rgba(0,0,0,.22);display:none;font-family:var(--sa)}
 .tooltip strong{display:block;font-size:.66rem;margin-bottom:.22rem;color:#7ddbb8}
 .ttr{display:flex;justify-content:space-between;gap:.62rem;color:rgba(255,255,255,.55);margin-bottom:2px}
-.ttr span:last-child{color:#fff;font-family:var(--mono);font-size:.62rem}
-
-/* DATABASE */
-.sl{display:flex;height:calc(100vh - var(--nav-h) - 60px)}
-.sbar{width:208px;flex-shrink:0;border-right:1px solid var(--border);background:#fff;display:flex;flex-direction:column;position:sticky;top:calc(var(--nav-h)+60px);height:calc(100vh - var(--nav-h) - 60px)}
-.sbar-sc{flex:1;overflow-y:auto;padding:.72rem .65rem .38rem}
-.sbar-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.48rem}
-.sbar-hdr span{font-family:var(--mono);font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
-.sbar-hdr button{font-size:.62rem;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans)}
-.sbar-hdr button:hover{color:var(--text)}
-.sbar-ft{padding:.52rem .65rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.28rem;flex-shrink:0}
-.mc{flex:1;min-width:0;overflow-y:auto;height:calc(100vh - var(--nav-h) - 60px)}
-.tw{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.ttr span:last-child{color:#fff;font-family:var(--mo);font-size:.62rem}
+/* BROWSE SORBENTS */
+.sl{display:flex;height:calc(100vh - var(--nh) - 62px)}
+.sbar{width:210px;flex-shrink:0;border-right:1px solid var(--bo);background:#fff;display:flex;flex-direction:column;position:sticky;top:calc(var(--nh)+62px);height:calc(100vh - var(--nh) - 62px)}
+.sbarsc{flex:1;overflow-y:auto;padding:.72rem .65rem .38rem}
+.sbarhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.45rem}
+.sbarhdr span{font-family:var(--mo);font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mu)}
+.sbarhdr button{font-size:.62rem;color:var(--mu);background:none;border:none;cursor:pointer;font-family:var(--sa)}
+.sbarhdr button:hover{color:var(--tx)}
+.sbarft{padding:.52rem .65rem;border-top:1px solid var(--bo);display:flex;flex-direction:column;gap:.28rem;flex-shrink:0}
+.mc{flex:1;min-width:0;overflow-y:auto;height:calc(100vh - var(--nh) - 62px)}
+.tw{background:#fff;border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:10}
 .tm{display:flex;gap:6px;align-items:center;padding:.5rem 1.4rem}
 .aw{position:relative;flex:1;min-width:130px;max-width:300px}
-.aw svg{position:absolute;left:7px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
-input[type=text]{width:100%;padding:6px 8px 6px 26px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.76rem;background:#fff;color:var(--text);outline:none}
-input[type=text]:focus{border-color:var(--accent)}
-input[type=text]::placeholder{color:var(--muted)}
-.acd{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;max-height:185px;overflow-y:auto;z-index:50;display:none;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.aw svg{position:absolute;left:7px;top:50%;transform:translateY(-50%);color:var(--mu);pointer-events:none}
+input[type=text]{width:100%;padding:6px 8px 6px 26px;border:1px solid var(--bo);border-radius:5px;font-family:var(--sa);font-size:.76rem;background:#fff;color:var(--tx);outline:none}
+input[type=text]:focus{border-color:var(--ac)}
+input[type=text]::placeholder{color:var(--mu)}
+.acd{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--bo);border-top:none;border-radius:0 0 6px 6px;max-height:185px;overflow-y:auto;z-index:50;display:none;box-shadow:0 4px 16px rgba(0,0,0,.08)}
 .acd.open{display:block}
-.aci{padding:5px 8px;font-size:.75rem;cursor:pointer;color:var(--text)}
-.aci:hover{background:var(--surface)}
-.aci em{color:var(--accent);font-style:normal}
-.afb{display:flex;flex-wrap:wrap;gap:3px;padding:.22rem 1.4rem;min-height:0}
+.aci{padding:5px 8px;font-size:.74rem;cursor:pointer;color:var(--tx)}
+.aci:hover{background:var(--sf)}
+.aci em{color:var(--ac);font-style:normal}
+.afb{display:flex;flex-wrap:wrap;gap:3px;padding:.22rem 1.4rem}
 .afb:empty{display:none}
-.aft{display:inline-flex;align-items:center;gap:3px;background:var(--accent-light);color:var(--accent);font-size:.62rem;font-family:var(--mono);padding:2px 6px;border-radius:3px}
+.aft{display:inline-flex;align-items:center;gap:3px;background:var(--al);color:var(--ac);font-size:.62rem;font-family:var(--mo);padding:2px 6px;border-radius:3px}
 .aft .rm{cursor:pointer;font-size:.68rem;opacity:.7}.aft .rm:hover{opacity:1}
-.sb{padding:.22rem 1.4rem;font-family:var(--mono);font-size:.62rem;color:var(--muted);border-top:1px solid var(--border)}
-.tabw{overflow-x:auto;padding:0 1.4rem 3rem;margin-top:.32rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.sb2{padding:.22rem 1.4rem;font-family:var(--mo);font-size:.62rem;color:var(--mu);border-top:1px solid var(--bo)}
+.tabw{overflow-x:auto;padding:0 1.4rem 3rem;margin-top:.32rem;scrollbar-width:thin;scrollbar-color:var(--bo) transparent}
 .tabw::-webkit-scrollbar{height:7px}
-.tabw::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-.sh{font-size:.67rem;color:var(--muted);padding:.16rem 1.4rem .06rem}
-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:.75rem;font-family:var(--sans)}
+.tabw::-webkit-scrollbar-thumb{background:var(--bo);border-radius:4px}
+.sh3{font-size:.67rem;color:var(--mu);padding:.16rem 1.4rem .06rem}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--bo);border-radius:8px;overflow:hidden;font-size:.75rem;font-family:var(--sa)}
 thead{background:#f5f3ee;position:sticky;top:0;z-index:5}
-th{padding:7px 10px;text-align:left;font-size:.66rem;font-weight:600;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
-th:hover .thl{color:var(--text)}
-th.sorted .thl{color:var(--accent)}
-.thi{display:inline-flex;align-items:center;gap:4px}
+th{padding:7px 10px;text-align:left;font-size:.66rem;font-weight:600;color:var(--mu);border-bottom:1px solid var(--bo);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover .thl{color:var(--tx)}
+th.sorted .thl{color:var(--ac)}
+.thi2{display:inline-flex;align-items:center;gap:4px}
 .thl{font-size:.66rem}
-.thii{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:#dddad4;color:var(--muted);font-size:.56rem;font-weight:600;cursor:help;position:relative;flex-shrink:0;line-height:1}
-.thii:hover{background:var(--accent);color:#fff}
-.thtt{display:none;position:absolute;top:calc(100%+5px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:.62rem;line-height:1.45;padding:.36rem .56rem;border-radius:5px;width:182px;z-index:200;font-weight:400;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.thii{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:#dddad4;color:var(--mu);font-size:.56rem;font-weight:600;cursor:help;position:relative;flex-shrink:0;line-height:1}
+.thii:hover{background:var(--ac);color:#fff}
+.thtt{display:none;position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:.62rem;line-height:1.45;padding:.36rem .56rem;border-radius:5px;width:182px;z-index:200;font-weight:400;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 .thii:hover .thtt{display:block}
-td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text);white-space:nowrap;max-width:182px;overflow:hidden;text-overflow:ellipsis;font-size:.75rem}
+td{padding:6px 10px;border-bottom:1px solid var(--bo);color:var(--tx);white-space:nowrap;max-width:182px;overflow:hidden;text-overflow:ellipsis;font-size:.75rem}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#faf9f6;cursor:pointer}
-.yc{font-size:.7rem;color:var(--muted)}
+.yc{font-size:.7rem;color:var(--mu)}
 .nc{font-size:.73rem}
 .tag{display:inline-block;padding:2px 6px;border-radius:3px;font-size:.64rem;font-weight:500}
-.ta{background:#d4f0e8;color:#0d6e52}
-.tm2{background:#fdf3d0;color:#7a5500}
-.to{background:#fde8e3;color:#a33015}
-.td{background:#f0ede6;color:var(--muted)}
+.ta{background:#d4f0e8;color:#0d6e52}.tm2{background:#fdf3d0;color:#7a5500}.to{background:#fde8e3;color:#a33015}.td2{background:#f0ede6;color:var(--mu)}
 .sy{background:#d4f0e8;color:#0d6e52;display:inline-block;padding:2px 5px;border-radius:3px;font-size:.64rem}
-.sn{background:#f0ede6;color:var(--muted);display:inline-block;padding:2px 5px;border-radius:3px;font-size:.64rem}
-.ra{color:var(--accent);text-decoration:none;font-size:.65rem;border-bottom:1px solid var(--accent-light)}
-.ra:hover{border-color:var(--accent)}
-.er{text-align:center;padding:3rem;color:var(--muted);font-size:.74rem}
+.sn2{background:#f0ede6;color:var(--mu);display:inline-block;padding:2px 5px;border-radius:3px;font-size:.64rem}
+.ra{color:var(--ac);text-decoration:none;font-size:.65rem;border-bottom:1px solid var(--al)}
+.ra:hover{border-color:var(--ac)}
+.er{text-align:center;padding:3rem;color:var(--mu);font-size:.74rem}
+/* MODALS */
 .dlbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:600;align-items:center;justify-content:center}
 .dlbg.open{display:flex}
-.dlb{background:#fff;border-radius:10px;border:1px solid var(--border);width:min(415px,92vw);padding:1.35rem;box-shadow:0 8px 40px rgba(0,0,0,.12)}
-.dlb h3{font-family:var(--serif);font-size:.96rem;font-weight:400;margin-bottom:.62rem}
-.dlb p{font-size:.76rem;color:var(--muted);line-height:1.6;margin-bottom:.82rem}
-.dlo{display:flex;flex-direction:column;gap:.38rem;margin-bottom:.82rem}
-.dlop{display:flex;align-items:flex-start;gap:.48rem;padding:.6rem .75rem;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:border-color .15s}
-.dlop:hover{border-color:var(--accent)}
-.dlop input[type=radio]{margin-top:2px;accent-color:var(--accent)}
+.dlb{background:#fff;border-radius:10px;border:1px solid var(--bo);width:min(415px,92vw);padding:1.35rem;box-shadow:0 8px 40px rgba(0,0,0,.12)}
+.dlb h3{font-family:var(--se);font-size:.96rem;font-weight:400;margin-bottom:.6rem}
+.dlb p{font-size:.76rem;color:var(--mu);line-height:1.6;margin-bottom:.8rem}
+.dlo{display:flex;flex-direction:column;gap:.38rem;margin-bottom:.8rem}
+.dlop{display:flex;align-items:flex-start;gap:.48rem;padding:.6rem .75rem;border:1px solid var(--bo);border-radius:6px;cursor:pointer;transition:border-color .15s}
+.dlop:hover{border-color:var(--ac)}
+.dlop input[type=radio]{margin-top:2px;accent-color:var(--ac)}
 .dlol{font-size:.76rem;font-weight:500;display:block;margin-bottom:1px}
-.dlos{font-size:.68rem;color:var(--muted)}
+.dlos{font-size:.68rem;color:var(--mu)}
 .dlft{display:flex;gap:.45rem;justify-content:flex-end}
 .mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;align-items:center;justify-content:center}
 .mbg.open{display:flex}
-.mbox{background:#fff;border-radius:10px;border:1px solid var(--border);width:min(675px,95vw);max-height:88vh;overflow-y:auto;padding:1.62rem;box-shadow:0 8px 40px rgba(0,0,0,.12)}
-.mclose{float:right;background:none;border:none;font-size:.93rem;cursor:pointer;color:var(--muted)}
-.mclose:hover{color:var(--text)}
-.mbox h3{font-family:var(--serif);font-size:.94rem;font-weight:400;margin-bottom:.16rem;padding-right:2rem}
-.msub{font-size:.7rem;color:var(--muted);margin-bottom:.9rem}
+.mbox{background:#fff;border-radius:10px;border:1px solid var(--bo);width:min(675px,95vw);max-height:88vh;overflow-y:auto;padding:1.62rem;box-shadow:0 8px 40px rgba(0,0,0,.12)}
+.mclose{float:right;background:none;border:none;font-size:.93rem;cursor:pointer;color:var(--mu)}
+.mclose:hover{color:var(--tx)}
+.mbox h3{font-family:var(--se);font-size:.94rem;font-weight:400;margin-bottom:.16rem;padding-right:2rem}
+.msub{font-size:.7rem;color:var(--mu);margin-bottom:.9rem}
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:.28rem .65rem}
 .mrow{display:flex;flex-direction:column;gap:1px}
 .mrow.full{grid-column:1/-1}
-.mlbl{font-family:var(--mono);font-size:.57rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-.mval{font-size:.73rem;color:var(--text);word-break:break-word}
-
+.mlbl{font-family:var(--mo);font-size:.57rem;text-transform:uppercase;letter-spacing:.07em;color:var(--mu)}
+.mval{font-size:.73rem;color:var(--tx);word-break:break-word}
+/* ARTICLE */
+.ao{padding:2rem 3.5rem 3.5rem}
+.art{max-width:820px;margin:0 auto}
+.art h2{font-family:var(--se);font-size:1.6rem;font-weight:400;margin-bottom:1.2rem}
+.art h3{font-family:var(--se);font-size:1.08rem;font-weight:600;margin:1.75rem 0 .45rem;border-bottom:1px solid var(--bo);padding-bottom:.28rem}
+.art h4{font-family:var(--se);font-size:.92rem;font-weight:600;margin:.92rem 0 .26rem}
+.art p{font-family:var(--se);font-size:.89rem;line-height:1.82;color:#2a2820;font-weight:300;margin-bottom:.62rem}
+.art ul{margin:.28rem 0 .62rem 1.3rem}
+.art ul li{font-family:var(--se);font-size:.87rem;line-height:1.7;color:#2a2820;font-weight:300;margin-bottom:.16rem}
+.art strong{font-weight:600}.art em{font-style:italic}
+.hlb{background:var(--al);border-left:3px solid var(--ac);padding:.78rem 1rem;margin:.78rem 0 .92rem;border-radius:0 6px 6px 0}
+.hlb p{font-size:.83rem;line-height:1.62;color:#1a3324;font-family:var(--sa);margin:0}
+.infob{background:#e8eef8;border-left:3px solid #1a3460;padding:.78rem 1rem;margin:.78rem 0 .92rem;border-radius:0 6px 6px 0}
+.infob p{font-size:.83rem;line-height:1.62;color:#1a2e5a;font-family:var(--sa);margin:0}
+.warnb{background:#f5ece8;border-left:3px solid #5c2010;padding:.78rem 1rem;margin:.78rem 0 .92rem;border-radius:0 6px 6px 0}
+.warnb p{font-size:.83rem;line-height:1.62;color:#4a2015;font-family:var(--sa);margin:0}
+.ctbl{width:100%;border-collapse:collapse;font-size:.78rem;margin:.78rem 0 .95rem;font-family:var(--sa)}
+.ctbl th{padding:7px 11px;background:#f2f0eb;font-size:.61rem;font-weight:600;color:var(--mu);border:1px solid var(--bo);text-align:left}
+.ctbl td{padding:7px 11px;border:1px solid var(--bo);color:var(--tx)}
+.ctbl td:first-child{font-weight:500}
+.ctbl .val{color:var(--ac);font-size:.75rem}
+.bmg{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:.8rem;margin:.78rem 0}
+.bmc{background:#fff;border:1px solid var(--bo);border-radius:8px;padding:.92rem}
+.bmcn{font-family:var(--se);font-size:.88rem;font-weight:600;margin-bottom:.18rem}
+.bmct{display:inline-block;padding:2px 6px;border-radius:3px;font-size:.62rem;margin-bottom:.38rem;font-family:var(--mo)}
+.bmcd{font-family:var(--se);font-size:.77rem;line-height:1.55;color:var(--mu);font-weight:300}
+/* GUIDELINES */
+.gtabs{display:flex;border-bottom:1px solid var(--bo);padding:0 3.5rem;background:#fff;position:sticky;top:var(--nh);z-index:10}
+.gtab{padding:.52rem .92rem;font-size:.76rem;color:var(--mu);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sa);transition:all .15s}
+.gtab.act{color:var(--ac);border-bottom-color:var(--ac);font-weight:600}
+.gs{display:none}.gs.act{display:block}
+/* ABOUT */
+.abto{padding:2rem 3.5rem 3.5rem;max-width:1100px;margin:0 auto}
+.abtg{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;margin-top:1.35rem}
+.abtc h3{font-family:var(--se);font-size:1.08rem;font-weight:400;margin-bottom:.82rem}
+.abtc p{font-family:var(--se);font-size:.85rem;line-height:1.78;color:var(--mu);font-weight:300;margin-bottom:.52rem}
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));gap:.55rem;margin-top:.4rem}
+.tc{background:#fff;border:1px solid var(--bo);border-radius:7px;padding:.7rem}
+.tn{font-size:.78rem;font-weight:500}
+.tr2{font-size:.68rem;color:var(--mu);margin-top:2px}
+.citeb{background:#f2f0eb;border-radius:6px;padding:.72rem .95rem;font-family:var(--mo);font-size:.67rem;line-height:1.6;color:var(--tx);word-break:break-word;margin-top:.42rem}
+.fr{margin-bottom:.78rem}
+.fr label{display:block;font-size:.72rem;font-weight:500;margin-bottom:.18rem}
+.fr input,.fr textarea,.fr select{width:100%;padding:6px 8px;border:1px solid var(--bo);border-radius:5px;font-family:var(--sa);font-size:.76rem;background:#fff;color:var(--tx);outline:none}
+.fr input:focus,.fr textarea:focus{border-color:var(--ac)}
+.fr textarea{resize:vertical;min-height:82px;line-height:1.5}
+.bac{padding:.46rem .92rem;background:var(--ac);color:#fff;border:none;border-radius:5px;font-family:var(--sa);font-size:.75rem;font-weight:500;cursor:pointer;transition:opacity .15s}
+.bac:hover{opacity:.85}
+/* PARAMS */
+.ptwo{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.pb{margin-bottom:1.25rem}
+.pb h4{font-size:.78rem;font-weight:600;margin-bottom:.15rem}
+.pb p{font-family:var(--se);font-size:.82rem;line-height:1.7;color:var(--mu);font-weight:300}
 @media(max-width:900px){
   nav{padding:0 1.4rem}
-  .hero-inner{flex-direction:column;padding:2rem 1.4rem;gap:2rem}
-  .hero-stats{width:100%;grid-template-columns:repeat(4,1fr)}
-  .hs,#section-params,#section-params>.hs{padding:2.8rem 1.4rem}
-  .ao,.abto,.gtabs,.phdr{padding-left:1.4rem;padding-right:1.4rem}
+  .hrin{flex-direction:column;padding:2rem 1.4rem;gap:2rem}
+  .hrstats{width:100%;grid-template-columns:repeat(4,1fr)}
+  .hs{padding:2.8rem 1.4rem}
+  .ao,.abto,.gtabs,.phdr,.hfoot{padding-left:1.4rem;padding-right:1.4rem}
   .abtg,.ptwo{grid-template-columns:1fr}
-  #page-trends .tcs{flex-direction:column;padding:1.4rem}
-  .tcs-l{width:100%;position:static;max-height:none}
+  .mtcs{flex-direction:column;padding:1.4rem}
+  .mtcsl{width:100%;position:static;max-height:none}
   .sl{display:block;height:auto}
   .sbar,.mc{height:auto}
-  .tm,.afb,.sb,.tabw,.sh{padding-left:1rem;padding-right:1rem}
-  .mgrid{grid-template-columns:1fr}
+  .tm,.afb,.sb2,.tabw,.sh3{padding-left:1rem;padding-right:1rem}
+  .mgrid{grid-column:1fr}
 }
 </style>
 </head>
 <body>
 
 <nav id="main-nav">
-  <div class="nav-links">
-    <button class="nav-link active" onclick="goPage('home')" id="nav-home">Home</button>
-    <button class="nav-link" onclick="goPage('database')" id="nav-database">Database</button>
-    <button class="nav-link" onclick="goPage('trends')" id="nav-trends">Trends</button>
-    <div class="nav-item">
-      <button class="nav-link" onclick="goPage('guidelines')" id="nav-guidelines">Guidelines <span class="nav-arrow">▾</span></button>
-      <div class="nav-dd">
-        <a onclick="goPage('guidelines');setTimeout(()=>sg('standard'),50)">Standard Conditions</a>
-        <a onclick="goPage('guidelines');setTimeout(()=>sg('deployment'),50)">Deployment Relevance</a>
-        <a onclick="goPage('guidelines');setTimeout(()=>sg('benchmark'),50)">Benchmark Materials</a>
+  <div class="nls">
+    <button class="nl act" onclick="goP('home')" id="nav-home">Home</button>
+    <button class="nl" onclick="goP('browse')" id="nav-browse">Browse Sorbents</button>
+    <button class="nl" onclick="goP('metrics')" id="nav-metrics">Explore Metrics</button>
+    <button class="nl" onclick="goP('parameters')" id="nav-parameters">Parameters</button>
+    <div class="ni">
+      <button class="nl" onclick="goP('guidelines')" id="nav-guidelines">Guidelines <span class="na">▾</span></button>
+      <div class="ndd">
+        <a onclick="goP('guidelines');setTimeout(()=>sg('standard'),50)">Standard Conditions</a>
+        <a onclick="goP('guidelines');setTimeout(()=>sg('deployment'),50)">Deployment Relevance</a>
+        <a onclick="goP('guidelines');setTimeout(()=>sg('benchmark'),50)">Benchmark Materials</a>
       </div>
     </div>
-    <button class="nav-link" onclick="goParams()" id="nav-parameters">Parameters</button>
-    <div class="nav-item">
-      <button class="nav-link" onclick="goPage('about')" id="nav-about">About <span class="nav-arrow">▾</span></button>
-      <div class="nav-dd">
-        <a onclick="goPage('about')">About the Project</a>
-        <a onclick="goPage('about');setTimeout(()=>document.getElementById('abt-contact').scrollIntoView({behavior:'smooth'}),80)">Contact & Contribute</a>
-      </div>
-    </div>
+    <button class="nl" onclick="goP('about')" id="nav-about">About</button>
+    <button class="nl" onclick="goP('contact')" id="nav-contact">Contact</button>
   </div>
-  <span class="nav-badge">BETA · 2025</span>
+  <span class="nb">BETA · 2025</span>
 </nav>
 
-<!-- ═══ HOME ═══ -->
-<div id="scroll-home" class="page active">
-<section id="sec-hero">
-  <div style="background:var(--accent-dark);min-height:100vh;display:flex;flex-direction:column">
-    <div class="hero-inner">
-      <div class="hero-left">
-        <div class="hero-eyebrow">Open-access research database</div>
-        <h1 class="hero-h1">The DAC Solid Sorbent<br><strong>Benchmarking Database</strong></h1>
-        <p class="hero-p">A curated dataset of solid direct air capture sorbents from peer-reviewed literature (2011–2025), built to support systematic comparison of sorbent performance.</p>
-        <p class="hero-p">A <strong>representative sample</strong> of published DAC sorbents — not a complete catalog — continuously updated as new studies are published.</p>
-        <div class="hero-cta">
-          <button class="btn-white" onclick="goPage('database')">Explore the Database →</button>
-          <button class="btn-ol" onclick="goPage('trends')">View Trends</button>
-          <button class="btn-ol" onclick="goPage('guidelines')">Guidelines</button>
+<!-- HOME PAGE -->
+<div id="page-home" class="page act">
+  <section id="sec-hero">
+    <div class="hero">
+      <div class="hrin">
+        <div class="hrl">
+          <div class="hrey">Open-access research database</div>
+          <h1 class="hrh1">The DAC Solid Sorbent<br><strong>Benchmarking Database</strong></h1>
+          <p class="hrp">A curated dataset of solid direct air capture sorbents from peer-reviewed literature (2011-2025), built to support systematic comparison of sorbent performance.</p>
+          <p class="hrp">A <strong>representative sample</strong> of published DAC sorbents - not a complete catalog - continuously updated as new studies are published.</p>
+          <div class="hrcta">
+            <button class="bw" onclick="goP('metrics')">Explore the Database &rarr;</button>
+            <button class="bol" onclick="goP('browse')">Browse Sorbents</button>
+            <button class="bol" onclick="goP('guidelines')">Guidelines</button>
+          </div>
+        </div>
+        <div class="hrstats">
+          <div class="sc"><span class="scn" id="stat-s">&mdash;</span><span class="scl">Unique sorbents</span></div>
+          <div class="sc"><span class="scn" id="stat-p">&mdash;</span><span class="scl">Publications</span></div>
+          <div class="sc"><span class="scn">18</span><span class="scl">Parameters recorded</span></div>
+          <div class="sc"><span class="scn" id="stat-d">&mdash;</span><span class="scl">Total data points</span></div>
         </div>
       </div>
-      <div class="hero-stats">
-        <div class="sc"><span class="sc-n" id="stat-s">—</span><span class="sc-l">Unique sorbents</span></div>
-        <div class="sc"><span class="sc-n" id="stat-p">—</span><span class="sc-l">Publications</span></div>
-        <div class="sc"><span class="sc-n">18</span><span class="sc-l">Parameters recorded</span></div>
-        <div class="sc"><span class="sc-n" id="stat-d">—</span><span class="sc-l">Total data points</span></div>
+      <div class="hrscroll">Scroll to explore <span class="bn">&#x2193;</span></div>
+    </div>
+  </section>
+
+  <div class="dv"></div>
+  <section class="sf2">
+    <div class="hs">
+      <div class="ey">Performance over time</div>
+      <h2 class="sh2">CO&#x2082; Capture <strong>Capacity Trends</strong></h2>
+      <p class="slead">Explore how CO&#x2082; capture capacity has evolved across sorbent classes from 2013-2025. Hover any point to see conditions; click to open the full entry. Filter the chart using the buttons below.</p>
+      <div class="hfrow" id="home-filter-row"></div>
+      <div class="chips" id="home-chips"></div>
+      <div class="hcw">
+        <div class="hcl">
+          <div class="cleg" id="home-leg"></div>
+          <div class="ccnt" id="home-cnt"></div>
+          CO&#x2082; capture capacity (mmol/g) vs. year of publication
+        </div>
+        <div style="width:100%;overflow-x:auto"><svg id="svg-home" style="display:block"></svg></div>
       </div>
+      <button class="ba" onclick="goP('metrics')">See other metrics &rarr;</button>
+      <span style="font-size:.75rem;color:var(--mu);margin-left:.75rem">Cycle time &amp; degradation rate data also available</span>
     </div>
-    <div class="hero-scroll">Scroll to explore <span class="bounce">↓</span></div>
-  </div>
-</section>
+  </section>
 
-<div class="divider"></div>
-<section class="sf">
-  <div class="hs">
-    <div class="eyebrow">Explore the data</div>
-    <h2 class="sh2">Full Sorbent <strong>Database</strong></h2>
-    <p class="slead">Search and filter 900+ sorbents across 18 experimental parameters. Click any entry for full experimental conditions and a link to the source paper.</p>
-    <div class="pcards">
-      <div class="pc" onclick="goPage('database')"><div class="pc-icon">🔍</div><h4>Search &amp; Filter</h4><p>Filter by sorbent class, year, measurement method, humidity, capture temperature, and 13 more parameters.</p></div>
-      <div class="pc" onclick="goPage('database')"><div class="pc-icon">⬇</div><h4>Download CSV</h4><p>Download the full database or a filtered subset as CSV for your own analysis.</p></div>
-      <div class="pc" onclick="goPage('database')"><div class="pc-icon">📋</div><h4>Full Conditions</h4><p>Click any row to see all 18 recorded parameters for that measurement, plus a link to the source paper.</p></div>
-      <div class="pc" onclick="goPage('database')"><div class="pc-icon">📊</div><h4>900+ Entries</h4><p>Amine, MOF, metal oxide, and other sorbent classes from 163 publications spanning 2011–2025.</p></div>
-    </div>
-    <button class="rmbtn" onclick="goPage('database')">Open Database →</button>
-  </div>
-</section>
-
-<div class="divider"></div>
-<section class="sf hs-alt">
-  <div class="hs">
-    <div class="eyebrow">Performance over time</div>
-    <h2 class="sh2">Interactive <strong>Trends</strong></h2>
-    <p class="slead">Explore how CO₂ capture capacity, cycle time, and degradation rate have evolved. Hover any point for conditions; click to open the full entry.</p>
-    <div class="pchw">
-      <div class="pchw-title">Preview: CO₂ capture capacity (mmol/g) vs. year — click any point for full data</div>
-      <div style="width:100%;overflow-x:auto"><svg id="prev-svg" style="display:block"></svg></div>
-      <div class="cleg" id="prev-leg" style="margin-top:.6rem"></div>
-    </div>
-    <button class="rmbtn" onclick="goPage('trends')">Explore Trends →</button>
-  </div>
-</section>
-
-<div class="divider"></div>
-<section class="sf">
-  <div class="hs">
-    <div class="eyebrow">Methodology</div>
-    <h2 class="sh2">Reporting <strong>Guidelines</strong></h2>
-    <p class="slead">Analysis of 900+ sorbents revealed significant variation in testing protocols. We identify the most commonly used conditions and recommend a standardized reporting framework.</p>
-    <div class="pcards">
-      <div class="pc" onclick="goPage('guidelines');sg('standard')"><div class="pc-icon">⚗️</div><h4>Standard Conditions</h4><p>Mode testing conditions by sorbent class. Only 37% of sorbents meet all standard conditions simultaneously.</p></div>
-      <div class="pc" onclick="goPage('guidelines');sg('deployment')"><div class="pc-icon">🌍</div><h4>Deployment Relevance</h4><p>Only 8% of sorbents are characterized under all deployment-relevant conditions.</p></div>
-      <div class="pc" onclick="goPage('guidelines');sg('benchmark')"><div class="pc-icon">🧪</div><h4>Benchmark Materials</h4><p>Data-driven recommendation of reference materials for cross-lab comparison.</p></div>
-    </div>
-    <button class="rmbtn" onclick="goPage('guidelines')">Read Guidelines →</button>
-  </div>
-</section>
-
-<div class="divider"></div>
-<section class="sf hs-alt" id="section-params">
-  <div class="hs">
-    <div class="eyebrow">Data collection</div>
-    <h2 class="sh2" style="margin-bottom:.55rem">Recorded <strong>Parameters</strong></h2>
-    <p class="slead">18 parameters were recorded for each entry. Text and numerical values were extracted from each paper; graphical data was digitized using WebPlotDigitizer. Values not reported: <em>nr</em>; not applicable: <em>na</em>. For performance metric equations, see the <span style="color:var(--accent);cursor:pointer;text-decoration:underline" onclick="goPage('trends')">Trends</span> page.</p>
-    <div class="ptwo">
-      <div>
-        <div class="pb"><h4>Year</h4><p>Year of publication of the source paper.</p></div>
-        <div class="pb"><h4>Sorbent Class</h4><p>Amine (any amine group interacting with CO₂), MOF (without amine CO₂-binding), Metal oxide, or Other (COFs, zeolites, ionic liquids, etc.).</p></div>
-        <div class="pb"><h4>Material Abbreviation</h4><p>Short identifier from the source paper, with additional descriptors where needed.</p></div>
-        <div class="pb"><h4>CO₂ Adsorption Capacity</h4><p>CO₂ uptake in mmol/g, converted from reported units. For isotherms, value at ~400 ppm CO₂.</p></div>
-        <div class="pb"><h4>Capture Temperature</h4><p>Temperature (°C) during CO₂ adsorption. "Room temperature" recorded as 25 °C.</p></div>
-        <div class="pb"><h4>Release Temperature</h4><p>Temperature (°C) during regeneration.</p></div>
-        <div class="pb"><h4>CO₂ Concentration</h4><p>CO₂ concentration (ppm) in feed gas. "Ambient air" recorded as 425 ppm. Only below 5,000 ppm included.</p></div>
-        <div class="pb"><h4>Capture Gas</h4><p>Y = Air (O₂ present); N = Inert + CO₂. O₂ can drive oxidative amine degradation.</p></div>
-        <div class="pb"><h4>Regeneration Gas</h4><p>Gas used during desorption: N₂, He, Ar, vacuum, or mixtures with CO₂ or H₂O.</p></div>
+  <div class="dv"></div>
+  <section class="sf2 hsbg">
+    <div class="hs">
+      <div class="ey">Methodology</div>
+      <h2 class="sh2">Reporting <strong>Guidelines</strong></h2>
+      <p class="slead">Analysis of 900+ sorbents revealed significant variation in testing protocols. We identify the most commonly used conditions and recommend a standardized reporting framework.</p>
+      <div class="pcards">
+        <div class="pc" onclick="goP('guidelines');setTimeout(()=>sg('standard'),50)"><div class="pcico">&#x2697;&#xfe0f;</div><h4>Standard Conditions</h4><p>Mode testing conditions by sorbent class. Only 37% of sorbents meet all standard conditions simultaneously.</p></div>
+        <div class="pc" onclick="goP('guidelines');setTimeout(()=>sg('deployment'),50)"><div class="pcico">&#x1F30D;</div><h4>Deployment Relevance</h4><p>Only 8% of sorbents are characterized under all deployment-relevant conditions.</p></div>
+        <div class="pc" onclick="goP('guidelines');setTimeout(()=>sg('benchmark'),50)"><div class="pcico">&#x1F9EA;</div><h4>Benchmark Materials</h4><p>Data-driven recommendation of reference materials for cross-lab comparison.</p></div>
       </div>
-      <div>
-        <div class="pb"><h4>Relative Humidity</h4><p>RH (%) of capture feed gas. Also converted to mole percent and dew point. 0% = dry.</p></div>
-        <div class="pb"><h4>Number of Cycles</h4><p>Total adsorption–desorption cycles. Zero = single measurement. ~20% of sorbents report any cycling data.</p></div>
-        <div class="pb"><h4>Degradation Rate (%/cycle)</h4><p>Average % capacity loss per cycle: [(q₁ − q_last)/q₁] × 100/N. Requires ≥2 cycles and first/last capacities.</p></div>
-        <div class="pb"><h4>Degradation Cause</h4><p>Mechanism as reported: Thermal, Oxidation, Hydrolysis, CO₂-catalyzed, Pore blockage, Structural, Negligible, None suggested.</p></div>
-        <div class="pb"><h4>CO₂ Measurement Method</h4><p>Gravimetric (TGA), Breakthrough (packed bed), Volumetric (isotherm), or Other.</p></div>
-        <div class="pb"><h4>Gas Flow Rate</h4><p>Volumetric flow rate (mL/min) during adsorption. Not applicable for isotherm measurements.</p></div>
-        <div class="pb"><h4>t₉₅</h4><p>Time (min) for breakthrough column outlet to reach 95% of inlet CO₂. Used to calculate cycle time.</p></div>
-        <div class="pb"><h4>Column Diameter</h4><p>Inner diameter (cm) of the breakthrough column.</p></div>
-        <div class="pb"><h4>Sorbent Mass / Cycle Time</h4><p>Mass (g) in column or TGA pan. Cycle time is calculated from standardized breakthrough parameters, not directly recorded.</p></div>
+      <button class="ba" onclick="goP('guidelines')">Read Guidelines &rarr;</button>
+    </div>
+  </section>
+
+  <div class="dv"></div>
+  <section class="sf2">
+    <div class="hs">
+      <div class="ey">Data collection</div>
+      <h2 class="sh2">Recorded <strong>Parameters</strong></h2>
+      <p class="slead">18 parameters were manually recorded for each sorbent entry from peer-reviewed publications, including experimental conditions, performance metrics, and degradation data.</p>
+      <div class="pcards" style="max-width:760px">
+        <div class="pc"><div class="pcico">&#x1F52C;</div><h4>Experimental Conditions</h4><p>Capture temperature, release temperature, CO&#x2082; concentration, capture gas, regeneration gas, relative humidity.</p></div>
+        <div class="pc"><div class="pcico">&#x1F4C8;</div><h4>Performance Metrics</h4><p>CO&#x2082; adsorption capacity, cycle time (calculated), degradation rate per cycle.</p></div>
+        <div class="pc"><div class="pcico">&#x2699;&#xfe0f;</div><h4>Reactor Parameters</h4><p>Gas flow rate, column diameter, sorbent mass, t&#x2089;&#x2085;, measurement method.</p></div>
       </div>
+      <button class="ba" onclick="goP('parameters')">View all parameters &rarr;</button>
+    </div>
+  </section>
+
+  <div class="dv"></div>
+  <div class="hfoot">
+    <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. <strong>163 papers</strong> were manually curated from 1,242 publications. The database will be continuously updated &mdash; contributions and corrections are welcome.</p>
+    <div style="display:flex;gap:.65rem;flex-wrap:wrap">
+      <button class="bw" onclick="goP('about')">About the Project</button>
+      <button class="bol" onclick="goP('contact')">Contact Us</button>
     </div>
   </div>
-</section>
+</div><!-- end home -->
 
-<div class="divider"></div>
-<section class="sf">
-  <div class="hs">
-    <div class="eyebrow">About this project</div>
-    <h2 class="sh2">Team &amp; <strong>Contact</strong></h2>
-    <p class="slead">This database was compiled as part of a study on benchmarking strategies for solid DAC sorbents. 163 papers were manually curated from 1,242 publications. The database will be continuously updated — contributions and corrections are welcome.</p>
-    <div class="pcards" style="max-width:560px">
-      <div class="pc" onclick="goPage('about')"><div class="pc-icon">👥</div><h4>Meet the Team</h4><p>UCLA and National Lab researchers who compiled and validated the dataset.</p></div>
-      <div class="pc" onclick="goPage('about');setTimeout(()=>document.getElementById('abt-contact').scrollIntoView({behavior:'smooth'}),80)"><div class="pc-icon">✉️</div><h4>Contribute Data</h4><p>Submit a new paper, report an error, or ask a question about the database.</p></div>
+<!-- METRICS PAGE -->
+<div id="page-metrics" class="page po">
+  <div class="phdr"><div><h2>Explore Metrics</h2><p>Scroll through each performance metric &middot; Hover points for conditions &middot; Click for full detail &middot; Expand accordion filters beside each chart</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
+  <div class="mtcs" id="tcs-cap">
+    <div class="mtcsl">
+      <div class="mtcsintro"><h3>CO&#x2082; Capture Capacity</h3><p>How much CO&#x2082; can a sorbent hold? CO&#x2082; capture capacity &mdash; in mmol per gram &mdash; is the most fundamental performance metric and most consistently reported. An upward trend over time is only meaningful when comparing sorbents under the same testing conditions.</p></div>
+      <div class="mfw"><div class="mftitle">Filters</div><div id="cap-ff"></div><div class="mff"><button class="bs ac2" style="flex:1" onclick="applyC('capacity')">Apply</button><button class="bs" style="flex:1" onclick="clearC('capacity')">&#x2715;</button></div></div>
     </div>
-    <button class="rmbtn" onclick="goPage('about')">About the Project →</button>
-    <button class="rmbtn-ol" onclick="goPage('about');setTimeout(()=>document.getElementById('abt-contact').scrollIntoView({behavior:'smooth'}),80)">Contact Us</button>
+    <div class="mtcsr"><div class="chips" id="cap-chips"></div><div class="cleg" id="cap-leg"></div><div class="ccnt" id="cap-cnt"></div><div style="font-size:.69rem;color:var(--mu);margin-bottom:.25rem" id="cap-tlbl"></div><div style="width:100%;overflow-x:auto"><svg id="svg-cap" style="display:block"></svg></div></div>
   </div>
-</section>
-</div><!-- end scroll-home -->
-
-<!-- ═══ TRENDS ═══ -->
-<div id="page-trends" class="page po">
-  <div class="phdr"><div class="phdr-l"><h2>Performance Trends Over Time</h2><p>Scroll through each metric · Hover points for conditions · Click for full detail · Expand accordion filters beside each chart</p></div><div class="phdr-r"><button class="back" onclick="goPage('home')">← Home</button></div></div>
-
-  <div class="tcs" id="tcs-cap">
-    <div class="tcs-l">
-      <div class="tcs-intro"><h3>CO₂ Capture Capacity</h3><p>How much CO₂ can a sorbent hold? CO₂ capture capacity — in mmol per gram — is the most fundamental performance metric and the most consistently reported in the literature.</p><p>An upward trend over time indicates genuine material progress, but only when comparing sorbents under the same testing conditions. When all conditions are included, the apparent trend reflects variation in experimental protocols as much as true improvements.</p></div>
-      <div class="tcs-filters"><div class="tcs-ft">Filters</div><div id="cap-ff"></div><div class="tcs-ff"><button class="bsm acc" style="flex:1" onclick="applyC('capacity')">Apply</button><button class="bsm" style="flex:1" onclick="clearC('capacity')">✕</button></div></div>
-    </div>
-    <div class="tcs-r"><div class="chips" id="cap-chips"></div><div class="cleg" id="cap-leg"></div><div class="cntlbl" id="cap-cnt"></div><div class="ctlbl" id="cap-tlbl"></div><div style="width:100%;overflow-x:auto"><svg id="svg-cap" style="display:block"></svg></div></div>
-  </div>
-
-  <div class="tcs" id="tcs-cyc">
-    <div class="tcs-l">
-      <div class="tcs-intro"><h3>Cycle Time <span class="calc-b">CALCULATED</span></h3><p>How fast does a sorbent reach capacity? Cycle time normalizes adsorption kinetics across different reactor setups. Calculated from breakthrough experiments using a standardized reactor (mass=100 mg, flow=400 mL/min, CO₂=400 ppm):</p>
-        <div class="tcs-math"><div class="eq">Cycle time = <em>t</em><sub>95,std</sub> × 3</div><div class="note">CO₂ uptake efficiency assumed independent of reactor parameters.</div></div>
-        <p>A lower cycle time means faster kinetics — more cycles per day and higher DAC productivity.</p>
+  <div class="mtcs" id="tcs-cyc">
+    <div class="mtcsl">
+      <div class="mtcsintro"><h3>Cycle Time <span class="cb">CALCULATED</span></h3><p>How fast does a sorbent reach capacity? Cycle time normalizes adsorption kinetics across different reactor setups.</p>
+        <div class="mathbox"><div class="eq">Cycle time = <em>t</em><sub>95,std</sub> &times; 3</div><div class="note">Standard reactor: mass=100 mg, flow=400 mL/min, CO&#x2082;=400 ppm.</div></div>
+        <p>Lower cycle time means faster kinetics and higher DAC productivity.</p>
       </div>
-      <div class="tcs-filters"><div class="tcs-ft">Filters</div><div id="cyc-ff"></div><div class="tcs-ff"><button class="bsm acc" style="flex:1" onclick="applyC('cycles')">Apply</button><button class="bsm" style="flex:1" onclick="clearC('cycles')">✕</button></div></div>
+      <div class="mfw"><div class="mftitle">Filters</div><div id="cyc-ff"></div><div class="mff"><button class="bs ac2" style="flex:1" onclick="applyC('cycles')">Apply</button><button class="bs" style="flex:1" onclick="clearC('cycles')">&#x2715;</button></div></div>
     </div>
-    <div class="tcs-r"><div class="chips" id="cyc-chips"></div><div class="cleg" id="cyc-leg"></div><div class="cntlbl" id="cyc-cnt"></div><div class="ctlbl" id="cyc-tlbl"></div><div style="width:100%;overflow-x:auto"><svg id="svg-cyc" style="display:block"></svg></div></div>
+    <div class="mtcsr"><div class="chips" id="cyc-chips"></div><div class="cleg" id="cyc-leg"></div><div class="ccnt" id="cyc-cnt"></div><div style="font-size:.69rem;color:var(--mu);margin-bottom:.25rem" id="cyc-tlbl"></div><div style="width:100%;overflow-x:auto"><svg id="svg-cyc" style="display:block"></svg></div></div>
   </div>
-
-  <div class="tcs" id="tcs-deg">
-    <div class="tcs-l">
-      <div class="tcs-intro"><h3>Degradation Rate</h3><p>Does the sorbent hold up? Only ~20% of sorbents have any cycling data. Degradation rate = average % capacity loss per cycle:</p>
-        <div class="tcs-math"><div class="eq">Deg. rate = <sup style="font-size:.8em"><em>q</em><sub>1</sub>−<em>q</em><sub>last</sub></sup>⁄<sub style="font-size:.8em"><em>q</em><sub>1</sub></sub> × <sup style="font-size:.8em">100</sup>⁄<sub style="font-size:.8em"><em>N</em></sub></div><div class="note"><em>q</em><sub>1</sub>=first cycle, <em>q</em><sub>last</sub>=last cycle, <em>N</em>=total cycles.</div></div>
-        <p>An apparent increase in recent years likely reflects a growing emphasis on stability testing rather than materials becoming less stable.</p>
+  <div class="mtcs" id="tcs-deg">
+    <div class="mtcsl">
+      <div class="mtcsintro"><h3>Degradation Rate</h3><p>Does the sorbent hold up over repeated use? Only ~20% of sorbents have any cycling data. Average % capacity loss per cycle:</p>
+        <div class="mathbox"><div class="eq">Deg. rate = <sup style="font-size:.8em"><em>q</em><sub>1</sub>&minus;<em>q</em><sub>last</sub></sup>&frasl;<sub style="font-size:.8em"><em>q</em><sub>1</sub></sub> &times; <sup style="font-size:.8em">100</sup>&frasl;<sub style="font-size:.8em"><em>N</em></sub></div><div class="note"><em>q</em><sub>1</sub>=first cycle, <em>q</em><sub>last</sub>=last, <em>N</em>=total cycles.</div></div>
+        <p>An apparent increase in recent years reflects a growing emphasis on stability testing rather than materials becoming less stable.</p>
       </div>
-      <div class="tcs-filters"><div class="tcs-ft">Filters</div><div id="deg-ff"></div><div class="tcs-ff"><button class="bsm acc" style="flex:1" onclick="applyC('degrad')">Apply</button><button class="bsm" style="flex:1" onclick="clearC('degrad')">✕</button></div></div>
+      <div class="mfw"><div class="mftitle">Filters</div><div id="deg-ff"></div><div class="mff"><button class="bs ac2" style="flex:1" onclick="applyC('degrad')">Apply</button><button class="bs" style="flex:1" onclick="clearC('degrad')">&#x2715;</button></div></div>
     </div>
-    <div class="tcs-r"><div class="chips" id="deg-chips"></div><div class="cleg" id="deg-leg"></div><div class="cntlbl" id="deg-cnt"></div><div class="ctlbl" id="deg-tlbl"></div><div style="width:100%;overflow-x:auto"><svg id="svg-deg" style="display:block"></svg></div></div>
+    <div class="mtcsr"><div class="chips" id="deg-chips"></div><div class="cleg" id="deg-leg"></div><div class="ccnt" id="deg-cnt"></div><div style="font-size:.69rem;color:var(--mu);margin-bottom:.25rem" id="deg-tlbl"></div><div style="width:100%;overflow-x:auto"><svg id="svg-deg" style="display:block"></svg></div></div>
   </div>
 </div>
 
-<!-- ═══ GUIDELINES ═══ -->
+<!-- BROWSE SORBENTS -->
+<div id="page-browse" class="page po">
+  <div class="phdr"><div><h2>Browse Sorbents</h2><p>Click any row for full detail &middot; Sidebar filters require Apply &middot; Hover column headers for descriptions</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button><button class="bs ac2" onclick="openDL()">&#x2B07; Download CSV</button></div></div>
+  <div class="sl">
+    <div class="sbar">
+      <div class="sbarsc"><div class="sbarhdr"><span>Filters</span><button onclick="colDB()">Collapse all</button></div><div id="db-ff"></div></div>
+      <div class="sbarft"><button class="bs ac2" style="width:100%" onclick="applyDB()">Apply filters</button><button class="bs" style="width:100%" onclick="clearDB()">&#x2715; Clear all</button></div>
+    </div>
+    <div class="mc">
+      <div class="tw">
+        <div class="tm"><div class="aw"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" id="db-srch" placeholder="Search material..." autocomplete="off" onkeydown="if(event.key==='Enter')applyDB()"><div class="acd" id="db-ac"></div></div><button class="bs ac2" onclick="applyDB()">Search</button><button class="bs" onclick="clearDB()">&#x2715;</button></div>
+        <div class="afb" id="db-af"></div>
+        <div class="sb2" id="db-sb">Loading...</div>
+      </div>
+      <div class="sh3">&#x2190; &#x2192; Scroll right to see all columns</div>
+      <div class="tabw"><table><thead id="db-thead"></thead><tbody id="db-tbody"><tr><td colspan="15" class="er">Loading data...</td></tr></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- PARAMETERS -->
+<div id="page-parameters" class="page po">
+  <div class="phdr"><div><h2>Recorded Parameters</h2><p>Documentation of all 18 parameters recorded for each sorbent entry.</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
+  <div class="ao"><div class="art">
+    <h2>Recorded Parameters</h2>
+    <p>Each entry corresponds to one experimental measurement under a specific set of conditions. 18 parameters were recorded per entry. Text and numerical values were extracted from each paper; graphical data was digitized using WebPlotDigitizer. Values not reported: <em>nr</em>; not applicable: <em>na</em>.</p>
+    <p>For performance metric equations (CO&#x2082; capacity, cycle time, degradation rate), see the <span style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="goP('metrics')">Explore Metrics</span> page.</p>
+    <h3>Sorbent Identity</h3>
+    <h4>Year</h4><p>Year of publication of the source paper.</p>
+    <h4>Sorbent Class</h4><p><strong>Amine:</strong> any material with an amine functional group that interacts with CO&#x2082;, regardless of the support. <strong>MOF:</strong> crystalline metal-organic frameworks without amine CO&#x2082;-binding groups. <strong>Metal oxide:</strong> inorganic metal-oxygen compounds. <strong>Other:</strong> COFs, zeolites, ionic liquids, moisture-swing sorbents, and all remaining types.</p>
+    <h4>Material Abbreviation</h4><p>Short identifier from the source paper. Additional descriptors included where necessary to distinguish similar materials.</p>
+    <h3>Performance Metrics</h3>
+    <h4>CO&#x2082; Adsorption Capacity</h4><p>CO&#x2082; uptake in mmol/g, converted from units as reported. For isotherms, the value at or near 400 ppm CO&#x2082;.</p>
+    <h4>Degradation Rate (%/cycle)</h4><p>Average % capacity loss per cycle: [(q&#x2081; - q<sub>last</sub>)/q&#x2081;] &times; 100/N. Only for sorbents with &#x2265;2 cycles where both first and last cycle capacities are reported.</p>
+    <h4>Cycle Time (calculated)</h4><p>Normalized kinetic metric calculated from breakthrough experiments using a standardized reactor model (mass=100 mg, flow=400 mL/min, CO&#x2082;=400 ppm). Only calculable when t&#x2089;&#x2085;, mass loading, flow rate, CO&#x2082; concentration, and CO&#x2082; capacity are all reported.</p>
+    <h3>Experimental Conditions</h3>
+    <div class="ptwo" style="margin-top:.5rem">
+      <div>
+        <div class="pb"><h4>Capture Temperature</h4><p>Temperature (&#xb0;C) during CO&#x2082; adsorption. "Room temperature" or "ambient" entries recorded as 25 &#xb0;C.</p></div>
+        <div class="pb"><h4>Release Temperature</h4><p>Temperature (&#xb0;C) during regeneration. For vacuum-swing materials, the temperature at which vacuum was applied.</p></div>
+        <div class="pb"><h4>CO&#x2082; Concentration</h4><p>CO&#x2082; concentration (ppm) in feed gas. "Ambient air" recorded as 425 ppm. Only sorbents below 5,000 ppm included.</p></div>
+        <div class="pb"><h4>Capture Gas</h4><p>Y = Air (O&#x2082; present); N = Inert + CO&#x2082;. O&#x2082; can drive oxidative amine degradation.</p></div>
+        <div class="pb"><h4>Regeneration Gas</h4><p>Gas used during desorption: N&#x2082;, He, Ar, vacuum, or mixtures with CO&#x2082; or H&#x2082;O.</p></div>
+        <div class="pb"><h4>Relative Humidity</h4><p>RH (%) of capture feed gas. Also converted to mole percent and dew point. 0% = dry conditions.</p></div>
+        <div class="pb"><h4>Number of Cycles</h4><p>Total adsorption-desorption cycles. Zero = single measurement. ~20% of sorbents report any cycling data.</p></div>
+      </div>
+      <div>
+        <div class="pb"><h4>Degradation Cause</h4><p>Mechanism as reported: Thermal, Oxidation, Hydrolysis, CO&#x2082;-catalyzed, Pore blockage, Structural, Negligible, None suggested.</p></div>
+        <div class="pb"><h4>CO&#x2082; Measurement Method</h4><p>Gravimetric (TGA), Breakthrough (packed bed), Volumetric (isotherm), or Other.</p></div>
+        <div class="pb"><h4>Gas Flow Rate</h4><p>Volumetric flow rate (mL/min) during adsorption. Not applicable for isotherm measurements.</p></div>
+        <div class="pb"><h4>t&#x2089;&#x2085;</h4><p>Time (min) for breakthrough column CO&#x2082; outlet to reach 95% of inlet concentration. Used to calculate cycle time.</p></div>
+        <div class="pb"><h4>Column Diameter</h4><p>Inner diameter (cm) of the breakthrough column.</p></div>
+        <div class="pb"><h4>Mass of Sorbent</h4><p>Mass (g) in column or TGA pan. Ranges from &lt;0.1 g to &gt;10 g across studies.</p></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- GUIDELINES -->
 <div id="page-guidelines" class="page po">
-  <div class="phdr"><div class="phdr-l"><h2>Reporting Guidelines</h2><p>Recommendations from our database analysis to improve comparability and deployment-relevance of DAC sorbent studies.</p></div><div class="phdr-r"><button class="back" onclick="goPage('home')">← Home</button></div></div>
-  <div class="gtabs"><button class="gtab active" onclick="sg('standard')" id="gtab-standard">Standard Conditions</button><button class="gtab" onclick="sg('deployment')" id="gtab-deployment">Deployment-Relevant Reporting</button><button class="gtab" onclick="sg('benchmark')" id="gtab-benchmark">Benchmark Materials</button></div>
-  <div class="gs active" id="gsec-standard">
+  <div class="phdr"><div><h2>Reporting Guidelines</h2><p>Recommendations from our database analysis to improve comparability and deployment-relevance of DAC sorbent studies.</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
+  <div class="gtabs"><button class="gtab act" onclick="sg('standard')" id="gtab-standard">Standard Conditions</button><button class="gtab" onclick="sg('deployment')" id="gtab-deployment">Deployment-Relevant Reporting</button><button class="gtab" onclick="sg('benchmark')" id="gtab-benchmark">Benchmark Materials</button></div>
+  <div class="gs act" id="gsec-standard">
     <div class="ao"><div class="art">
       <h2>Standardized Testing Conditions</h2>
       <p>A key challenge in assessing progress is the wide variation in testing conditions across studies. Without a consistent framework, differences in reported performance may reflect experimental variation rather than genuine material improvements.</p>
-      <div class="hlb"><p>When CO₂ capacity is plotted for all sorbents under all conditions, every class shows a positive trend. Once only sorbents under standard conditions are isolated, only amine sorbents show a statistically meaningful positive trend — MOF and metal oxide sorbents have too few entries to analyze.</p></div>
-      <p>Standard conditions were identified as the most frequently reported (mode) value for each parameter within each class. The percentage in parentheses is the fraction tested under that condition.</p>
+      <div class="hlb"><p>When CO&#x2082; capacity is plotted for all sorbents under all conditions, every class shows a positive trend. Once only sorbents under standard conditions are isolated, only amine sorbents show a statistically meaningful positive trend &mdash; MOF and metal oxide sorbents have too few entries to analyze.</p></div>
+      <p>Standard conditions were identified as the most frequently reported (mode) value for each parameter within each class. The percentage in parentheses is the fraction of that class tested under that condition.</p>
       <h3>Recommended Standard Conditions</h3>
       <table class="ctbl"><thead><tr><th>Parameter</th><th>Unit</th><th>Amine (%)</th><th>MOF (%)</th><th>Metal Oxide (%)</th><th>Other (%)</th></tr></thead>
         <tbody>
-          <tr><td>Capture temperature</td><td>°C</td><td class="val">25 (61%)</td><td class="val">25 (64%)</td><td class="val">25 (45%)</td><td class="val">25 (72%)</td></tr>
-          <tr><td>Regeneration temperature</td><td>°C</td><td class="val">110 (31%)</td><td class="val">100 (31%)</td><td class="val">200 (54%)</td><td class="val">250 (24%)</td></tr>
+          <tr><td>Capture temperature</td><td>&#xb0;C</td><td class="val">25 (61%)</td><td class="val">25 (64%)</td><td class="val">25 (45%)</td><td class="val">25 (72%)</td></tr>
+          <tr><td>Regeneration temperature</td><td>&#xb0;C</td><td class="val">110 (31%)</td><td class="val">100 (31%)</td><td class="val">200 (54%)</td><td class="val">250 (24%)</td></tr>
           <tr><td>Relative humidity</td><td>%</td><td class="val">0 (82%)</td><td class="val">0 (79%)</td><td class="val">0 (59%)</td><td class="val">0 (48%)</td></tr>
-          <tr><td>CO₂ in feed gas</td><td>ppm</td><td class="val">400 (83%)</td><td class="val">400 (93%)</td><td class="val">400 (70%)</td><td class="val">400 (89%)</td></tr>
-          <tr><td>Capture gas</td><td>—</td><td class="val">Inert+CO₂ (80%)</td><td class="val">Inert+CO₂ (79%)</td><td class="val">Air (79%)</td><td class="val">Inert+CO₂ (61%)</td></tr>
-          <tr><td>Regeneration gas</td><td>—</td><td class="val">Inert dry (88%)</td><td class="val">Inert dry (91%)</td><td class="val">Inert dry (75%)</td><td class="val">Inert dry (63%)</td></tr>
-          <tr><td>Measurement method</td><td>—</td><td class="val">Gravimetric (59%)</td><td class="val">Volumetric (67%)</td><td class="val">Breakthrough (52%)</td><td class="val">Breakthrough (59%)</td></tr>
+          <tr><td>CO&#x2082; in feed gas</td><td>ppm</td><td class="val">400 (83%)</td><td class="val">400 (93%)</td><td class="val">400 (70%)</td><td class="val">400 (89%)</td></tr>
+          <tr><td>Capture gas</td><td>&mdash;</td><td class="val">Inert+CO&#x2082; (80%)</td><td class="val">Inert+CO&#x2082; (79%)</td><td class="val">Air (79%)</td><td class="val">Inert+CO&#x2082; (61%)</td></tr>
+          <tr><td>Regeneration gas</td><td>&mdash;</td><td class="val">Inert dry (88%)</td><td class="val">Inert dry (91%)</td><td class="val">Inert dry (75%)</td><td class="val">Inert dry (63%)</td></tr>
+          <tr><td>Measurement method</td><td>&mdash;</td><td class="val">Gravimetric (59%)</td><td class="val">Volumetric (67%)</td><td class="val">Breakthrough (52%)</td><td class="val">Breakthrough (59%)</td></tr>
         </tbody>
       </table>
-      <h3>How Many Sorbents Meet Standard Conditions?</h3>
-      <p>Applying the standard conditions sequentially reduces 914 sorbents to just 335 (37%). Amine: 312/710 (44%). MOF: only 4/42 (10%). Metal oxide: 15/56 (27%), but zero have sufficient breakthrough data to calculate cycle time.</p>
-      <div class="infob"><p><strong>Recommendation:</strong> Adopt standard conditions analogous to NREL's photovoltaic testing program. Always report all experimental conditions — even small differences substantially alter measured performance values.</p></div>
+      <p>Applying the standard conditions sequentially reduces 914 sorbents to 335 (37%). Amines: 312/710 (44%). MOFs: 4/42 (10%). Metal oxides: 15/56 (27%), but zero have sufficient breakthrough data to calculate cycle time.</p>
+      <div class="infob"><p><strong>Recommendation:</strong> Adopt standard conditions analogous to NREL's photovoltaic testing program. Always report all experimental conditions &mdash; even small differences substantially alter measured values.</p></div>
     </div></div>
   </div>
   <div class="gs" id="gsec-deployment">
     <div class="ao"><div class="art">
       <h2>Deployment-Relevant Reporting</h2>
-      <p>While standardized testing enables comparability, real DAC systems operate across wide environmental variation. A sensitivity analysis on Lewatit VP OC 1065 showed that varying humidity, temperature, and altitude across U.S. deployment sites can shift the modeled net CO₂ removal cost by more than $400 per ton.</p>
-      <div class="warnb"><p>Only about 8% of sorbents have been characterized under all four deployment-relevant conditions: atmospheric CO₂ concentrations, oxidative environments, humid conditions, and breakthrough measurements.</p></div>
+      <p>While standardized testing enables comparability, real DAC systems operate across wide environmental variation. A sensitivity analysis on Lewatit VP OC 1065 showed that varying humidity, temperature, and altitude across U.S. deployment sites can shift the modeled net CO&#x2082; removal cost by more than $400 per ton.</p>
+      <div class="warnb"><p>Only about 8% of sorbents have been characterized under all four deployment-relevant conditions: atmospheric CO&#x2082; concentrations, oxidative environments, humid conditions, and breakthrough measurements.</p></div>
       <h3>Key Environmental Factors</h3>
-      <h4>Relative Humidity</h4><p>At moderate humidity (20–60% RH), water can increase CO₂ capacity of amine sorbents by shifting the mechanism toward ammonium bicarbonate. At high humidity, excess water loading raises regeneration energy and blocks binding sites.</p>
+      <h4>Relative Humidity</h4><p>At moderate humidity (20-60% RH), water can increase CO&#x2082; capacity of amine sorbents by shifting the mechanism toward ammonium bicarbonate. At high humidity, excess water loading raises regeneration energy and blocks binding sites.</p>
       <h4>Ambient Temperature</h4><p>Lower temperatures increase adsorption affinity but raise desorption energy. DAC sites range from hot-dry desert to cold subarctic conditions.</p>
-      <h4>Altitude and CO₂ Partial Pressure</h4><p>At 2,000 m elevation, CO₂ partial pressure is ~0.34 mbar vs. ~0.42 mbar at sea level. We recommend reporting CO₂ isotherms across 0.35–0.45 mbar.</p>
-      <h4>Oxygen Exposure</h4><p>DAC operates in ~21% O₂. Oxygen at elevated regeneration temperatures causes oxidative amine degradation. Stability testing must include simulated air.</p>
+      <h4>Altitude and CO&#x2082; Partial Pressure</h4><p>At 2,000 m elevation, CO&#x2082; partial pressure is ~0.34 mbar vs. ~0.42 mbar at sea level. We recommend reporting CO&#x2082; isotherms across 0.35-0.45 mbar.</p>
+      <h4>Oxygen Exposure</h4><p>DAC operates in ~21% O&#x2082;. Oxygen at elevated regeneration temperatures causes oxidative amine degradation. Stability testing must include simulated air.</p>
       <h3>What to Report</h3>
       <ul>
-        <li>Capacity and kinetics at <strong>multiple humidity levels</strong> (min: 0% and ~40–60% RH)</li>
+        <li>Capacity and kinetics at <strong>multiple humidity levels</strong> (min: 0% and ~40-60% RH)</li>
         <li>Capacity at <strong>multiple capture temperatures</strong></li>
-        <li>Capacity across <strong>CO₂ partial pressure</strong> 0.35–0.45 mbar</li>
+        <li>Capacity across <strong>CO&#x2082; partial pressure</strong> 0.35-0.45 mbar</li>
         <li>Degradation under <strong>simulated air</strong> during adsorption and regeneration</li>
         <li>At least <strong>10 cycles</strong> with first and last cycle capacities reported</li>
       </ul>
-      <div class="hlb"><p>Varying working capacity, cycle time, regeneration energy, and sorbent lifetime by ±30% can shift the modeled cost of CO₂ removal by hundreds of dollars per ton.</p></div>
+      <div class="hlb"><p>Varying working capacity, cycle time, regeneration energy, and sorbent lifetime by &#xb1;30% can shift the modeled cost of CO&#x2082; removal by hundreds of dollars per ton.</p></div>
     </div></div>
   </div>
   <div class="gs" id="gsec-benchmark">
     <div class="ao"><div class="art">
       <h2>Recommended Benchmark Materials</h2>
-      <p>Including well-characterized reference materials is critical for measurement reliability and long-term comparability. Over 60% of sorbents were reported in only a single publication.</p>
+      <p>Including well-characterized reference materials alongside new sorbents is critical for measurement reliability. Over 60% of sorbents were reported in only a single publication.</p>
       <h3>Selection Approach</h3>
       <p>Benchmarks were identified as commercially available materials tested under standard conditions for their class with the highest deployment-relevance characterization among qualifying candidates.</p>
       <div class="bmg">
-        <div class="bmc"><div class="bmc-n">Lewatit VP OC 1065</div><span class="bmc-t ta">Amine</span><div class="bmc-d">Polyamine-functionalized polymer bead. Most widely studied amine sorbent and the reference for our technoeconomic sensitivity analysis.</div></div>
-        <div class="bmc"><div class="bmc-n">ZIF-8</div><span class="bmc-t tm2">MOF</span><div class="bmc-d">Zeolitic imidazolate framework (Zn-based). Commercially available, thermally stable, widely studied.</div></div>
-        <div class="bmc"><div class="bmc-n">γ-Al₂O₃</div><span class="bmc-t to">Metal oxide</span><div class="bmc-d">Widely available metal oxide support with well-documented CO₂ adsorption properties under DAC conditions.</div></div>
-        <div class="bmc"><div class="bmc-n">Zeolite 13X</div><span class="bmc-t td">Other</span><div class="bmc-d">Commercially available sodium aluminosilicate zeolite, well-characterized for CO₂ adsorption.</div></div>
+        <div class="bmc"><div class="bmcn">Lewatit VP OC 1065</div><span class="bmct ta">Amine</span><div class="bmcd">Polyamine-functionalized polymer bead. Most widely studied amine sorbent and the reference for our technoeconomic sensitivity analysis.</div></div>
+        <div class="bmc"><div class="bmcn">ZIF-8</div><span class="bmct tm2">MOF</span><div class="bmcd">Zeolitic imidazolate framework (Zn-based). Commercially available, thermally stable, widely studied.</div></div>
+        <div class="bmc"><div class="bmcn">&#x3b3;-Al&#x2082;O&#x2083;</div><span class="bmct to">Metal oxide</span><div class="bmcd">Widely available metal oxide support with well-documented CO&#x2082; adsorption properties under DAC conditions.</div></div>
+        <div class="bmc"><div class="bmcn">Zeolite 13X</div><span class="bmct td2">Other</span><div class="bmcd">Commercially available sodium aluminosilicate zeolite, well-characterized for CO&#x2082; adsorption.</div></div>
       </div>
-      <div class="infob"><p>If you have tested any of these materials under standard conditions and would like to contribute data, please <span style="color:var(--accent);cursor:pointer;text-decoration:underline" onclick="goPage('about')">contact us</span>.</p></div>
+      <div class="infob"><p>If you have tested any of these materials under standard conditions and would like to contribute data, please <span style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="goP('contact')">contact us</span>.</p></div>
     </div></div>
   </div>
 </div>
 
-<!-- ═══ ABOUT ═══ -->
+<!-- ABOUT -->
 <div id="page-about" class="page po">
-  <div class="phdr"><div class="phdr-l"><h2>About &amp; Contact</h2><p>About the project, team, how to cite, and how to contribute.</p></div><div class="phdr-r"><button class="back" onclick="goPage('home')">← Home</button></div></div>
+  <div class="phdr"><div><h2>About the Project</h2><p>Methods, team, and citation information.</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
   <div class="abto">
     <div class="abtg">
       <div class="abtc">
-        <div style="font-family:var(--mono);font-size:.61rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.7rem">About the project</div>
         <h3>The Database</h3>
         <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. A SciFinder search for "Direct Air Capture" yielded 1,242 publications as of October 2024. After screening, 163 papers totalling over 900 unique sorbent entries were included. This is a <strong>representative sample</strong>, not a complete catalog, and will be continuously updated.</p>
         <h3 style="margin-top:1.6rem">Team</h3>
-        <div class="tg"><div class="tc"><div class="tn">First A. Author</div><div class="tr">UC Los Angeles</div></div><div class="tc"><div class="tn">Second B. Author</div><div class="tr">UC Los Angeles</div></div><div class="tc"><div class="tn">Third C. Author</div><div class="tr">National Lab of the Rockies</div></div></div>
+        <div class="tg"><div class="tc"><div class="tn">First A. Author</div><div class="tr2">UC Los Angeles</div></div><div class="tc"><div class="tn">Second B. Author</div><div class="tr2">UC Los Angeles</div></div><div class="tc"><div class="tn">Third C. Author</div><div class="tr2">National Lab of the Rockies</div></div></div>
         <h3 style="margin-top:1.6rem">How to Cite</h3>
         <p>If you use this database, please cite:</p>
         <div class="citeb">Author et al., "Direct Air Capture Solid Sorbents: Trends, Challenges, and Recommendations," <em>Journal</em>, 2025. [DOI pending]</div>
       </div>
-      <div class="abtc" id="abt-contact">
-        <div style="font-family:var(--mono);font-size:.61rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.7rem">Contribute &amp; contact</div>
-        <h3>Get in Touch</h3>
-        <p>We welcome contributions from the research community — new papers to add, corrections to existing entries, or questions about methodology. Email us directly at <strong>[email address]</strong>.</p>
-        <div style="margin-top:.95rem">
-          <div class="fr"><label>Your name</label><input type="text" placeholder="Jane Smith"></div>
-          <div class="fr"><label>Your email</label><input type="text" placeholder="you@institution.edu"></div>
-          <div class="fr"><label>Type of inquiry</label><select style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.76rem;background:#fff;outline:none"><option>Add a paper</option><option>Correct a data point</option><option>Question about methodology</option><option>Collaboration</option><option>Other</option></select></div>
-          <div class="fr"><label>Message</label><textarea placeholder="Describe your inquiry, including any relevant DOIs or sorbent names…"></textarea></div>
-          <button class="bac" onclick="alert('Please email us directly at the address listed in the paper.')">Send message</button>
-        </div>
+      <div class="abtc">
+        <h3>Data Collection</h3>
+        <p>Text and numerical values were extracted from each paper; graphical data was digitized using WebPlotDigitizer. Each entry was independently checked by a second team member. Values not reported: <em>nr</em>; not applicable: <em>na</em>.</p>
+        <h3 style="margin-top:1.6rem">Contribute Data</h3>
+        <p>We welcome contributions from the research community &mdash; new papers to add, corrections to existing entries, or questions about methodology.</p>
+        <button class="ba" onclick="goP('contact')" style="margin-top:.5rem">Contact Us &rarr;</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ DATABASE ═══ -->
-<div id="page-database" class="page po">
-  <div class="phdr"><div class="phdr-l"><h2>Full Sorbent Database</h2><p>Click any row for full detail · Sidebar filters require Apply · Hover column headers for descriptions</p></div><div class="phdr-r"><button class="back" onclick="goPage('home')">← Home</button><button class="bsm acc" onclick="openDL()">⬇ Download CSV</button></div></div>
-  <div class="sl">
-    <div class="sbar">
-      <div class="sbar-sc">
-        <div class="sbar-hdr"><span>Filters</span><button onclick="collapseDB()">Collapse all</button></div>
-        <div id="db-ff"></div>
-      </div>
-      <div class="sbar-ft"><button class="bsm acc" style="width:100%" onclick="applyDB()">Apply filters</button><button class="bsm" style="width:100%" onclick="clearDB()">✕ Clear all</button></div>
-    </div>
-    <div class="mc">
-      <div class="tw">
-        <div class="tm">
-          <div class="aw"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" id="db-srch" placeholder="Search material…" autocomplete="off" onkeydown="if(event.key==='Enter')applyDB()"><div class="acd" id="db-ac"></div></div>
-          <button class="bsm acc" onclick="applyDB()">Search</button>
-          <button class="bsm" onclick="clearDB()">✕</button>
-        </div>
-        <div class="afb" id="db-af"></div>
-        <div class="sb" id="db-sb">Loading…</div>
-      </div>
-      <div class="sh">← → Scroll right to see all columns</div>
-      <div class="tabw"><table><thead id="db-thead"></thead><tbody id="db-tbody"><tr><td colspan="15" class="er">Loading data…</td></tr></tbody></table></div>
+<!-- CONTACT -->
+<div id="page-contact" class="page po">
+  <div class="phdr"><div><h2>Contact &amp; Contribute</h2><p>Submit a new paper, report a data error, or ask a question about the database.</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
+  <div class="abto" style="max-width:700px">
+    <p style="font-family:var(--se);font-size:.9rem;line-height:1.8;color:var(--mu);margin-bottom:1.25rem">We welcome contributions from the research community. Email us directly at <strong style="color:var(--tx)">[email address]</strong>.</p>
+    <div style="background:#fff;border:1px solid var(--bo);border-radius:8px;padding:1.35rem;max-width:500px">
+      <div class="fr"><label>Your name</label><input type="text" placeholder="Jane Smith"></div>
+      <div class="fr"><label>Your email</label><input type="text" placeholder="you@institution.edu"></div>
+      <div class="fr"><label>Type of inquiry</label><select style="width:100%;padding:6px 8px;border:1px solid var(--bo);border-radius:5px;font-family:var(--sa);font-size:.76rem;background:#fff;outline:none"><option>Add a paper</option><option>Correct a data point</option><option>Question about methodology</option><option>Collaboration</option><option>Other</option></select></div>
+      <div class="fr"><label>Message</label><textarea placeholder="Describe your inquiry, including any relevant DOIs or sorbent names..."></textarea></div>
+      <button class="bac" onclick="alert('Please email us directly at the address listed in the paper.')">Send message</button>
     </div>
   </div>
 </div>
 
-<!-- Download modal -->
+<!-- DOWNLOAD + DETAIL MODALS -->
 <div class="dlbg" id="dlbg" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="dlb"><h3>Download Database</h3><p>Choose whether to download the full database or only the rows matching your current filters.</p>
     <div class="dlo">
       <label class="dlop"><input type="radio" name="dlt" value="filtered" checked><div><span class="dlol">Filtered dataset</span><span class="dlos"><span id="dl-rc">all</span> rows matching current filters</span></div></label>
-      <label class="dlop"><input type="radio" name="dlt" value="full"><div><span class="dlol">Full database</span><span class="dlos">All <span id="dl-tc">—</span> rows</span></div></label>
+      <label class="dlop"><input type="radio" name="dlt" value="full"><div><span class="dlol">Full database</span><span class="dlos">All <span id="dl-tc">&mdash;</span> rows</span></div></label>
     </div>
-    <div class="dlft"><button class="bsm" onclick="document.getElementById('dlbg').classList.remove('open')">Cancel</button><button class="bsm acc" onclick="doDL()">Download CSV</button></div>
+    <div class="dlft"><button class="bs" onclick="document.getElementById('dlbg').classList.remove('open')">Cancel</button><button class="bs ac2" onclick="doDL()">Download CSV</button></div>
   </div>
 </div>
-
 <div class="tooltip" id="tooltip"></div>
 <div class="mbg" id="mbg" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="mbox"><button class="mclose" onclick="document.getElementById('mbg').classList.remove('open')">✕</button><h3 id="m-title"></h3><div class="msub" id="m-sub"></div><div class="mgrid" id="m-grid"></div></div>
+  <div class="mbox"><button class="mclose" onclick="document.getElementById('mbg').classList.remove('open')">&#x2715;</button><h3 id="m-title"></h3><div class="msub" id="m-sub"></div><div class="mgrid" id="m-grid"></div></div>
 </div>
 
 <script>
 const CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRwFX5ySIouDa_kLljce19yeT_w3hrP7Gh1DAJflDKFptbXHahHB0CeMv-BeZFPjByIUlT1LiQr40KO/pub?gid=1105970839&single=true&output=csv";
 let ALL=[];
-
 window.addEventListener('load',()=>setTimeout(()=>document.body.classList.add('loaded'),55));
 
-// pages
-const PAGES=['scroll-home','page-trends','page-guidelines','page-about','page-database'];
-const NAV_MAP={home:'nav-home',database:'nav-database',trends:'nav-trends',guidelines:'nav-guidelines',about:'nav-about',parameters:'nav-parameters'};
-function goPage(id,push=true){
-  PAGES.forEach(p=>document.getElementById(p).classList.remove('active'));
-  const m={home:'scroll-home',database:'page-database',trends:'page-trends',guidelines:'page-guidelines',about:'page-about'};
-  const el=document.getElementById(m[id]||'scroll-home');if(el)el.classList.add('active');
-  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-  const nl=document.getElementById(NAV_MAP[id]||'nav-home');if(nl)nl.classList.add('active');
-  const nav=document.getElementById('main-nav');
-  nav.classList.toggle('dark',id==='home');
+// PAGE NAVIGATION
+const PIDS=['page-home','page-metrics','page-browse','page-parameters','page-guidelines','page-about','page-contact'];
+const NM={home:'nav-home',metrics:'nav-metrics',browse:'nav-browse',parameters:'nav-parameters',guidelines:'nav-guidelines',about:'nav-about',contact:'nav-contact'};
+
+function goP(id,push=true){
+  PIDS.forEach(p=>document.getElementById(p).classList.remove('act'));
+  const el=document.getElementById('page-'+id);
+  if(el)el.classList.add('act');
+  document.querySelectorAll('.nl').forEach(l=>l.classList.remove('act'));
+  const nl=document.getElementById(NM[id]);
+  if(nl)nl.classList.add('act');
+  document.getElementById('main-nav').classList.toggle('dk',id==='home');
   if(push)history.pushState({page:id},'','#'+id);
   window.scrollTo(0,0);
-  if(id==='trends')setTimeout(()=>renderAll(),80);
+  if(id==='metrics')setTimeout(()=>renderAll(),80);
 }
-function goParams(){goPage('home');setTimeout(()=>{const el=document.getElementById('section-params');if(el)el.scrollIntoView({behavior:'smooth'});},50);}
-window.addEventListener('popstate',e=>{const id=(e.state&&e.state.page)||location.hash.replace('#','')||'home';goPage(id,false);});
-(()=>{const h=location.hash.replace('#','');const v=['home','database','trends','guidelines','about','parameters'];if(v.includes(h)){if(h==='parameters')goParams();else goPage(h,false);}else{history.replaceState({page:'home'},'','#home');goPage('home',false);}})();
 
-// hero observer for nav dark
-const hio=new IntersectionObserver(en=>{if(document.getElementById('scroll-home').classList.contains('active'))document.getElementById('main-nav').classList.toggle('dark',en[0].isIntersecting);},{threshold:0.05});
-hio.observe(document.getElementById('sec-hero'));
+window.addEventListener('popstate',e=>{
+  const id=(e.state&&e.state.page)||location.hash.replace('#','')||'home';
+  goP(id,false);
+});
+
+(()=>{
+  const h=location.hash.replace('#','');
+  const valid=['home','metrics','browse','parameters','guidelines','about','contact'];
+  if(valid.includes(h))goP(h,false);
+  else{history.replaceState({page:'home'},'','#home');goP('home',false);}
+})();
+
+// dark nav on hero
+const hio=new IntersectionObserver(en=>{
+  if(document.getElementById('page-home').classList.contains('act'))
+    document.getElementById('main-nav').classList.toggle('dk',en[0].isIntersecting);
+},{threshold:0.05});
+const heroEl=document.getElementById('sec-hero');
+if(heroEl)hio.observe(heroEl);
 
 // scroll fade
 const fio=new IntersectionObserver(en=>en.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:0.08});
-document.querySelectorAll('.sf').forEach(el=>fio.observe(el));
+document.querySelectorAll('.sf2').forEach(el=>fio.observe(el));
 
-// data
+// LOAD DATA
 function loadData(){
   Papa.parse(CSV,{download:true,header:true,skipEmptyLines:true,
-    complete(res){ALL=res.data.map(r=>{const o={};Object.keys(r).forEach(k=>o[k.trim()]=(r[k]||'').trim());return o;});onLoaded();},
+    complete(res){
+      ALL=res.data.map(r=>{const o={};Object.keys(r).forEach(k=>o[k.trim()]=(r[k]||'').trim());return o;});
+      onLoaded();
+    },
     error(){document.getElementById('db-sb').innerHTML='<span style="color:#a33">Could not load CSV.</span>';}
   });
 }
+
 function onLoaded(){
   const us=new Set(ALL.map(r=>r['Material abbreviation']).filter(Boolean));
   document.getElementById('stat-s').textContent=us.size;
@@ -670,44 +699,182 @@ function onLoaded(){
   document.getElementById('stat-p').textContent=ud.size;
   document.getElementById('stat-d').textContent=(ALL.length*18).toLocaleString();
   computeRanges();
-  buildSF('db','db-ff',dbD);
+  buildHomeFilters();
   buildSF('cap','cap-ff',cD.capacity);
   buildSF('cyc','cyc-ff',cD.cycles);
   buildSF('deg','deg-ff',cD.degrad);
-  buildAC();renderDB();renderAll();renderPrev();
+  buildDBFilters();
+  buildAC();
+  renderDB();
+  renderAll();
+  renderHome();
 }
 
-// filter spec
+// FILTER SPEC
 const FS=[
   {k:'Year',l:'Year',t:'num',tip:'Year of publication.'},
   {k:'Sorbent Class',l:'Sorbent class',t:'cat',tip:'Amine, MOF, Metal oxide, or Other.'},
-  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',t:'num',tip:'CO₂ uptake in mmol/g.'},
-  {k:'Capture temperature (C)',l:'Capture temp (°C)',t:'num',tip:'Temperature during CO₂ adsorption.'},
-  {k:'Release temperature (C)',l:'Release temp (°C)',t:'num',tip:'Temperature during regeneration.'},
-  {k:'CO2 Concentration (ppm)',l:'CO₂ conc. (ppm)',t:'num',tip:'CO₂ concentration in feed gas.'},
-  {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',t:'cat',tip:'Y=Air; N=Inert+CO₂.'},
+  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',t:'num',tip:'CO2 uptake in mmol/g.'},
+  {k:'Capture temperature (C)',l:'Capture temp (C)',t:'num',tip:'Temperature during CO2 adsorption.'},
+  {k:'Release temperature (C)',l:'Release temp (C)',t:'num',tip:'Temperature during regeneration.'},
+  {k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)',t:'num',tip:'CO2 concentration in feed gas.'},
+  {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',t:'cat',tip:'Y=Air; N=Inert+CO2.'},
   {k:'Purging gas',l:'Regeneration gas',t:'cat',tip:'Gas used during regeneration.'},
   {k:'Moisture content (RH%)',l:'Rel. humidity (%)',t:'num',tip:'Relative humidity of capture gas.'},
-  {k:'Capture-release cycles tested (#)',l:'No. of cycles',t:'num',tip:'Total adsorption–desorption cycles.'},
+  {k:'Capture-release cycles tested (#)',l:'No. of cycles',t:'num',tip:'Total adsorption-desorption cycles.'},
   {k:'Degradation rate (%/cycle)',l:'Degrad. rate (%/cyc)',t:'num',tip:'Average % capacity loss per cycle.'},
   {k:'Degradation cause (Category)',l:'Degradation cause',t:'cat',tip:'Reported degradation mechanism.'},
   {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method',t:'cat',tip:'TGA, Breakthrough, Isotherm, Other.'},
-  {k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)',t:'num',tip:'Volumetric flow rate during adsorption.'},
+  {k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)',t:'num',tip:'Flow rate during adsorption.'},
   {k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)',t:'num',tip:'Inner diameter of breakthrough column.'},
   {k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)',t:'num',tip:'Mass of sorbent.'},
   {k:'Cycle time (Min)',l:'Cycle time (min)',t:'num',tip:'Calculated standardized cycle time.'},
 ];
+const SK='Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)';
+
 const dbD={},dbA={};
 const cD={capacity:{},cycles:{},degrad:{}};
 const cA={capacity:{},cycles:{},degrad:{}};
-FS.forEach(s=>{dbD[s.k]={min:'',max:'',sel:[]};dbA[s.k]={min:'',max:'',sel:[]};['capacity','cycles','degrad'].forEach(c=>{cD[c][s.k]={min:'',max:'',sel:[]};cA[c][s.k]={min:'',max:'',sel:[]};});});
+const HOME_KEYS=['Sorbent Class','Capture temperature (C)','Moisture content (RH%)','Year',SK,'Method of CO2 capacity measurement (i.e. TGA)'];
+const hD={},hA={};
+FS.forEach(s=>{
+  dbD[s.k]={min:'',max:'',sel:[]};dbA[s.k]={min:'',max:'',sel:[]};
+  ['capacity','cycles','degrad'].forEach(c=>{cD[c][s.k]={min:'',max:'',sel:[]};cA[c][s.k]={min:'',max:'',sel:[]};});
+  hD[s.k]={min:'',max:'',sel:[]};hA[s.k]={min:'',max:'',sel:[]};
+});
+
 const DR={};
-function computeRanges(){FS.filter(s=>s.t==='num').forEach(s=>{const v=ALL.map(r=>parseFloat(r[s.k])).filter(v=>!isNaN(v));DR[s.k]=v.length?{min:Math.min(...v),max:Math.max(...v)}:{min:0,max:100};});}
-function fl(k,v){const sk='Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)';if(k===sk)return v==='Y'?'Air (Y)':v==='N'?'Inert+CO₂ (N)':v;return v;}
+function computeRanges(){
+  FS.filter(s=>s.t==='num').forEach(s=>{
+    const v=ALL.map(r=>parseFloat(r[s.k])).filter(v=>!isNaN(v));
+    DR[s.k]=v.length?{min:Math.min(...v),max:Math.max(...v)}:{min:0,max:100};
+  });
+}
+function fl(k,v){if(k===SK)return v==='Y'?'Air (Y)':v==='N'?'Inert+CO2 (N)':v;return v;}
 function uniq(a){return[...new Set(a.filter(v=>v&&v!=='na'&&v!=='nr'))].sort();}
 function nv(s){const v=parseFloat(s);return isNaN(v)?null:v;}
-function getDraft(m){if(m==='db')return dbD;if(m==='cap')return cD.capacity;if(m==='cyc')return cD.cycles;if(m==='deg')return cD.degrad;return dbD;}
+function getDraft(m){
+  if(m==='db')return dbD;if(m==='home')return hD;
+  if(m==='cap')return cD.capacity;if(m==='cyc')return cD.cycles;if(m==='deg')return cD.degrad;
+  return dbD;
+}
+function afr(rows,ap){
+  return rows.filter(r=>{
+    for(const s of FS){
+      const f=ap[s.k];if(!f)continue;
+      if(s.t==='num'){const v=nv(r[s.k]);if(f.min!==''&&(v===null||v<parseFloat(f.min)))return false;if(f.max!==''&&(v===null||v>parseFloat(f.max)))return false;}
+      else if(f.sel&&f.sel.length>0){if(!f.sel.includes(r[s.k]))return false;}
+    }
+    return true;
+  });
+}
 
+// HOME INLINE FILTERS (popover per param)
+let openPanel=null;
+function buildHomeFilters(){
+  const row=document.getElementById('home-filter-row');if(!row)return;row.innerHTML='';
+  HOME_KEYS.forEach(k=>{
+    const s=FS.find(x=>x.k===k);if(!s)return;
+    const fid='hf_'+k.replace(/[^a-z0-9]/gi,'_');
+    const hasA=hD[k].min!==''||hD[k].max!==''||hD[k].sel.length>0;
+    const div=document.createElement('div');div.className='hfg';
+    let body='';
+    if(s.t==='num'){
+      const r=DR[k]||{min:0,max:100};
+      body=`<span class="hflbl">${s.l}</span>
+        <div class="hfrr"><input type="number" id="${fid}_mn" placeholder="${r.min.toFixed(1)}" value="${hD[k].min}" step="any" oninput="hfni('${k}','min',this.value,'${fid}')"><span>-</span><input type="number" id="${fid}_mx" placeholder="${r.max.toFixed(1)}" value="${hD[k].max}" step="any" oninput="hfni('${k}','max',this.value,'${fid}')"></div>
+        <div class="hfsds" id="${fid}_sl"><div class="hfsdt"></div><div class="hfsdf" id="${fid}_f" style="left:0%;width:100%"></div><div class="hfsdth" id="${fid}_tl" style="left:0%" onmousedown="hfstt(event,'${k}','min','${fid}')"></div><div class="hfsdth" id="${fid}_tr" style="left:100%" onmousedown="hfstt(event,'${k}','max','${fid}')"></div></div>`;
+    } else {
+      const vals=uniq(ALL.map(r=>r[k]));
+      body=`<span class="hflbl">${s.l}</span>
+        <div class="hfcat"><select onchange="hfca('${k}',this,'${fid}')"><option value="">Any...</option>${vals.map(v=>`<option value="${v}">${fl(k,v)}</option>`).join('')}</select></div>
+        <div class="hftags" id="${fid}_t">${hD[k].sel.map(v=>`<span class="hftag">${fl(k,v)}<span class="rm" onclick="hfcr('${k}','${v}','${fid}')">x</span></span>`).join('')}</div>`;
+    }
+    div.innerHTML=`<button class="hfb${hasA?' on':''}" id="${fid}_btn" onclick="toggleHF('${fid}')"><span class="hfdot${hasA?' on':''}" id="${fid}_dot"></span>${s.l} v</button>
+      <div class="hfpanel" id="${fid}_panel">${body}<div class="hfpf"><button class="bs ac2" style="flex:1" onclick="applyHF()">Apply</button><button class="bs" style="flex:1" onclick="clearHFK('${k}','${fid}')">Clear</button></div></div>`;
+    row.appendChild(div);
+  });
+  HOME_KEYS.forEach(k=>{
+    const s=FS.find(x=>x.k===k);if(!s||s.t!=='num')return;
+    const fid='hf_'+k.replace(/[^a-z0-9]/gi,'_');
+    hfuisui(fid,k);
+  });
+}
+
+function toggleHF(fid){
+  const panel=document.getElementById(fid+'_panel');if(!panel)return;
+  if(openPanel&&openPanel!==fid){const op=document.getElementById(openPanel+'_panel');if(op)op.classList.remove('open');}
+  panel.classList.toggle('open');
+  openPanel=panel.classList.contains('open')?fid:null;
+}
+document.addEventListener('click',e=>{
+  if(openPanel&&!e.target.closest('.hfg')){
+    const op=document.getElementById(openPanel+'_panel');if(op)op.classList.remove('open');openPanel=null;
+  }
+});
+function hfni(k,side,val,fid){hD[k][side]=val;hfuisui(fid,k);hfudot(fid,k);}
+function hfca(k,sel,fid){const v=sel.value;if(!v)return;if(!hD[k].sel.includes(v)){hD[k].sel.push(v);hfrtags(fid,k);}sel.value='';hfudot(fid,k);}
+function hfcr(k,val,fid){hD[k].sel=hD[k].sel.filter(v=>v!==val);hfrtags(fid,k);hfudot(fid,k);}
+function hfrtags(fid,k){const el=document.getElementById(fid+'_t');if(!el)return;el.innerHTML=hD[k].sel.map(v=>`<span class="hftag">${fl(k,v)}<span class="rm" onclick="hfcr('${k}','${v}','${fid}')">x</span></span>`).join('');}
+function hfudot(fid,k){
+  const dot=document.getElementById(fid+'_dot');const btn=document.getElementById(fid+'_btn');
+  const has=hD[k].min!==''||hD[k].max!==''||hD[k].sel.length>0;
+  if(dot)dot.classList.toggle('on',has);if(btn)btn.classList.toggle('on',has);
+}
+let hfat=null;
+function hfstt(e,k,side,fid){e.preventDefault();hfat={k,side,fid};document.addEventListener('mousemove',hfmtt);document.addEventListener('mouseup',hfstp);}
+function hfmtt(e){
+  if(!hfat)return;const{k,side,fid}=hfat;
+  const sl=document.getElementById(fid+'_sl');if(!sl)return;
+  const r=DR[k]||{min:0,max:100};const rect=sl.getBoundingClientRect();
+  let pct=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
+  const val=r.min+(r.max-r.min)*pct;const dp=r.max>1000?0:r.max>10?1:2;const vs=val.toFixed(dp);
+  if(side==='min'){const cMax=hD[k].max!==''?parseFloat(hD[k].max):r.max;if(val>cMax)return;}
+  else{const cMin=hD[k].min!==''?parseFloat(hD[k].min):r.min;if(val<cMin)return;}
+  hD[k][side]=vs;hfuisui(fid,k);
+  const inp=document.getElementById(fid+'_'+(side==='min'?'mn':'mx'));if(inp)inp.value=vs;
+  hfudot(fid,k);
+}
+function hfstp(){hfat=null;document.removeEventListener('mousemove',hfmtt);document.removeEventListener('mouseup',hfstp);}
+function hfuisui(fid,k){
+  const r=DR[k]||{min:0,max:100};
+  const cMin=hD[k].min!==''?parseFloat(hD[k].min):r.min;
+  const cMax=hD[k].max!==''?parseFloat(hD[k].max):r.max;
+  const pMin=r.max>r.min?((cMin-r.min)/(r.max-r.min)*100):0;
+  const pMax=r.max>r.min?((cMax-r.min)/(r.max-r.min)*100):100;
+  const f=document.getElementById(fid+'_f');const tl=document.getElementById(fid+'_tl');const tr=document.getElementById(fid+'_tr');
+  if(f){f.style.left=pMin+'%';f.style.width=(pMax-pMin)+'%';}
+  if(tl)tl.style.left=pMin+'%';if(tr)tr.style.left=pMax+'%';
+}
+function applyHF(){
+  FS.forEach(s=>{hA[s.k]={min:hD[s.k].min,max:hD[s.k].max,sel:[...hD[s.k].sel]};});
+  renderHome();updateHomeChips();
+  if(openPanel){const op=document.getElementById(openPanel+'_panel');if(op)op.classList.remove('open');openPanel=null;}
+}
+function clearHFK(k,fid){
+  hD[k]={min:'',max:'',sel:[]};hA[k]={min:'',max:'',sel:[]};
+  hfuisui(fid,k);hfudot(fid,k);buildHomeFilters();renderHome();updateHomeChips();
+}
+function updateHomeChips(){
+  const el=document.getElementById('home-chips');if(!el)return;
+  const chips=[];
+  HOME_KEYS.forEach(k=>{
+    const f=hA[k];if(!f)return;const lbl=FS.find(x=>x.k===k)?.l||k;
+    if(f.min!==''||f.max!=='')chips.push(`<span class="chip">${lbl}: ${f.min||'...'}–${f.max||'...'}<span class="rm" onclick="rmHC('${k}')">x</span></span>`);
+    (f.sel||[]).forEach(v=>chips.push(`<span class="chip">${lbl}: ${fl(k,v)}<span class="rm" onclick="rmHC('${k}','${v}')">x</span></span>`));
+  });
+  el.innerHTML=chips.join('');
+}
+function rmHC(k,v){
+  const fid='hf_'+k.replace(/[^a-z0-9]/gi,'_');
+  if(v){hD[k].sel=hD[k].sel.filter(x=>x!==v);hA[k].sel=hA[k].sel.filter(x=>x!==v);}
+  else{hD[k]={min:'',max:'',sel:[]};hA[k]={min:'',max:'',sel:[]};}
+  buildHomeFilters();renderHome();updateHomeChips();
+}
+</script>
+
+<script>
+// METRICS ACCORDION FILTERS
 function buildSF(mode,cid,draft){
   if(!ALL.length||!Object.keys(DR).length)return;
   const c=document.getElementById(cid);if(!c)return;c.innerHTML='';
@@ -721,28 +888,30 @@ function buildSF(mode,cid,draft){
       const cMax=draft[s.k].max!==''?parseFloat(draft[s.k].max):r.max;
       const pMin=r.max>r.min?((cMin-r.min)/(r.max-r.min)*100):0;
       const pMax=r.max>r.min?((cMax-r.min)/(r.max-r.min)*100):100;
-      div.innerHTML=`<div class="sfh" onclick="tsf('${fid}')"><span class="sfh-l">${s.l}</span><div class="sfh-r"><span class="sfd${ha?' on':''}" id="${fid}_d"></span><span class="sfc" id="${fid}_c">▾</span></div></div>
-      <div class="sfb" id="${fid}_b">
-        <div class="srr"><input type="number" id="${fid}_mn" placeholder="${r.min.toFixed(1)}" value="${draft[s.k].min}" step="any" oninput="sfni('${mode}','${s.k}','min',this.value,'${fid}')"><span>–</span><input type="number" id="${fid}_mx" placeholder="${r.max.toFixed(1)}" value="${draft[s.k].max}" step="any" oninput="sfni('${mode}','${s.k}','max',this.value,'${fid}')"></div>
-        <div class="sds" id="${fid}_sl"><div class="sdt"></div><div class="sdf" id="${fid}_f" style="left:${pMin}%;width:${pMax-pMin}%"></div><div class="sdth" id="${fid}_tl" style="left:${pMin}%" onmousedown="stt(event,'${mode}','${s.k}','min','${fid}')"></div><div class="sdth" id="${fid}_tr" style="left:${pMax}%" onmousedown="stt(event,'${mode}','${s.k}','max','${fid}')"></div></div>
-      </div>`;
+      div.innerHTML=`<div class="sfh" onclick="tsf('${fid}')"><span>${s.l}</span><div class="sfhr"><span class="sfd${ha?' on':''}" id="${fid}_d"></span><span class="sfc" id="${fid}_c">v</span></div></div>
+        <div class="sfb" id="${fid}_b"><div class="srr"><input type="number" id="${fid}_mn" placeholder="${r.min.toFixed(1)}" value="${draft[s.k].min}" step="any" oninput="sfni('${mode}','${s.k}','min',this.value,'${fid}')"><span>-</span><input type="number" id="${fid}_mx" placeholder="${r.max.toFixed(1)}" value="${draft[s.k].max}" step="any" oninput="sfni('${mode}','${s.k}','max',this.value,'${fid}')"></div>
+        <div class="sds" id="${fid}_sl"><div class="sdt"></div><div class="sdf" id="${fid}_f" style="left:${pMin}%;width:${pMax-pMin}%"></div><div class="sdth" id="${fid}_tl" style="left:${pMin}%" onmousedown="stt(event,'${mode}','${s.k}','min','${fid}')"></div><div class="sdth" id="${fid}_tr" style="left:${pMax}%" onmousedown="stt(event,'${mode}','${s.k}','max','${fid}')"></div></div></div>`;
     } else {
       const vals=uniq(ALL.map(r=>r[s.k]));
-      div.innerHTML=`<div class="sfh" onclick="tsf('${fid}')"><span class="sfh-l">${s.l}</span><div class="sfh-r"><span class="sfd${ha?' on':''}" id="${fid}_d"></span><span class="sfc" id="${fid}_c">▾</span></div></div>
-      <div class="sfb" id="${fid}_b">
-        <div class="scat"><select onchange="sfca('${mode}','${s.k}',this,'${fid}')"><option value="">Any…</option>${vals.map(v=>`<option value="${v}">${fl(s.k,v)}</option>`).join('')}</select></div>
-        <div class="stags" id="${fid}_t">${draft[s.k].sel.map(v=>`<span class="stag">${fl(s.k,v)}<span class="rm" onclick="sfcr('${mode}','${s.k}','${v}','${fid}')">×</span></span>`).join('')}</div>
-      </div>`;
+      div.innerHTML=`<div class="sfh" onclick="tsf('${fid}')"><span>${s.l}</span><div class="sfhr"><span class="sfd${ha?' on':''}" id="${fid}_d"></span><span class="sfc" id="${fid}_c">v</span></div></div>
+        <div class="sfb" id="${fid}_b"><div class="scat"><select onchange="sfca('${mode}','${s.k}',this,'${fid}')"><option value="">Any...</option>${vals.map(v=>`<option value="${v}">${fl(s.k,v)}</option>`).join('')}</select></div><div class="stags" id="${fid}_t">${draft[s.k].sel.map(v=>`<span class="stag">${fl(s.k,v)}<span class="rm" onclick="sfcr('${mode}','${s.k}','${v}','${fid}')">x</span></span>`).join('')}</div></div>`;
     }
     c.appendChild(div);
   });
 }
+
 function tsf(fid){const b=document.getElementById(fid+'_b');const cv=document.getElementById(fid+'_c');if(b)b.classList.toggle('open');if(cv)cv.classList.toggle('open');}
-function collapseDB(){FS.forEach(s=>{const fid='db_'+s.k.replace(/[^a-z0-9]/gi,'_');const b=document.getElementById(fid+'_b');const cv=document.getElementById(fid+'_c');if(b)b.classList.remove('open');if(cv)cv.classList.remove('open');});}
-let at=null;
-function stt(e,m,k,side,fid){e.preventDefault();at={m,k,side,fid};document.addEventListener('mousemove',mtt);document.addEventListener('mouseup',stp);}
-function mtt(e){
-  if(!at)return;const{m,k,side,fid}=at;
+
+function sfni(m,k,side,val,fid){getDraft(m)[k][side]=val;usui(fid,k,m);ud(fid,k,m);}
+function sfca(m,k,sel,fid){const v=sel.value;if(!v)return;const d=getDraft(m);if(!d[k].sel.includes(v)){d[k].sel.push(v);rbt(fid,k,m);}sel.value='';ud(fid,k,m);}
+function sfcr(m,k,val,fid){const d=getDraft(m);d[k].sel=d[k].sel.filter(v=>v!==val);rbt(fid,k,m);ud(fid,k,m);}
+function rbt(fid,k,m){const el=document.getElementById(fid+'_t');if(!el)return;const d=getDraft(m);el.innerHTML=d[k].sel.map(v=>`<span class="stag">${fl(k,v)}<span class="rm" onclick="sfcr('${m}','${k}','${v}','${fid}')">x</span></span>`).join('');}
+function ud(fid,k,m){const dot=document.getElementById(fid+'_d');if(!dot)return;const d=getDraft(m);dot.classList.toggle('on',d[k].min!==''||d[k].max!==''||d[k].sel.length>0);}
+
+let at2=null;
+function stt(e,m,k,side,fid){e.preventDefault();at2={m,k,side,fid};document.addEventListener('mousemove',mtt2);document.addEventListener('mouseup',stp2);}
+function mtt2(e){
+  if(!at2)return;const{m,k,side,fid}=at2;
   const sl=document.getElementById(fid+'_sl');if(!sl)return;
   const r=DR[k]||{min:0,max:100};const rect=sl.getBoundingClientRect();
   let pct=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
@@ -752,7 +921,7 @@ function mtt(e){
   else{const cMin=draft[k].min!==''?parseFloat(draft[k].min):r.min;if(val<cMin)return;}
   draft[k][side]=vs;usui(fid,k,m);const inp=document.getElementById(fid+'_'+(side==='min'?'mn':'mx'));if(inp)inp.value=vs;ud(fid,k,m);
 }
-function stp(){at=null;document.removeEventListener('mousemove',mtt);document.removeEventListener('mouseup',stp);}
+function stp2(){at2=null;document.removeEventListener('mousemove',mtt2);document.removeEventListener('mouseup',stp2);}
 function usui(fid,k,m){
   const r=DR[k]||{min:0,max:100};const draft=getDraft(m);
   const cMin=draft[k].min!==''?parseFloat(draft[k].min):r.min;const cMax=draft[k].max!==''?parseFloat(draft[k].max):r.max;
@@ -760,96 +929,173 @@ function usui(fid,k,m){
   const f=document.getElementById(fid+'_f');const tl=document.getElementById(fid+'_tl');const tr=document.getElementById(fid+'_tr');
   if(f){f.style.left=pMin+'%';f.style.width=(pMax-pMin)+'%';}if(tl)tl.style.left=pMin+'%';if(tr)tr.style.left=pMax+'%';
 }
-function sfni(m,k,side,val,fid){getDraft(m)[k][side]=val;usui(fid,k,m);ud(fid,k,m);}
-function sfca(m,k,sel,fid){const v=sel.value;if(!v)return;const d=getDraft(m);if(!d[k].sel.includes(v)){d[k].sel.push(v);rbt(fid,k,m);}sel.value='';ud(fid,k,m);}
-function sfcr(m,k,val,fid){const d=getDraft(m);d[k].sel=d[k].sel.filter(v=>v!==val);rbt(fid,k,m);ud(fid,k,m);}
-function rbt(fid,k,m){const el=document.getElementById(fid+'_t');if(!el)return;const d=getDraft(m);el.innerHTML=d[k].sel.map(v=>`<span class="stag">${fl(k,v)}<span class="rm" onclick="sfcr('${m}','${k}','${v}','${fid}')">×</span></span>`).join('');}
-function ud(fid,k,m){const dot=document.getElementById(fid+'_d');if(!dot)return;const d=getDraft(m);dot.classList.toggle('on',d[k].min!==''||d[k].max!==''||d[k].sel.length>0);}
 
-function applyDB(){FS.forEach(s=>{dbA[s.k]={min:dbD[s.k].min,max:dbD[s.k].max,sel:[...dbD[s.k].sel]};});renderDB();uatdb();}
-function clearDB(){document.getElementById('db-srch').value='';FS.forEach(s=>{dbD[s.k]={min:'',max:'',sel:[]};dbA[s.k]={min:'',max:'',sel:[]};});buildSF('db','db-ff',dbD);renderDB();uatdb();}
 const CM={capacity:'cap',cycles:'cyc',degrad:'deg'};
-function applyC(chart){const src=cD[chart];const tgt=cA[chart];FS.forEach(s=>{tgt[s.k]={min:src[s.k].min,max:src[s.k].max,sel:[...src[s.k].sel]};});renderSingle(chart);uchips(chart);}
-function clearC(chart){const px=CM[chart];FS.forEach(s=>{cD[chart][s.k]={min:'',max:'',sel:[]};cA[chart][s.k]={min:'',max:'',sel:[]};});buildSF(px,px+'-ff',cD[chart]);renderSingle(chart);uchips(chart);}
+function applyC(chart){
+  const src=cD[chart];const tgt=cA[chart];
+  FS.forEach(s=>{tgt[s.k]={min:src[s.k].min,max:src[s.k].max,sel:[...src[s.k].sel]};});
+  renderSingle(chart);uchips(chart);
+}
+function clearC(chart){
+  const px=CM[chart];
+  FS.forEach(s=>{cD[chart][s.k]={min:'',max:'',sel:[]};cA[chart][s.k]={min:'',max:'',sel:[]};});
+  buildSF(px,px+'-ff',cD[chart]);renderSingle(chart);uchips(chart);
+}
+function uchips(chart){
+  const px=CM[chart];const el=document.getElementById(px+'-chips');if(!el)return;
+  const chips=[];
+  FS.forEach(s=>{
+    const f=cA[chart][s.k];
+    if(f.min!==''||f.max!=='')chips.push(`<span class="chip">${s.l}: ${f.min||'...'}–${f.max||'...'}<span class="rm" onclick="rmcc('${chart}','${s.k}','range')">x</span></span>`);
+    f.sel.forEach(v=>chips.push(`<span class="chip">${s.l}: ${fl(s.k,v)}<span class="rm" onclick="rmcc('${chart}','${s.k}','cat','${v}')">x</span></span>`));
+  });
+  el.innerHTML=chips.join('');
+}
+function rmcc(chart,k,t,v){
+  const px=CM[chart];
+  if(t==='range'){cD[chart][k].min='';cD[chart][k].max='';cA[chart][k].min='';cA[chart][k].max='';}
+  else{cD[chart][k].sel=cD[chart][k].sel.filter(x=>x!==v);cA[chart][k].sel=cA[chart][k].sel.filter(x=>x!==v);}
+  buildSF(px,px+'-ff',cD[chart]);renderSingle(chart);uchips(chart);
+}
 
-function afr(rows,ap){return rows.filter(r=>{for(const s of FS){const f=ap[s.k];if(s.t==='num'){const v=nv(r[s.k]);if(f.min!==''&&(v===null||v<parseFloat(f.min)))return false;if(f.max!==''&&(v===null||v>parseFloat(f.max)))return false;}else if(f.sel.length>0){if(!f.sel.includes(r[s.k]))return false;}}return true;});}
-function uatdb(){const el=document.getElementById('db-af');if(!el)return;const tags=[];FS.forEach(s=>{const f=dbA[s.k];if(f.min!==''||f.max!=='')tags.push(`<span class="aft">${s.l}: ${f.min||'…'}–${f.max||'…'}<span class="rm" onclick="rmdbt('${s.k}','range')">×</span></span>`);f.sel.forEach(v=>tags.push(`<span class="aft">${s.l}: ${fl(s.k,v)}<span class="rm" onclick="rmdbt('${s.k}','cat','${v}')">×</span></span>`));});el.innerHTML=tags.join('');}
-function rmdbt(k,t,v){if(t==='range'){dbD[k].min='';dbD[k].max='';dbA[k].min='';dbA[k].max='';}else{dbD[k].sel=dbD[k].sel.filter(x=>x!==v);dbA[k].sel=dbA[k].sel.filter(x=>x!==v);}buildSF('db','db-ff',dbD);renderDB();uatdb();}
-function uchips(chart){const px=CM[chart];const el=document.getElementById(px+'-chips');if(!el)return;const chips=[];FS.forEach(s=>{const f=cA[chart][s.k];if(f.min!==''||f.max!=='')chips.push(`<span class="chip">${s.l}: ${f.min||'…'}–${f.max||'…'}<span class="rm" onclick="rmcc('${chart}','${s.k}','range')">×</span></span>`);f.sel.forEach(v=>chips.push(`<span class="chip">${s.l}: ${fl(s.k,v)}<span class="rm" onclick="rmcc('${chart}','${s.k}','cat','${v}')">×</span></span>`));});el.innerHTML=chips.join('');}
-function rmcc(chart,k,t,v){const px=CM[chart];if(t==='range'){cD[chart][k].min='';cD[chart][k].max='';cA[chart][k].min='';cA[chart][k].max='';}else{cD[chart][k].sel=cD[chart][k].sel.filter(x=>x!==v);cA[chart][k].sel=cA[chart][k].sel.filter(x=>x!==v);}buildSF(px,px+'-ff',cD[chart]);renderSingle(chart);uchips(chart);}
+// DB SIDEBAR FILTERS
+function buildDBFilters(){buildSF('db','db-ff',dbD);}
+function applyDB(){FS.forEach(s=>{dbA[s.k]={min:dbD[s.k].min,max:dbD[s.k].max,sel:[...dbD[s.k].sel]};});renderDB();uatdb();}
+function clearDB(){document.getElementById('db-srch').value='';FS.forEach(s=>{dbD[s.k]={min:'',max:'',sel:[]};dbA[s.k]={min:'',max:'',sel:[]};});buildDBFilters();renderDB();uatdb();}
+function colDB(){FS.forEach(s=>{const fid='db_'+s.k.replace(/[^a-z0-9]/gi,'_');const b=document.getElementById(fid+'_b');const cv=document.getElementById(fid+'_c');if(b)b.classList.remove('open');if(cv)cv.classList.remove('open');});}
+function uatdb(){
+  const el=document.getElementById('db-af');if(!el)return;const tags=[];
+  FS.forEach(s=>{const f=dbA[s.k];if(f.min!==''||f.max!=='')tags.push(`<span class="aft">${s.l}: ${f.min||'...'}–${f.max||'...'}<span class="rm" onclick="rdbt('${s.k}','range')">x</span></span>`);f.sel.forEach(v=>tags.push(`<span class="aft">${s.l}: ${fl(s.k,v)}<span class="rm" onclick="rdbt('${s.k}','cat','${v}')">x</span></span>`));});
+  el.innerHTML=tags.join('');
+}
+function rdbt(k,t,v){
+  if(t==='range'){dbD[k].min='';dbD[k].max='';dbA[k].min='';dbA[k].max='';}
+  else{dbD[k].sel=dbD[k].sel.filter(x=>x!==v);dbA[k].sel=dbA[k].sel.filter(x=>x!==v);}
+  buildDBFilters();renderDB();uatdb();
+}
 
-// autocomplete
+// AUTOCOMPLETE
 let acn=[];
-function buildAC(){const ns=new Set();ALL.forEach(r=>{if(r['Material abbreviation'])ns.add(r['Material abbreviation']);if(r['Material'])ns.add(r['Material']);});acn=[...ns].sort();const inp=document.getElementById('db-srch');const dd=document.getElementById('db-ac');inp.addEventListener('input',()=>{const q=inp.value.toLowerCase().trim();if(!q){dd.classList.remove('open');return;}const m=acn.filter(n=>n.toLowerCase().includes(q)).slice(0,10);if(!m.length){dd.classList.remove('open');return;}const re=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');dd.innerHTML=m.map(n=>`<div class="aci" onmousedown="selAC('${n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')"><span>${n.replace(re,s=>`<em>${s}</em>`)}</span></div>`).join('');dd.classList.add('open');});inp.addEventListener('keydown',e=>{if(e.key==='Enter'){dd.classList.remove('open');applyDB();}});inp.addEventListener('blur',()=>setTimeout(()=>dd.classList.remove('open'),150));}
+function buildAC(){
+  const ns=new Set();ALL.forEach(r=>{if(r['Material abbreviation'])ns.add(r['Material abbreviation']);if(r['Material'])ns.add(r['Material']);});
+  acn=[...ns].sort();
+  const inp=document.getElementById('db-srch');const dd=document.getElementById('db-ac');
+  inp.addEventListener('input',()=>{
+    const q=inp.value.toLowerCase().trim();if(!q){dd.classList.remove('open');return;}
+    const m=acn.filter(n=>n.toLowerCase().includes(q)).slice(0,10);
+    if(!m.length){dd.classList.remove('open');return;}
+    const re=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+    dd.innerHTML=m.map(n=>`<div class="aci" onmousedown="selAC('${n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')"><span>${n.replace(re,s=>`<em>${s}</em>`)}</span></div>`).join('');
+    dd.classList.add('open');
+  });
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){dd.classList.remove('open');applyDB();}});
+  inp.addEventListener('blur',()=>setTimeout(()=>dd.classList.remove('open'),150));
+}
 function selAC(v){document.getElementById('db-srch').value=v;document.getElementById('db-ac').classList.remove('open');}
 
-// DB columns
+// DATABASE TABLE
 const DBC=[
   {k:'Year',l:'Year',c:'yc',tip:'Year of publication.'},
   {k:'First author',l:'First author',tip:'Last name of first author.'},
   {k:'Material abbreviation',l:'Material',tip:'Short identifier from the source paper.'},
   {k:'Sorbent Class',l:'Class',tip:'Amine, MOF, Metal oxide, or Other.'},
-  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',c:'nc',tip:'CO₂ uptake in mmol/g at ~400 ppm.'},
-  {k:'Capture temperature (C)',l:'Cap. T (°C)',c:'nc',tip:'Temperature (°C) during CO₂ adsorption.'},
-  {k:'Release temperature (C)',l:'Rel. T (°C)',c:'nc',tip:'Temperature (°C) during regeneration.'},
-  {k:'CO2 Concentration (ppm)',l:'CO₂ (ppm)',c:'nc',tip:'CO₂ concentration in feed gas (ppm).'},
-  {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',tip:'Y=Air (O₂ present); N=Inert+CO₂.'},
-  {k:'Moisture content (RH%)',l:'RH%',c:'nc',tip:'Relative humidity (%) of capture feed gas.'},
+  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',c:'nc',tip:'CO2 uptake in mmol/g at ~400 ppm.'},
+  {k:'Capture temperature (C)',l:'Cap. T (C)',c:'nc',tip:'Temperature during CO2 adsorption.'},
+  {k:'Release temperature (C)',l:'Rel. T (C)',c:'nc',tip:'Temperature during regeneration.'},
+  {k:'CO2 Concentration (ppm)',l:'CO2 (ppm)',c:'nc',tip:'CO2 concentration in feed gas.'},
+  {k:SK,l:'Capture gas',tip:'Y=Air (O2 present); N=Inert+CO2.'},
+  {k:'Moisture content (RH%)',l:'RH%',c:'nc',tip:'Relative humidity of capture feed gas.'},
   {k:'Purging gas',l:'Regen. gas',tip:'Gas used during regeneration.'},
-  {k:'Capture-release cycles tested (#)',l:'Cycles',c:'nc',tip:'Total adsorption–desorption cycles tested.'},
+  {k:'Capture-release cycles tested (#)',l:'Cycles',c:'nc',tip:'Total adsorption-desorption cycles.'},
   {k:'Degradation rate (%/cycle)',l:'Degrad.(%/cyc)',c:'nc',tip:'Average % capacity loss per cycle.'},
-  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Method',tip:'Gravimetric (TGA), Breakthrough, Volumetric, Other.'},
+  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Method',tip:'TGA, Breakthrough, Volumetric, Other.'},
   {k:'DOI',l:'DOI',tip:'Click to open the source paper.'},
 ];
 let dbs='Year',dbd=-1;
-function tc2(cls){if(!cls)return'td';const c=cls.toLowerCase();if(c.includes('amine'))return'ta';if(c.includes('mof'))return'tm2';return'to';}
-function ch(col,r){const v=r[col.k]||'';const sk='Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)';if(col.k===sk){const u=v.toUpperCase();if(u==='Y')return`<td><span class="sy">Air</span></td>`;if(u==='N')return`<td><span class="sn">Inert+CO₂</span></td>`;}if(col.k==='Sorbent Class'&&v)return`<td><span class="tag ${tc2(v)}">${v}</span></td>`;if(col.k==='DOI'&&v)return`<td><a class="ra" href="https://doi.org/${v}" target="_blank" rel="noopener">${v.length>26?v.slice(0,24)+'…':v}</a></td>`;const c2=col.c?` class="${col.c}"`:'';return`<td${c2} title="${v.replace(/"/g,'&quot;')}">${v}</td>`;}
-function gdf(){const q=document.getElementById('db-srch').value.toLowerCase().trim();let r=ALL;if(q)r=r.filter(x=>((x['Material abbreviation']||'').toLowerCase()+(x['Material']||'').toLowerCase()+(x['First author']||'').toLowerCase()).includes(q));return afr(r,dbA);}
+function tc2(cls){if(!cls)return'td2';const c=cls.toLowerCase();if(c.includes('amine'))return'ta';if(c.includes('mof'))return'tm2';return'to';}
+function ch(col,r){
+  const v=r[col.k]||'';
+  if(col.k===SK){const u=v.toUpperCase();if(u==='Y')return`<td><span class="sy">Air</span></td>`;if(u==='N')return`<td><span class="sn2">Inert+CO2</span></td>`;}
+  if(col.k==='Sorbent Class'&&v)return`<td><span class="tag ${tc2(v)}">${v}</span></td>`;
+  if(col.k==='DOI'&&v)return`<td><a class="ra" href="https://doi.org/${v}" target="_blank" rel="noopener">${v.length>26?v.slice(0,24)+'...':v}</a></td>`;
+  const c2=col.c?` class="${col.c}"`:'';return`<td${c2} title="${v.replace(/"/g,'&quot;')}">${v}</td>`;
+}
+function gdf(){
+  const q=document.getElementById('db-srch').value.toLowerCase().trim();
+  let r=ALL;
+  if(q)r=r.filter(x=>((x['Material abbreviation']||'').toLowerCase()+(x['Material']||'').toLowerCase()+(x['First author']||'').toLowerCase()).includes(q));
+  return afr(r,dbA);
+}
 function renderDB(){
   const tr=document.createElement('tr');
-  DBC.forEach(col=>{const th=document.createElement('th');const is=dbs===col.k;th.innerHTML=`<div class="thi"><span class="thl">${col.l}${is?(dbd===1?' ↑':' ↓'):''}</span><span class="thii">i<span class="thtt">${col.tip}</span></span></div>`;if(is)th.classList.add('sorted');th.onclick=()=>{dbs===col.k?dbd*=-1:(dbs=col.k,dbd=1);renderDB();};tr.appendChild(th);});
+  DBC.forEach(col=>{
+    const th=document.createElement('th');const is=dbs===col.k;
+    th.innerHTML=`<div class="thi2"><span class="thl">${col.l}${is?(dbd===1?' ^':' v'):''}</span><span class="thii">i<span class="thtt">${col.tip}</span></span></div>`;
+    if(is)th.classList.add('sorted');
+    th.onclick=()=>{dbs===col.k?dbd*=-1:(dbs=col.k,dbd=1);renderDB();};
+    tr.appendChild(th);
+  });
   document.getElementById('db-thead').innerHTML='';document.getElementById('db-thead').appendChild(tr);
-  let rows=gdf();rows.sort((a,b)=>{let va=a[dbs]||'',vb=b[dbs]||'';const na=parseFloat(va),nb=parseFloat(vb);if(!isNaN(na)&&!isNaN(nb))return(na-nb)*dbd;return va.localeCompare(vb)*dbd;});
+  let rows=gdf();
+  rows.sort((a,b)=>{let va=a[dbs]||'',vb=b[dbs]||'';const na=parseFloat(va),nb=parseFloat(vb);if(!isNaN(na)&&!isNaN(nb))return(na-nb)*dbd;return va.localeCompare(vb)*dbd;});
   document.getElementById('db-sb').textContent=`Showing ${rows.length} of ${ALL.length} entries`;
   const tb=document.getElementById('db-tbody');
-  if(!rows.length){const q=document.getElementById('db-srch').value.trim();tb.innerHTML=`<tr><td colspan="${DBC.length}" class="er">No matching entries${q?` for "${q}" — try a different spelling or abbreviation`:''}.</td></tr>`;return;}
+  if(!rows.length){const q=document.getElementById('db-srch').value.trim();tb.innerHTML=`<tr><td colspan="${DBC.length}" class="er">No matching entries${q?` for "${q}" - try a different spelling`:''}</td></tr>`;return;}
   tb.innerHTML=rows.map(r=>`<tr onclick="openM(${ALL.indexOf(r)})">${DBC.map(col=>ch(col,r)).join('')}</tr>`).join('');
 }
 function openDL(){const f=gdf();document.getElementById('dl-rc').textContent=f.length+' rows';document.getElementById('dl-tc').textContent=ALL.length;document.getElementById('dlbg').classList.add('open');}
-function doDL(){const t=document.querySelector('input[name="dlt"]:checked').value;const rows=t==='full'?ALL:gdf();if(!rows.length){alert('No rows.');return;}const keys=Object.keys(rows[0]);const csv=[keys.join(','),...rows.map(r=>keys.map(k=>{const v=(r[k]||'').replace(/"/g,'""');return v.includes(',')||v.includes('"')||v.includes('\n')?`"${v}"`:v;}).join(','))].join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='dac_sorbents.csv';a.click();document.getElementById('dlbg').classList.remove('open');}
+function doDL(){
+  const t=document.querySelector('input[name="dlt"]:checked').value;
+  const rows=t==='full'?ALL:gdf();if(!rows.length){alert('No rows.');return;}
+  const keys=Object.keys(rows[0]);
+  const csv=[keys.join(','),...rows.map(r=>keys.map(k=>{const v=(r[k]||'').replace(/"/g,'""');return v.includes(',')||v.includes('"')||v.includes('\n')?`"${v}"`:v;}).join(','))].join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='dac_sorbents.csv';a.click();
+  document.getElementById('dlbg').classList.remove('open');
+}
 
-const MF2=[{k:'Year',l:'Year'},{k:'First author',l:'First author'},{k:'Corresponding author 1',l:'Corresponding author'},{k:'Material',l:'Material (full)',f:true},{k:'Material abbreviation',l:'Abbreviation'},{k:'Sorbent Class',l:'Sorbent class'},{k:'Adsorption Capacity (reported)',l:'Capacity (reported)'},{k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)'},{k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method'},{k:'Capture temperature (C)',l:'Capture temp (°C)'},{k:'Release temperature (C)',l:'Release temp (°C)'},{k:'CO2 Concentration (ppm)',l:'CO₂ conc. (ppm)'},{k:'Purging gas',l:'Regeneration gas'},{k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas'},{k:'Moisture content (RH%)',l:'Humidity (RH%)'},{k:'dew point (C)',l:'Dew point (°C)'},{k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)'},{k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)'},{k:'Capture-release cycles tested (#)',l:'Cycles'},{k:'Degradation rate (% total)',l:'Degrad. (% total)'},{k:'Degradation rate (%/cycle)',l:'Degrad. (%/cycle)'},{k:'Degradation cause (Category)',l:'Degrad. cause'},{k:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t₉₅ (min)'},{k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)'},{k:'Productivity',l:'Productivity'},{k:'Cycle time (Min)',l:'Cycle time (min)'},{k:'Notes',l:'Notes',f:true},{k:'DOI',l:'DOI',f:true}];
-function openM(idx){const r=ALL[idx];document.getElementById('m-title').textContent=r['Material abbreviation']||r['Material']||'Sorbent detail';document.getElementById('m-sub').textContent=`${r['First author']||''} · ${r['Year']||''} · ${r['Sorbent Class']||''}`;document.getElementById('m-grid').innerHTML=MF2.map(f=>{const v=r[f.k]||'';if(!v||v==='na'||v==='nr')return'';const full=f.f?' full':'';let val=f.k==='DOI'&&v?`<a class="ra" href="https://doi.org/${v}" target="_blank">${v}</a>`:v;return`<div class="mrow${full}"><span class="mlbl">${f.l}</span><span class="mval">${val}</span></div>`;}).join('');document.getElementById('mbg').classList.add('open');}
+const MF2=[{k:'Year',l:'Year'},{k:'First author',l:'First author'},{k:'Corresponding author 1',l:'Corresponding author'},{k:'Material',l:'Material (full)',f:true},{k:'Material abbreviation',l:'Abbreviation'},{k:'Sorbent Class',l:'Sorbent class'},{k:'Adsorption Capacity (reported)',l:'Capacity (reported)'},{k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)'},{k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method'},{k:'Capture temperature (C)',l:'Capture temp (C)'},{k:'Release temperature (C)',l:'Release temp (C)'},{k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)'},{k:'Purging gas',l:'Regeneration gas'},{k:SK,l:'Capture gas'},{k:'Moisture content (RH%)',l:'Humidity (RH%)'},{k:'dew point (C)',l:'Dew point (C)'},{k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)'},{k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)'},{k:'Capture-release cycles tested (#)',l:'Cycles'},{k:'Degradation rate (% total)',l:'Degrad. (% total)'},{k:'Degradation rate (%/cycle)',l:'Degrad. (%/cycle)'},{k:'Degradation cause (Category)',l:'Degrad. cause'},{k:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t95 (min)'},{k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)'},{k:'Productivity',l:'Productivity'},{k:'Cycle time (Min)',l:'Cycle time (min)'},{k:'Notes',l:'Notes',f:true},{k:'DOI',l:'DOI',f:true}];
+function openM(idx){
+  const r=ALL[idx];
+  document.getElementById('m-title').textContent=r['Material abbreviation']||r['Material']||'Sorbent detail';
+  document.getElementById('m-sub').textContent=`${r['First author']||''} · ${r['Year']||''} · ${r['Sorbent Class']||''}`;
+  document.getElementById('m-grid').innerHTML=MF2.map(f=>{
+    const v=r[f.k]||'';if(!v||v==='na'||v==='nr')return'';
+    const full=f.f?' full':'';
+    let val=f.k==='DOI'&&v?`<a class="ra" href="https://doi.org/${v}" target="_blank">${v}</a>`:v;
+    return`<div class="mrow${full}"><span class="mlbl">${f.l}</span><span class="mval">${val}</span></div>`;
+  }).join('');
+  document.getElementById('mbg').classList.add('open');
+}
 
-// charts
+// CHARTS
 const CC={'Amine':'#1a9e7e','MOF':'#c89a0a','Metal oxide':'#c0391c','Other':'#5b3fa0'};
 const CO=['Amine','MOF','Metal oxide','Other'];
 const CCFG={
-  capacity:{svgId:'svg-cap',legId:'cap-leg',cntId:'cap-cnt',tlId:'cap-tlbl',title:'CO₂ capture capacity (mmol/g) vs. year of publication',xk:'Year',yk:'Adsorption capacity (mmol/g)',yl:'CO₂ Capture Capacity (mmol/g)'},
+  capacity:{svgId:'svg-cap',legId:'cap-leg',cntId:'cap-cnt',tlId:'cap-tlbl',title:'CO2 capture capacity (mmol/g) vs. year of publication',xk:'Year',yk:'Adsorption capacity (mmol/g)',yl:'CO2 Capture Capacity (mmol/g)'},
   cycles:{svgId:'svg-cyc',legId:'cyc-leg',cntId:'cyc-cnt',tlId:'cyc-tlbl',title:'Calculated standardized cycle time (min) vs. year',xk:'Year',yk:'Cycle time (Min)',yl:'Cycle Time (min)'},
   degrad:{svgId:'svg-deg',legId:'deg-leg',cntId:'deg-cnt',tlId:'deg-tlbl',title:'Degradation rate (%/cycle) vs. year of publication',xk:'Year',yk:'Degradation rate (%/cycle)',yl:'Degradation Rate (%/cycle)'},
 };
+
 function renderAll(){['capacity','cycles','degrad'].forEach(c=>renderSingle(c));}
-function renderSingle(type){
-  if(!ALL.length)return;
-  const cfg=CCFG[type];
-  const tEl=document.getElementById(cfg.tlId);if(tEl)tEl.textContent=cfg.title;
-  const pts=afr(ALL,cA[type]).map(r=>({x:parseFloat(r[cfg.xk]),y:parseFloat(r[cfg.yk]),idx:ALL.indexOf(r),r})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)&&p.y>=0);
-  const cEl=document.getElementById(cfg.cntId);if(cEl)cEl.textContent=`${pts.length} points`;
-  const svgEl=document.getElementById(cfg.svgId);if(!svgEl)return;
+
+function drawChart(svgId,legId,cntId,pts,yl,type){
+  const svgEl=document.getElementById(svgId);if(!svgEl)return;
   const container=svgEl.parentElement;
-  const W=Math.max(340,container?container.offsetWidth-4:580);
+  const W=Math.max(340,container?container.offsetWidth-4:600);
   const H=Math.round(W*0.56);
   const PAD={t:18,r:20,b:62,l:84};
   const cw=W-PAD.l-PAD.r,ch=H-PAD.t-PAD.b;
   svgEl.setAttribute('width',W);svgEl.setAttribute('height',H);svgEl.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  if(!pts.length){svgEl.innerHTML=`<rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}" fill="#fff" stroke="#ccc" stroke-width="1.5"/><text x="${PAD.l+cw/2}" y="${PAD.t+ch/2}" text-anchor="middle" fill="#999" font-size="14" font-family="Inter,sans-serif">No data for current filters</text>`;document.getElementById(cfg.legId).innerHTML='';return;}
+  if(!pts.length){
+    svgEl.innerHTML=`<rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}" fill="#fff" stroke="#ccc" stroke-width="1.5"/><text x="${PAD.l+cw/2}" y="${PAD.t+ch/2}" text-anchor="middle" fill="#999" font-size="14" font-family="Inter,sans-serif">No data for current filters</text>`;
+    const le=document.getElementById(legId);if(le)le.innerHTML='';return;
+  }
   const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
   const xMin=Math.floor(Math.min(...xs))-1,xMax=Math.ceil(Math.max(...xs))+1;
   const ymx=Math.max(...ys);const yMin=-ymx*0.04;const yMax=ymx*1.15;
   const sx=x=>PAD.l+(x-xMin)/(xMax-xMin)*cw;
   const sy=y=>PAD.t+ch-(y-yMin)/(yMax-yMin)*ch;
-  function jx(p){return sx(p.x+(((p.idx*7919+type.charCodeAt(0)*31)%200)/200-.5)*0.42);}
+  function jx(p){return sx(p.x+(((p.idx*7919+(type||'x').charCodeAt(0)*31)%200)/200-.5)*0.42);}
   const xT=[];for(let y=Math.ceil(xMin);y<=Math.floor(xMax);y++){if(y%2===0||(xMax-xMin)<10)xT.push(y);}
   const yT=[];for(let i=0;i<=5;i++)yT.push(ymx*i/5);
   const F="Arial,Helvetica,sans-serif";
@@ -859,54 +1105,71 @@ function renderSingle(type){
   xT.forEach(xv=>{h+=`<line x1="${sx(xv)}" y1="${PAD.t+ch}" x2="${sx(xv)}" y2="${PAD.t+ch+5}" stroke="#333" stroke-width="1.2"/>`;h+=`<line x1="${sx(xv)}" y1="${PAD.t}" x2="${sx(xv)}" y2="${PAD.t-3}" stroke="#333" stroke-width="1"/>`;h+=`<text x="${sx(xv)}" y="${PAD.t+ch+22}" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="15" fill="#111">${xv}</text>`;});
   yT.forEach(yv=>{h+=`<line x1="${PAD.l-5}" y1="${sy(yv)}" x2="${PAD.l}" y2="${sy(yv)}" stroke="#333" stroke-width="1.2"/>`;h+=`<line x1="${PAD.l+cw}" y1="${sy(yv)}" x2="${PAD.l+cw+3}" y2="${sy(yv)}" stroke="#333" stroke-width="1"/>`;const lb=yv>=1000?(yv/1000).toFixed(1)+'k':yv<1&&yv>0?yv.toFixed(2):yv.toFixed(1);h+=`<text x="${PAD.l-10}" y="${sy(yv)+5}" text-anchor="end" font-weight="bold" font-family="${F}" font-size="15" fill="#111">${lb}</text>`;});
   h+=`<text x="${PAD.l+cw/2}" y="${H-6}" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="16" fill="#111">Year Published</text>`;
-  h+=`<text transform="rotate(-90)" x="${-(PAD.t+ch/2)}" y="21" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="14" fill="#111">${cfg.yl}</text>`;
+  h+=`<text transform="rotate(-90)" x="${-(PAD.t+ch/2)}" y="21" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="14" fill="#111">${yl}</text>`;
   h+=`<defs><clipPath id="cp_${type}"><rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}"/></clipPath></defs><g clip-path="url(#cp_${type})">`;
-  CO.forEach(cls=>{pts.filter(p=>{const c=p.r['Sorbent Class']||'';return cls==='Other'?!CO.slice(0,3).some(k=>c.toLowerCase().includes(k.toLowerCase())):(c.toLowerCase().includes(cls.toLowerCase()));}).forEach(p=>{const col=CC[cls]||'#888';h+=`<circle cx="${jx(p)}" cy="${sy(p.y)}" r="3.5" fill="${col}" fill-opacity="0.78" stroke="${col}" stroke-width="0.5" style="cursor:pointer" onmouseenter="showT(event,${p.idx},'${type}')" onmouseleave="hideT()" onclick="openM(${p.idx})"/>`;});});
+  CO.forEach(cls=>{
+    pts.filter(p=>{const c=p.r['Sorbent Class']||'';return cls==='Other'?!CO.slice(0,3).some(k=>c.toLowerCase().includes(k.toLowerCase())):(c.toLowerCase().includes(cls.toLowerCase()));})
+    .forEach(p=>{const col=CC[cls]||'#888';h+=`<circle cx="${jx(p)}" cy="${sy(p.y)}" r="3.5" fill="${col}" fill-opacity="0.78" stroke="${col}" stroke-width="0.5" style="cursor:pointer" onmouseenter="showT(event,${p.idx},'${type}')" onmouseleave="hideT()" onclick="openM(${p.idx})"/>`;});
+  });
   h+='</g>';svgEl.innerHTML=h;
   const pc=CO.filter(cls=>pts.some(p=>{const c=p.r['Sorbent Class']||'';return cls==='Other'?!CO.slice(0,3).some(k=>c.toLowerCase().includes(k.toLowerCase())):(c.toLowerCase().includes(cls.toLowerCase()));}));
-  const le=document.getElementById(cfg.legId);if(le)le.innerHTML=pc.map(cls=>`<div class="cli"><svg width="13" height="13" style="flex-shrink:0;vertical-align:middle"><circle cx="6.5" cy="6.5" r="5.5" fill="${CC[cls]}" fill-opacity="0.8"/></svg>${cls}</div>`).join('');
+  const le=document.getElementById(legId);if(le)le.innerHTML=pc.map(cls=>`<div class="cli"><svg width="13" height="13" style="flex-shrink:0;vertical-align:middle"><circle cx="6.5" cy="6.5" r="5.5" fill="${CC[cls]}" fill-opacity="0.8"/></svg>${cls}</div>`).join('');
+  const ce=document.getElementById(cntId);if(ce)ce.textContent=`${pts.length} points`;
 }
 
-function renderPrev(){
-  const svgEl=document.getElementById('prev-svg');if(!svgEl||!ALL.length)return;
-  const cont=svgEl.parentElement;const W=Math.max(340,cont?cont.offsetWidth-4:680);const H=Math.round(W*0.42);
-  const PAD={t:14,r:16,b:50,l:74};const cw=W-PAD.l-PAD.r,ch=H-PAD.t-PAD.b;
-  svgEl.setAttribute('width',W);svgEl.setAttribute('height',H);svgEl.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  const pts=ALL.map(r=>({x:parseFloat(r['Year']),y:parseFloat(r['Adsorption capacity (mmol/g)']),idx:ALL.indexOf(r),r})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)&&p.y>=0);
-  if(!pts.length)return;
-  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
-  const xMin=Math.floor(Math.min(...xs))-1,xMax=Math.ceil(Math.max(...xs))+1;
-  const ymx=Math.max(...ys);const yMin=-ymx*0.04;const yMax=ymx*1.15;
-  const sx=x=>PAD.l+(x-xMin)/(xMax-xMin)*cw;const sy=y=>PAD.t+ch-(y-yMin)/(yMax-yMin)*ch;
-  function jx(p){return sx(p.x+(((p.idx*7919)%200)/200-.5)*0.42);}
-  const xT=[];for(let y=Math.ceil(xMin);y<=Math.floor(xMax);y++){if(y%2===0)xT.push(y);}
-  const yT=[];for(let i=0;i<=4;i++)yT.push(ymx*i/4);
-  const F="Arial,Helvetica,sans-serif";
-  let h=`<rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}" fill="#fff" stroke="#333" stroke-width="1.5"/>`;
-  yT.forEach(yv=>{if(yv>0)h+=`<line x1="${PAD.l}" y1="${sy(yv)}" x2="${PAD.l+cw}" y2="${sy(yv)}" stroke="#eeece8" stroke-width="0.7"/>`;});
-  xT.forEach(xv=>{h+=`<line x1="${sx(xv)}" y1="${PAD.t+ch}" x2="${sx(xv)}" y2="${PAD.t+ch+5}" stroke="#333" stroke-width="1.1"/>`;h+=`<text x="${sx(xv)}" y="${PAD.t+ch+19}" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="13" fill="#111">${xv}</text>`;});
-  yT.forEach(yv=>{const lb=yv>=1000?(yv/1000).toFixed(1)+'k':yv<1&&yv>0?yv.toFixed(2):yv.toFixed(1);h+=`<line x1="${PAD.l-4}" y1="${sy(yv)}" x2="${PAD.l}" y2="${sy(yv)}" stroke="#333" stroke-width="1.1"/>`;h+=`<text x="${PAD.l-8}" y="${sy(yv)+4}" text-anchor="end" font-weight="bold" font-family="${F}" font-size="13" fill="#111">${lb}</text>`;});
-  h+=`<text x="${PAD.l+cw/2}" y="${H-4}" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="13" fill="#111">Year Published</text>`;
-  h+=`<text transform="rotate(-90)" x="${-(PAD.t+ch/2)}" y="18" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="12" fill="#111">CO₂ Capacity (mmol/g)</text>`;
-  h+=`<defs><clipPath id="cp_prev"><rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}"/></clipPath></defs><g clip-path="url(#cp_prev)">`;
-  CO.forEach(cls=>{pts.filter(p=>{const c=p.r['Sorbent Class']||'';return cls==='Other'?!CO.slice(0,3).some(k=>c.toLowerCase().includes(k.toLowerCase())):(c.toLowerCase().includes(cls.toLowerCase()));}).forEach(p=>{const col=CC[cls]||'#888';h+=`<circle cx="${jx(p)}" cy="${sy(p.y)}" r="3" fill="${col}" fill-opacity="0.75" stroke="${col}" stroke-width="0.4" style="cursor:pointer" onmouseenter="showT(event,${p.idx},'capacity')" onmouseleave="hideT()" onclick="goPage('trends')"/>`;});});
-  h+='</g>';svgEl.innerHTML=h;
-  const pc=CO.filter(cls=>pts.some(p=>{const c=p.r['Sorbent Class']||'';return cls==='Other'?!CO.slice(0,3).some(k=>c.toLowerCase().includes(k.toLowerCase())):(c.toLowerCase().includes(cls.toLowerCase()));}));
-  const le=document.getElementById('prev-leg');if(le)le.innerHTML=pc.map(cls=>`<div class="cli"><svg width="12" height="12" style="flex-shrink:0;vertical-align:middle"><circle cx="6" cy="6" r="5" fill="${CC[cls]}" fill-opacity="0.8"/></svg><span style="font-size:.71rem">${cls}</span></div>`).join('');
+function renderSingle(type){
+  if(!ALL.length)return;
+  const cfg=CCFG[type];
+  const tEl=document.getElementById(cfg.tlId);if(tEl)tEl.textContent=cfg.title;
+  const pts=afr(ALL,cA[type]).map(r=>({x:parseFloat(r[cfg.xk]),y:parseFloat(r[cfg.yk]),idx:ALL.indexOf(r),r})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)&&p.y>=0);
+  drawChart(cfg.svgId,cfg.legId,cfg.cntId,pts,cfg.yl,type);
+}
+
+function renderHome(){
+  if(!ALL.length)return;
+  const pts=afr(ALL,hA).map(r=>({x:parseFloat(r['Year']),y:parseFloat(r['Adsorption capacity (mmol/g)']),idx:ALL.indexOf(r),r})).filter(p=>!isNaN(p.x)&&!isNaN(p.y)&&p.y>=0);
+  drawChart('svg-home','home-leg','home-cnt',pts,'CO2 Capacity (mmol/g)','home');
 }
 
 function showT(e,idx,type){
-  const r=ALL[idx];const cfg=CCFG[type]||CCFG.capacity;const sk='Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)';
-  const flds=[['Material',r['Material abbreviation']||r['Material']],[(cfg.yl||'').split('(')[0].trim()||'Capacity',r[cfg.yk||'Adsorption capacity (mmol/g)']],['Cap. temp (°C)',r['Capture temperature (C)']],['Rel. temp (°C)',r['Release temperature (C)']],['RH%',r['Moisture content (RH%)']],['CO₂ (ppm)',r['CO2 Concentration (ppm)']],['Capture gas',(r[sk]||'').toUpperCase()==='Y'?'Air':'Inert+CO₂'],['Regen. gas',r['Purging gas']],['Cycles',r['Capture-release cycles tested (#)']],];
+  const r=ALL[idx];
+  const cfg=type==='home'?{yk:'Adsorption capacity (mmol/g)',yl:'Capacity'}:CCFG[type];
+  const fields=[
+    ['Material',r['Material abbreviation']||r['Material']],
+    [(cfg.yl||'').split('(')[0].trim()||'Capacity',r[cfg.yk||'Adsorption capacity (mmol/g)']],
+    ['Cap. temp (C)',r['Capture temperature (C)']],
+    ['Rel. temp (C)',r['Release temperature (C)']],
+    ['RH%',r['Moisture content (RH%)']],
+    ['CO2 (ppm)',r['CO2 Concentration (ppm)']],
+    ['Capture gas',(r[SK]||'').toUpperCase()==='Y'?'Air':'Inert+CO2'],
+    ['Regen. gas',r['Purging gas']],
+    ['Cycles',r['Capture-release cycles tested (#)']],
+  ];
   const tip=document.getElementById('tooltip');
-  tip.innerHTML=`<strong>${r['First author']||''} (${r['Year']||''})</strong>`+flds.filter(([,v])=>v&&v!=='na'&&v!=='nr').map(([l,v])=>`<div class="ttr"><span>${l}</span><span>${v}</span></div>`).join('');
+  tip.innerHTML=`<strong>${r['First author']||''} (${r['Year']||''})</strong>`+fields.filter(([,v])=>v&&v!=='na'&&v!=='nr').map(([l,v])=>`<div class="ttr"><span>${l}</span><span>${v}</span></div>`).join('');
   tip.style.display='block';mvT(e);
 }
-function mvT(e){const tip=document.getElementById('tooltip');const x=e.clientX+14,y=e.clientY-10,tw=tip.offsetWidth||240;tip.style.left=(x+tw>window.innerWidth?x-tw-28:x)+'px';tip.style.top=y+'px';}
+function mvT(e){
+  const tip=document.getElementById('tooltip');
+  const x=e.clientX+14,y=e.clientY-10,tw=tip.offsetWidth||240;
+  tip.style.left=(x+tw>window.innerWidth?x-tw-28:x)+'px';tip.style.top=y+'px';
+}
 function hideT(){document.getElementById('tooltip').style.display='none';}
 document.addEventListener('mousemove',e=>{if(document.getElementById('tooltip').style.display==='block')mvT(e);});
-function sg(id){document.querySelectorAll('.gs').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.gtab').forEach(t=>t.classList.remove('active'));document.getElementById('gsec-'+id).classList.add('active');document.getElementById('gtab-'+id).classList.add('active');}
-window.addEventListener('resize',()=>{if(document.getElementById('page-trends').classList.contains('active'))renderAll();else if(document.getElementById('scroll-home').classList.contains('active'))renderPrev();});
+
+// GUIDELINES TABS
+function sg(id){
+  document.querySelectorAll('.gs').forEach(s=>s.classList.remove('act'));
+  document.querySelectorAll('.gtab').forEach(t=>t.classList.remove('act'));
+  document.getElementById('gsec-'+id).classList.add('act');
+  document.getElementById('gtab-'+id).classList.add('act');
+}
+
+window.addEventListener('resize',()=>{
+  if(document.getElementById('page-metrics').classList.contains('act'))renderAll();
+  else if(document.getElementById('page-home').classList.contains('act'))renderHome();
+});
+
 loadData();
 </script>
 </body>
