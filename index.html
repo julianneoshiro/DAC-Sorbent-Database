@@ -187,13 +187,13 @@ nav.dk .ndd a:hover{color:#fff;background:rgba(255,255,255,.06)}
 .ttr span:last-child{color:#fff;font-family:var(--mo);font-size:.62rem}
 /* BROWSE SORBENTS */
 .sl{display:flex;height:calc(100vh - var(--nh) - 62px)}
-.sbar{width:210px;flex-shrink:0;border-right:1px solid var(--bo);background:#fff;display:flex;flex-direction:column;position:sticky;top:calc(var(--nh)+62px);height:calc(100vh - var(--nh) - 62px)}
+.sbar{width:210px;flex-shrink:0;border-right:1px solid var(--bo);background:#fff;display:flex;flex-direction:column;position:sticky;top:calc(var(--nh)+62px);height:calc(100vh - var(--nh) - 62px);overflow:hidden}
 .sbarsc{flex:1;overflow-y:auto;padding:.72rem .65rem .38rem}
 .sbarhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.45rem}
 .sbarhdr span{font-family:var(--mo);font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mu)}
 .sbarhdr button{font-size:.62rem;color:var(--mu);background:none;border:none;cursor:pointer;font-family:var(--sa)}
 .sbarhdr button:hover{color:var(--tx)}
-.sbarft{padding:.52rem .65rem;border-top:1px solid var(--bo);display:flex;flex-direction:column;gap:.28rem;flex-shrink:0}
+.sbarft{padding:.52rem .65rem;border-top:1px solid var(--bo);display:flex;flex-direction:column;gap:.28rem;flex-shrink:0;background:#fff;z-index:2}
 .mc{flex:1;min-width:0;overflow-y:auto;height:calc(100vh - var(--nh) - 62px)}
 .tw{background:#fff;border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:10}
 .tm{display:flex;gap:6px;align-items:center;padding:.5rem 1.4rem}
@@ -212,7 +212,8 @@ input[type=text]::placeholder{color:var(--mu)}
 .aft{display:inline-flex;align-items:center;gap:3px;background:var(--al);color:var(--ac);font-size:.62rem;font-family:var(--mo);padding:2px 6px;border-radius:3px}
 .aft .rm{cursor:pointer;font-size:.68rem;opacity:.7}.aft .rm:hover{opacity:1}
 .sb2{padding:.22rem 1.4rem;font-family:var(--mo);font-size:.62rem;color:var(--mu);border-top:1px solid var(--bo)}
-.tabw{overflow-x:auto;padding:0 1.4rem 3rem;margin-top:.32rem;scrollbar-width:thin;scrollbar-color:var(--bo) transparent}
+.tabw{overflow-x:auto;padding:0 1.4rem 3rem;margin-top:.32rem;scrollbar-width:thin;scrollbar-color:var(--bo) transparent;cursor:grab;user-select:none}
+.tabw.dragging{cursor:grabbing}
 .tabw::-webkit-scrollbar{height:7px}
 .tabw::-webkit-scrollbar-thumb{background:var(--bo);border-radius:4px}
 .sh3{font-size:.67rem;color:var(--mu);padding:.16rem 1.4rem .06rem}
@@ -225,7 +226,7 @@ th.sorted .thl{color:var(--ac)}
 .thl{font-size:.66rem}
 .thii{display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:#dddad4;color:var(--mu);font-size:.56rem;font-weight:600;cursor:help;position:relative;flex-shrink:0;line-height:1}
 .thii:hover{background:var(--ac);color:#fff}
-.thtt{display:none;position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:.62rem;line-height:1.45;padding:.36rem .56rem;border-radius:5px;width:182px;z-index:200;font-weight:400;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.thtt{display:none;position:absolute;top:calc(100% + 5px);left:0;transform:none;background:#111;color:#fff;font-size:.62rem;line-height:1.5;padding:.42rem .65rem;border-radius:5px;width:220px;max-width:260px;z-index:200;font-weight:400;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2);white-space:normal}
 .thii:hover .thtt{display:block}
 td{padding:6px 10px;border-bottom:1px solid var(--bo);color:var(--tx);white-space:nowrap;max-width:182px;overflow:hidden;text-overflow:ellipsis;font-size:.75rem}
 tr:last-child td{border-bottom:none}
@@ -342,7 +343,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
     <div class="ni">
       <button class="nl" onclick="goP('metrics')" id="nav-metrics">Explore Metrics <span class="na">&#x25be;</span></button>
       <div class="ndd">
-        <a onclick="goP('metrics');setTimeout(()=>switchMetric('capacity'),80)">CO&#x2082; Capture Capacity</a>
+        <a onclick="goP('metrics');setTimeout(()=>switchMetric('capacity'),80)">CO<sub>2</sub> Capture Capacity</a>
         <a onclick="goP('metrics');setTimeout(()=>switchMetric('cycles'),80)">Cycle Time</a>
         <a onclick="goP('metrics');setTimeout(()=>switchMetric('degrad'),80)">Degradation Rate</a>
       </div>
@@ -377,12 +378,6 @@ tr:hover td{background:#faf9f6;cursor:pointer}
             <button class="bol" onclick="goP('guidelines')">Guidelines</button>
           </div>
         </div>
-        <div class="hrstats">
-          <div class="sc"><span class="scn" id="stat-s">&mdash;</span><span class="scl">Unique sorbents</span></div>
-          <div class="sc"><span class="scn" id="stat-p">&mdash;</span><span class="scl">Publications</span></div>
-          <div class="sc"><span class="scn">18</span><span class="scl">Parameters recorded</span></div>
-          <div class="sc"><span class="scn" id="stat-d">&mdash;</span><span class="scl">Total data points</span></div>
-        </div>
       </div>
       <div class="hrscroll">Scroll to explore <span class="bn">&#x2193;</span></div>
     </div>
@@ -394,7 +389,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
     <div class="hs" style="text-align:center">
       <div class="ey" style="text-align:center">By the numbers</div>
       <h2 class="sh2" style="text-align:center;margin-bottom:.5rem">The Largest Open-Access<br><strong>Solid DAC Sorbent Dataset</strong></h2>
-      <p class="slead" style="max-width:560px;margin:0 auto 2.5rem;text-align:center">Compiled from systematic review of peer-reviewed literature, spanning four sorbent classes and 15 years of research.</p>
+      <p class="slead" style="max-width:560px;margin:0 auto 2.5rem;text-align:center">Manually curated from peer-reviewed literature on solid-sorbent direct air capture, with standardized extraction of experimental conditions and performance metrics.</p>
       <div class="stats-feature-grid">
         <div class="sfeat-card"><span class="sfeat-n" id="sfeat-s">--</span><span class="sfeat-l">Unique sorbent entries</span></div>
         <div class="sfeat-card"><span class="sfeat-n" id="sfeat-p">--</span><span class="sfeat-l">Peer-reviewed publications</span></div>
@@ -408,15 +403,15 @@ tr:hover td{background:#faf9f6;cursor:pointer}
   <section class="sf2">
     <div class="hs">
       <div class="ey">Performance over time</div>
-      <h2 class="sh2">CO&#x2082; Capture <strong>Capacity Trends</strong></h2>
-      <p class="slead">Explore how CO&#x2082; capture capacity has evolved across sorbent classes from 2013-2025. Hover any point to see conditions; click to open the full entry. Filter the chart using the buttons below.</p>
+      <h2 class="sh2">CO<sub>2</sub> Capture <strong>Capacity Trends</strong></h2>
+      <p class="slead">Explore how CO<sub>2</sub> capture capacity has evolved across sorbent classes from 2013-2025. Hover any point to see conditions; click to open the full entry. Filter the chart using the buttons below.</p>
       <div class="hfrow" id="home-filter-row"></div>
       <div class="chips" id="home-chips"></div>
       <div class="hcw">
         <div class="hcl">
           <div class="cleg" id="home-leg"></div>
           <div class="ccnt" id="home-cnt"></div>
-          CO&#x2082; capture capacity (mmol/g) vs. year of publication
+          CO<sub>2</sub> capture capacity (mmol/g) vs. year of publication
         </div>
         <div style="width:100%;overflow-x:auto"><svg id="svg-home" style="display:block"></svg></div>
       </div>
@@ -432,8 +427,8 @@ tr:hover td{background:#faf9f6;cursor:pointer}
       <h2 class="sh2">Reporting <strong>Guidelines</strong></h2>
       <p class="slead">Analysis of 900+ sorbents revealed significant variation in testing protocols. We identify the most commonly used conditions and recommend a standardized reporting framework.</p>
       <div class="pcards">
-        <div class="pc" onclick="goP('guidelines');setTimeout(()=>sg('standard'),50)"><div class="pcico">&#x2697;&#xfe0f;</div><h4>Standard Conditions</h4><p>Mode testing conditions by sorbent class. Only 37% of sorbents meet all standard conditions simultaneously.</p></div>
-        <div class="pc" onclick="goP('guidelines');setTimeout(()=>sg('deployment'),50)"><div class="pcico">&#x1F30D;</div><h4>Deployment Relevance</h4><p>Only 8% of sorbents are characterized under all deployment-relevant conditions.</p></div>
+        <div class="pc" onclick="goP('guidelines');setTimeout(()=>sg('standard'),50)"><div class="pcico">&#x2697;&#xfe0f;</div><h4>Standard Conditions</h4><p>Recommended testing conditions defined separately for each sorbent class, enabling more meaningful cross-study comparison.</p></div>
+        <div class="pc" onclick="goP('guidelines');setTimeout(()=>sg('deployment'),50)"><div class="pcico">&#x1F30D;</div><h4>Deployment Relevance</h4><p>Guidance on characterizing sorbents under conditions that reflect real-world DAC deployment environments.</p></div>
         <div class="pc" onclick="goP('guidelines');setTimeout(()=>sg('benchmark'),50)"><div class="pcico">&#x1F9EA;</div><h4>Benchmark Materials</h4><p>Data-driven recommendation of reference materials for cross-lab comparison.</p></div>
       </div>
       <button class="ba" onclick="goP('guidelines')">Read Guidelines &rarr;</button>
@@ -445,10 +440,10 @@ tr:hover td{background:#faf9f6;cursor:pointer}
     <div class="hs">
       <div class="ey">Data collection</div>
       <h2 class="sh2">Recorded <strong>Parameters</strong></h2>
-      <p class="slead">18 parameters were manually recorded for each sorbent entry from peer-reviewed publications, including experimental conditions, performance metrics, and degradation data.</p>
+      <p class="slead">18 parameters were manually recorded for each sorbent entry, including experimental conditions, performance metrics, and degradation data. View descriptions and definitions below or on the Parameters page.</p>
       <div class="pcards" style="max-width:760px">
-        <div class="pc"><div class="pcico">&#x1F52C;</div><h4>Experimental Conditions</h4><p>Capture temperature, release temperature, CO&#x2082; concentration, capture gas, regeneration gas, relative humidity.</p></div>
-        <div class="pc"><div class="pcico">&#x1F4C8;</div><h4>Performance Metrics</h4><p>CO&#x2082; adsorption capacity, cycle time (calculated), degradation rate per cycle.</p></div>
+        <div class="pc"><div class="pcico">&#x1F52C;</div><h4>Experimental Conditions</h4><p>Capture temperature, release temperature, CO<sub>2</sub> concentration, capture gas, regeneration gas, relative humidity.</p></div>
+        <div class="pc"><div class="pcico">&#x1F4C8;</div><h4>Performance Metrics</h4><p>CO<sub>2</sub> adsorption capacity, cycle time (calculated), degradation rate per cycle.</p></div>
         <div class="pc"><div class="pcico">&#x2699;&#xfe0f;</div><h4>Reactor Parameters</h4><p>Gas flow rate, column diameter, sorbent mass, t&#x2089;&#x2085;, measurement method.</p></div>
       </div>
       <button class="ba" onclick="goP('parameters')">View all parameters &rarr;</button>
@@ -457,7 +452,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 
   <div class="dv"></div>
   <div class="hfoot">
-    <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. <strong>163 papers</strong> were manually curated from 1,242 publications. The database will be continuously updated &mdash; contributions and corrections are welcome.</p>
+    <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. The database will be continuously updated as new studies are published. Contributions, corrections, and collaboration inquiries are welcome.</p>
     <div style="display:flex;gap:.65rem;flex-wrap:wrap">
       <button class="bw" onclick="goP('about')">About the Project</button>
       <button class="bol" onclick="goP('contact')">Contact Us</button>
@@ -473,16 +468,16 @@ tr:hover td{background:#faf9f6;cursor:pointer}
   </div>
   <!-- METRIC TABS -->
   <div class="metric-tabs-bar">
-    <button class="metric-tab act" id="mtab-capacity" onclick="switchMetric('capacity')">CO&#x2082; Capture Capacity</button>
-    <button class="metric-tab" id="mtab-cycles" onclick="switchMetric('cycles')">Cycle Time</button>
+    <button class="metric-tab act" id="mtab-capacity" onclick="switchMetric('capacity')">CO<sub>2</sub> Capture Capacity</button>
+    <button class="metric-tab" id="mtab-cycles" onclick="switchMetric('cycles')">Normalized Cycle Time</button>
     <button class="metric-tab" id="mtab-degrad" onclick="switchMetric('degrad')">Degradation Rate</button>
     <span class="metric-tabs-hint">&#8592; Switch between metrics</span>
   </div>
   <!-- CAPACITY PANEL -->
   <div class="mpanel act" id="mpanel-capacity">
     <div class="mpanel-intro">
-      <h3>CO&#x2082; Capture Capacity</h3>
-      <p>How much CO&#x2082; can a sorbent hold? CO&#x2082; capture capacity &mdash; measured in mmol per gram of sorbent &mdash; is the most fundamental performance metric in direct air capture research and the most consistently reported parameter in the literature. The scatter plot below shows how reported capacity values have evolved across sorbent classes over the past decade. An upward trend over time indicates genuine progress in material design, but this is only meaningful when comparing sorbents tested under the same conditions.</p>
+      <h3>CO<sub>2</sub> Capture Capacity</h3>
+      <p>How much CO<sub>2</sub> can a sorbent hold? CO<sub>2</sub> capture capacity, measured in mmol per gram of sorbent, is the most fundamental performance metric in direct air capture research and the most consistently reported parameter in the literature. The scatter plot below shows how reported capacity values have evolved across sorbent classes over the past decade. An upward trend over time indicates genuine progress in material design, but this is only meaningful when comparing sorbents tested under the same conditions.</p>
     </div>
     <div class="mpanel-body">
       <div class="mtcsl">
@@ -494,8 +489,8 @@ tr:hover td{background:#faf9f6;cursor:pointer}
   <!-- CYCLES PANEL -->
   <div class="mpanel" id="mpanel-cycles">
     <div class="mpanel-intro">
-      <h3>Cycle Time <span class="cb">CALCULATED</span></h3>
-      <p>How fast does a sorbent reach capacity? Cycle time is a normalized kinetic metric that enables comparison of adsorption dynamics across different laboratory setups &mdash; something raw breakthrough data alone cannot provide, since each lab uses different column sizes, mass loadings, and flow rates. It is calculated from breakthrough experiments using a standardized reactor model (mass&nbsp;=&nbsp;100&nbsp;mg, flow&nbsp;=&nbsp;400&nbsp;mL/min, CO&#x2082;&nbsp;=&nbsp;400&nbsp;ppm), and defined as <em>t</em><sub>95,std</sub>&nbsp;&times;&nbsp;3. A lower cycle time means faster kinetics &mdash; more capture&ndash;release cycles per day and higher DAC productivity.</p>
+      <h3>Normalized Cycle Time <span class="cb">CALCULATED</span></h3>
+      <p>Normalized cycle time is a kinetic metric we developed to enable comparison of sorbent adsorption dynamics across studies where limited or inconsistent data are reported. It is derived from breakthrough curves and normalizes differences in mass loading, volumetric flow rate, and CO<sub>2</sub> concentration, then scales the result to the most common laboratory breakthrough column conditions reported in this database (100&nbsp;mg sorbent, 400&nbsp;mL/min, 400&nbsp;ppm CO<sub>2</sub>). The resulting normalized breakthrough time is multiplied by three to account for desorption, heating ramps, and cooling ramps in a full adsorption-desorption cycle. A lower normalized cycle time indicates faster adsorption kinetics and higher potential DAC productivity.</p>
     </div>
     <div class="mpanel-body">
       <div class="mtcsl">
@@ -508,7 +503,9 @@ tr:hover td{background:#faf9f6;cursor:pointer}
   <div class="mpanel" id="mpanel-degrad">
     <div class="mpanel-intro">
       <h3>Degradation Rate</h3>
-      <p>Does the sorbent hold up over repeated use? Degradation rate captures how quickly a material loses CO&#x2082; capture capacity over successive adsorption&ndash;desorption cycles &mdash; a critical but severely under-reported parameter. Only about 20% of sorbents in this database have any cycling data at all. We define degradation rate as the average percent capacity loss per cycle: [(q<sub>1</sub>&nbsp;&minus;&nbsp;q<sub>last</sub>)&nbsp;/&nbsp;q<sub>1</sub>]&nbsp;&times;&nbsp;100&nbsp;/&nbsp;N. An apparent increase in recent years likely reflects a growing emphasis on stability testing rather than materials genuinely becoming less stable.</p>
+      <p>Sorbent stability under repeated adsorption-desorption cycling is essential for the long-term viability of solid DAC systems, yet cycling data remains among the most under-reported parameters in the literature. We define degradation rate as the average fractional loss in CO<sub>2</sub> capture capacity per cycle, calculated as:</p>
+      <p style="font-family:var(--se);font-size:.88rem;text-align:center;margin:1rem 0;font-style:italic">Degradation rate (%/cycle) = [(q<sub>1</sub> &minus; q<sub>last</sub>) / q<sub>1</sub>] &times; 100 / N</p>
+      <p>where q<sub>1</sub> is the CO<sub>2</sub> capacity in the first cycle (mmol/g), q<sub>last</sub> is the capacity in the final cycle (mmol/g), and N is the total number of cycles tested. A low degradation rate is desirable for long-lasting, economically viable sorbents.</p>
     </div>
     <div class="mpanel-body">
       <div class="mtcsl">
@@ -532,7 +529,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
         <div class="afb" id="db-af"></div>
         <div class="sb2" id="db-sb">Loading...</div>
       </div>
-      <div class="sh3">&#x2190; &#x2192; Scroll right to see all columns</div>
+      <div class="sh3" style="color:var(--mu);font-size:.67rem;padding:.16rem 1.4rem .06rem">Click and drag to scroll horizontally &nbsp;&middot;&nbsp; Click column headers to sort</div>
       <div class="tabw"><table><thead id="db-thead"></thead><tbody id="db-tbody"><tr><td colspan="15" class="er">Loading data...</td></tr></tbody></table></div>
     </div>
   </div>
@@ -544,31 +541,31 @@ tr:hover td{background:#faf9f6;cursor:pointer}
   <div class="ao"><div class="art">
     <h2>Recorded Parameters</h2>
     <p>Each entry corresponds to one experimental measurement under a specific set of conditions. 18 parameters were recorded per entry. Text and numerical values were extracted from each paper; graphical data was digitized using WebPlotDigitizer. Values not reported: <em>nr</em>; not applicable: <em>na</em>.</p>
-    <p>For performance metric equations (CO&#x2082; capacity, cycle time, degradation rate), see the <span style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="goP('metrics')">Explore Metrics</span> page.</p>
+    <p>For performance metric equations (CO<sub>2</sub> capacity, cycle time, degradation rate), see the <span style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="goP('metrics')">Explore Metrics</span> page.</p>
     <h3>Sorbent Identity</h3>
     <h4>Year</h4><p>Year of publication of the source paper.</p>
-    <h4>Sorbent Class</h4><p><strong>Amine:</strong> any material with an amine functional group that interacts with CO&#x2082;, regardless of the support. <strong>MOF:</strong> crystalline metal-organic frameworks without amine CO&#x2082;-binding groups. <strong>Metal oxide:</strong> inorganic metal-oxygen compounds. <strong>Other:</strong> COFs, zeolites, ionic liquids, moisture-swing sorbents, and all remaining types.</p>
+    <h4>Sorbent Class</h4><p><strong>Amine:</strong> any material with an amine functional group that interacts with CO<sub>2</sub>, regardless of the support. <strong>MOF:</strong> crystalline metal-organic frameworks without amine CO<sub>2</sub>-binding groups. <strong>Metal oxide:</strong> inorganic metal-oxygen compounds. <strong>Other:</strong> COFs, zeolites, ionic liquids, moisture-swing sorbents, and all remaining types.</p>
     <h4>Material Abbreviation</h4><p>Short identifier from the source paper. Additional descriptors included where necessary to distinguish similar materials.</p>
     <h3>Performance Metrics</h3>
-    <h4>CO&#x2082; Adsorption Capacity</h4><p>CO&#x2082; uptake in mmol/g, converted from units as reported. For isotherms, the value at or near 400 ppm CO&#x2082;.</p>
+    <h4>CO<sub>2</sub> Adsorption Capacity</h4><p>CO<sub>2</sub> uptake in mmol/g, converted from units as reported. For isotherms, the value at or near 400 ppm CO<sub>2</sub>.</p>
     <h4>Degradation Rate (%/cycle)</h4><p>Average % capacity loss per cycle: [(q&#x2081; - q<sub>last</sub>)/q&#x2081;] &times; 100/N. Only for sorbents with &#x2265;2 cycles where both first and last cycle capacities are reported.</p>
-    <h4>Cycle Time (calculated)</h4><p>Normalized kinetic metric calculated from breakthrough experiments using a standardized reactor model (mass=100 mg, flow=400 mL/min, CO&#x2082;=400 ppm). Only calculable when t&#x2089;&#x2085;, mass loading, flow rate, CO&#x2082; concentration, and CO&#x2082; capacity are all reported.</p>
+    <h4>Cycle Time (calculated)</h4><p>Normalized kinetic metric calculated from breakthrough experiments using a standardized reactor model (mass=100 mg, flow=400 mL/min, CO<sub>2</sub>=400 ppm). Only calculable when t&#x2089;&#x2085;, mass loading, flow rate, CO<sub>2</sub> concentration, and CO<sub>2</sub> capacity are all reported.</p>
     <h3>Experimental Conditions</h3>
     <div class="ptwo" style="margin-top:.5rem">
       <div>
-        <div class="pb"><h4>Capture Temperature</h4><p>Temperature (&#xb0;C) during CO&#x2082; adsorption. "Room temperature" or "ambient" entries recorded as 25 &#xb0;C.</p></div>
+        <div class="pb"><h4>Capture Temperature</h4><p>Temperature (&#xb0;C) during CO<sub>2</sub> adsorption. "Room temperature" or "ambient" entries recorded as 25 &#xb0;C.</p></div>
         <div class="pb"><h4>Release Temperature</h4><p>Temperature (&#xb0;C) during regeneration. For vacuum-swing materials, the temperature at which vacuum was applied.</p></div>
-        <div class="pb"><h4>CO&#x2082; Concentration</h4><p>CO&#x2082; concentration (ppm) in feed gas. "Ambient air" recorded as 425 ppm. Only sorbents below 5,000 ppm included.</p></div>
-        <div class="pb"><h4>Capture Gas</h4><p>Y = Air (O&#x2082; present); N = Inert + CO&#x2082;. O&#x2082; can drive oxidative amine degradation.</p></div>
-        <div class="pb"><h4>Regeneration Gas</h4><p>Gas used during desorption: N&#x2082;, He, Ar, vacuum, or mixtures with CO&#x2082; or H&#x2082;O.</p></div>
+        <div class="pb"><h4>CO<sub>2</sub> Concentration</h4><p>CO<sub>2</sub> concentration (ppm) in feed gas. "Ambient air" recorded as 425 ppm. Only sorbents below 5,000 ppm included.</p></div>
+        <div class="pb"><h4>Capture Gas</h4><p>Y = Air (O&#x2082; present); N = Inert + CO<sub>2</sub>. O&#x2082; can drive oxidative amine degradation.</p></div>
+        <div class="pb"><h4>Regeneration Gas</h4><p>Gas used during desorption: N&#x2082;, He, Ar, vacuum, or mixtures with CO<sub>2</sub> or H&#x2082;O.</p></div>
         <div class="pb"><h4>Relative Humidity</h4><p>RH (%) of capture feed gas. Also converted to mole percent and dew point. 0% = dry conditions.</p></div>
         <div class="pb"><h4>Number of Cycles</h4><p>Total adsorption-desorption cycles. Zero = single measurement. ~20% of sorbents report any cycling data.</p></div>
       </div>
       <div>
-        <div class="pb"><h4>Degradation Cause</h4><p>Mechanism as reported: Thermal, Oxidation, Hydrolysis, CO&#x2082;-catalyzed, Pore blockage, Structural, Negligible, None suggested.</p></div>
-        <div class="pb"><h4>CO&#x2082; Measurement Method</h4><p>Gravimetric (TGA), Breakthrough (packed bed), Volumetric (isotherm), or Other.</p></div>
+        <div class="pb"><h4>Degradation Cause</h4><p>Mechanism as reported: Thermal, Oxidation, Hydrolysis, CO<sub>2</sub>-catalyzed, Pore blockage, Structural, Negligible, None suggested.</p></div>
+        <div class="pb"><h4>CO<sub>2</sub> Measurement Method</h4><p>Gravimetric (TGA), Breakthrough (packed bed), Volumetric (isotherm), or Other.</p></div>
         <div class="pb"><h4>Gas Flow Rate</h4><p>Volumetric flow rate (mL/min) during adsorption. Not applicable for isotherm measurements.</p></div>
-        <div class="pb"><h4>t&#x2089;&#x2085;</h4><p>Time (min) for breakthrough column CO&#x2082; outlet to reach 95% of inlet concentration. Used to calculate cycle time.</p></div>
+        <div class="pb"><h4>t&#x2089;&#x2085;</h4><p>Time (min) for breakthrough column CO<sub>2</sub> outlet to reach 95% of inlet concentration. Used to calculate cycle time.</p></div>
         <div class="pb"><h4>Column Diameter</h4><p>Inner diameter (cm) of the breakthrough column.</p></div>
         <div class="pb"><h4>Mass of Sorbent</h4><p>Mass (g) in column or TGA pan. Ranges from &lt;0.1 g to &gt;10 g across studies.</p></div>
       </div>
@@ -583,57 +580,57 @@ tr:hover td{background:#faf9f6;cursor:pointer}
   <div class="gs act" id="gsec-standard">
     <div class="ao"><div class="art">
       <h2>Standardized Testing Conditions</h2>
-      <p>A key challenge in assessing progress is the wide variation in testing conditions across studies. Without a consistent framework, differences in reported performance may reflect experimental variation rather than genuine material improvements.</p>
-      <div class="hlb"><p>When CO&#x2082; capacity is plotted for all sorbents under all conditions, every class shows a positive trend. Once only sorbents under standard conditions are isolated, only amine sorbents show a statistically meaningful positive trend &mdash; MOF and metal oxide sorbents have too few entries to analyze.</p></div>
-      <p>Standard conditions were identified as the most frequently reported (mode) value for each parameter within each class. The percentage in parentheses is the fraction of that class tested under that condition.</p>
+      <p>A key challenge in assessing progress in DAC sorbent development is the wide variation in testing conditions across studies. Without a consistent framework, differences in reported performance may reflect experimental variation rather than genuine material improvements in CO<sub>2</sub> capture capacity.</p>
+      <div class="hlb"><p>Because different sorbent classes operate under fundamentally different conditions, standard conditions were defined separately for each class. The recommended conditions below represent the most frequently reported (mode) value for each parameter within each sorbent class. The percentage in parentheses indicates the fraction of sorbents in that class tested under that condition. More consistent reporting across the community will enable more meaningful comparisons, accelerate identification of top-performing materials, and allow clearer tracking of progress over time.</p></div>
       <h3>Recommended Standard Conditions</h3>
       <table class="ctbl"><thead><tr><th>Parameter</th><th>Unit</th><th>Amine (%)</th><th>MOF (%)</th><th>Metal Oxide (%)</th><th>Other (%)</th></tr></thead>
         <tbody>
           <tr><td>Capture temperature</td><td>&#xb0;C</td><td class="val">25 (61%)</td><td class="val">25 (64%)</td><td class="val">25 (45%)</td><td class="val">25 (72%)</td></tr>
           <tr><td>Regeneration temperature</td><td>&#xb0;C</td><td class="val">110 (31%)</td><td class="val">100 (31%)</td><td class="val">200 (54%)</td><td class="val">250 (24%)</td></tr>
           <tr><td>Relative humidity</td><td>%</td><td class="val">0 (82%)</td><td class="val">0 (79%)</td><td class="val">0 (59%)</td><td class="val">0 (48%)</td></tr>
-          <tr><td>CO&#x2082; in feed gas</td><td>ppm</td><td class="val">400 (83%)</td><td class="val">400 (93%)</td><td class="val">400 (70%)</td><td class="val">400 (89%)</td></tr>
-          <tr><td>Capture gas</td><td>&mdash;</td><td class="val">Inert+CO&#x2082; (80%)</td><td class="val">Inert+CO&#x2082; (79%)</td><td class="val">Air (79%)</td><td class="val">Inert+CO&#x2082; (61%)</td></tr>
-          <tr><td>Regeneration gas</td><td>&mdash;</td><td class="val">Inert dry (88%)</td><td class="val">Inert dry (91%)</td><td class="val">Inert dry (75%)</td><td class="val">Inert dry (63%)</td></tr>
-          <tr><td>Measurement method</td><td>&mdash;</td><td class="val">Gravimetric (59%)</td><td class="val">Volumetric (67%)</td><td class="val">Breakthrough (52%)</td><td class="val">Breakthrough (59%)</td></tr>
+          <tr><td>CO<sub>2</sub> in feed gas</td><td>ppm</td><td class="val">400 (83%)</td><td class="val">400 (93%)</td><td class="val">400 (70%)</td><td class="val">400 (89%)</td></tr>
+          <tr><td>Capture gas</td><td>, </td><td class="val">Inert+CO<sub>2</sub> (80%)</td><td class="val">Inert+CO<sub>2</sub> (79%)</td><td class="val">Air (79%)</td><td class="val">Inert+CO<sub>2</sub> (61%)</td></tr>
+          <tr><td>Regeneration gas</td><td>, </td><td class="val">Inert dry (88%)</td><td class="val">Inert dry (91%)</td><td class="val">Inert dry (75%)</td><td class="val">Inert dry (63%)</td></tr>
+          <tr><td>Measurement method</td><td>, </td><td class="val">Gravimetric (59%)</td><td class="val">Volumetric (67%)</td><td class="val">Breakthrough (52%)</td><td class="val">Breakthrough (59%)</td></tr>
         </tbody>
       </table>
-      <p>Applying the standard conditions sequentially reduces 914 sorbents to 335 (37%). Amines: 312/710 (44%). MOFs: 4/42 (10%). Metal oxides: 15/56 (27%), but zero have sufficient breakthrough data to calculate cycle time.</p>
-      <div class="infob"><p><strong>Recommendation:</strong> Adopt standard conditions analogous to NREL's photovoltaic testing program. Always report all experimental conditions &mdash; even small differences substantially alter measured values.</p></div>
+      <p>Applying the standard conditions sequentially reduces 914 sorbents to 335 (37%). Amines: 312/710 (44%). MOFs: 4/42 (10%). Metal oxides: 15/56 (27%).</p>
+
     </div></div>
   </div>
   <div class="gs" id="gsec-deployment">
     <div class="ao"><div class="art">
       <h2>Deployment-Relevant Reporting</h2>
-      <p>While standardized testing enables comparability, real DAC systems operate across wide environmental variation. A sensitivity analysis on Lewatit VP OC 1065 showed that varying humidity, temperature, and altitude across U.S. deployment sites can shift the modeled net CO&#x2082; removal cost by more than $400 per ton.</p>
-      <div class="warnb"><p>Only about 8% of sorbents have been characterized under all four deployment-relevant conditions: atmospheric CO&#x2082; concentrations, oxidative environments, humid conditions, and breakthrough measurements.</p></div>
+      <p>While standardized testing enables comparability, real DAC systems operate across a wide range of environmental and operational conditions. Sorbents that perform well under simplified laboratory conditions may behave very differently when deployed at scale. Testing sorbents under conditions that reflect realistic deployment environments is therefore essential for translating laboratory results into practical system performance.</p>
+      <div class="warnb"><p>Only about 8% of sorbents in this database have been characterized under all four deployment-relevant conditions: atmospheric CO<sub>2</sub> concentrations, oxidative environments (simulated air), humid conditions, and breakthrough column measurements for kinetic characterization.</p></div>
       <h3>Key Environmental Factors</h3>
-      <h4>Relative Humidity</h4><p>At moderate humidity (20-60% RH), water can increase CO&#x2082; capacity of amine sorbents by shifting the mechanism toward ammonium bicarbonate. At high humidity, excess water loading raises regeneration energy and blocks binding sites.</p>
+      <h4>Relative Humidity</h4><p>At moderate humidity (20-60% RH), water can increase CO<sub>2</sub> capacity of amine sorbents by shifting the mechanism toward ammonium bicarbonate. At high humidity, excess water loading raises regeneration energy and blocks binding sites.</p>
       <h4>Ambient Temperature</h4><p>Lower temperatures increase adsorption affinity but raise desorption energy. DAC sites range from hot-dry desert to cold subarctic conditions.</p>
-      <h4>Altitude and CO&#x2082; Partial Pressure</h4><p>At 2,000 m elevation, CO&#x2082; partial pressure is ~0.34 mbar vs. ~0.42 mbar at sea level. We recommend reporting CO&#x2082; isotherms across 0.35-0.45 mbar.</p>
+      <h4>Altitude and CO<sub>2</sub> Partial Pressure</h4><p>At 2,000 m elevation, CO<sub>2</sub> partial pressure is ~0.34 mbar vs. ~0.42 mbar at sea level. We recommend reporting CO<sub>2</sub> isotherms across 0.35-0.45 mbar.</p>
       <h4>Oxygen Exposure</h4><p>DAC operates in ~21% O&#x2082;. Oxygen at elevated regeneration temperatures causes oxidative amine degradation. Stability testing must include simulated air.</p>
-      <h3>What to Report</h3>
-      <ul>
-        <li>Capacity and kinetics at <strong>multiple humidity levels</strong> (min: 0% and ~40-60% RH)</li>
-        <li>Capacity at <strong>multiple capture temperatures</strong></li>
-        <li>Capacity across <strong>CO&#x2082; partial pressure</strong> 0.35-0.45 mbar</li>
-        <li>Degradation under <strong>simulated air</strong> during adsorption and regeneration</li>
-        <li>At least <strong>10 cycles</strong> with first and last cycle capacities reported</li>
-      </ul>
-      <div class="hlb"><p>Varying working capacity, cycle time, regeneration energy, and sorbent lifetime by &#xb1;30% can shift the modeled cost of CO&#x2082; removal by hundreds of dollars per ton.</p></div>
+
+      <div class="infob"><p><strong>Recommendation:</strong> Test sorbents under a range of conditions that reflect realistic deployment environments, including varying humidity, temperature, oxygen exposure, and CO<sub>2</sub> partial pressures. Report complete experimental conditions to enable meaningful cross-study comparison.</p></div>
     </div></div>
   </div>
   <div class="gs" id="gsec-benchmark">
     <div class="ao"><div class="art">
       <h2>Recommended Benchmark Materials</h2>
-      <p>Including well-characterized reference materials alongside new sorbents is critical for measurement reliability. Over 60% of sorbents were reported in only a single publication.</p>
-      <h3>Selection Approach</h3>
-      <p>Benchmarks were identified as commercially available materials tested under standard conditions for their class with the highest deployment-relevance characterization among qualifying candidates.</p>
+      <p>Including well-characterized reference materials alongside new sorbents is essential for ensuring measurement reliability and enabling long-term cross-study comparison. Without common benchmarks, it is difficult to determine whether differences in reported performance reflect genuine material differences or variability in experimental setup.</p>
+      <h3>Ideal Benchmarking Material Traits</h3>
+      <ul style="margin-bottom:1rem">
+        <li>Commercially available and reproducibly synthesized</li>
+        <li>Well-characterized in independent studies across multiple laboratories</li>
+        <li>Tested under standard conditions for its sorbent class</li>
+        <li>Characterized under deployment-relevant conditions (humidity, oxidative gas, varied CO<sub>2</sub> concentration)</li>
+        <li>Stable over multiple adsorption-desorption cycles</li>
+        <li>Representative of its material class</li>
+      </ul>
+      <p>Based on these criteria applied to the full database, the following four materials were selected as recommended benchmarks:</p>
       <div class="bmg">
         <div class="bmc"><div class="bmcn">Lewatit VP OC 1065</div><span class="bmct ta">Amine</span><div class="bmcd">Polyamine-functionalized polymer bead. Most widely studied amine sorbent and the reference for our technoeconomic sensitivity analysis.</div></div>
         <div class="bmc"><div class="bmcn">ZIF-8</div><span class="bmct tm2">MOF</span><div class="bmcd">Zeolitic imidazolate framework (Zn-based). Commercially available, thermally stable, widely studied.</div></div>
-        <div class="bmc"><div class="bmcn">&#x3b3;-Al&#x2082;O&#x2083;</div><span class="bmct to">Metal oxide</span><div class="bmcd">Widely available metal oxide support with well-documented CO&#x2082; adsorption properties under DAC conditions.</div></div>
-        <div class="bmc"><div class="bmcn">Zeolite 13X</div><span class="bmct td2">Other</span><div class="bmcd">Commercially available sodium aluminosilicate zeolite, well-characterized for CO&#x2082; adsorption.</div></div>
+        <div class="bmc"><div class="bmcn">&#x3b3;-Al&#x2082;O&#x2083;</div><span class="bmct to">Metal oxide</span><div class="bmcd">Widely available metal oxide support with well-documented CO<sub>2</sub> adsorption properties under DAC conditions.</div></div>
+        <div class="bmc"><div class="bmcn">Zeolite 13X</div><span class="bmct td2">Other</span><div class="bmcd">Commercially available sodium aluminosilicate zeolite, well-characterized for CO<sub>2</sub> adsorption.</div></div>
       </div>
       <div class="infob"><p>If you have tested any of these materials under standard conditions and would like to contribute data, please <span style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="goP('contact')">contact us</span>.</p></div>
     </div></div>
@@ -647,21 +644,21 @@ tr:hover td{background:#faf9f6;cursor:pointer}
     <div class="abtg">
       <div class="abtc">
         <h3>The Database</h3>
-        <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. A SciFinder search for "Direct Air Capture" yielded 1,242 publications as of October 2024. After screening, 163 papers totalling over 900 unique sorbent entries were included. This is a <strong>representative sample</strong>, not a complete catalog, and will be continuously updated.</p>
+        <p>This database was compiled as part of a study on benchmarking strategies for solid direct air capture sorbents. For each included publication, we manually extracted and standardized 18 experimental and performance parameters per sorbent entry, including operating conditions, measurement methods, and performance metrics. Where values were reported in non-standard units or only available in graphical form, data were converted or digitized using WebPlotDigitizer. Two computed metrics, normalized cycle time and degradation rate, were calculated from reported parameters where sufficient data were available.</p>
         <h3 style="margin-top:1.6rem">Team</h3>
         <div class="tg">
-  <div class="tc"><div class="tn">Julianne Oshiro</div><div class="tr2">UC Los Angeles</div></div>
-  <div class="tc"><div class="tn">Andrew Grorud</div><div class="tr2">UC Los Angeles</div></div>
+  <div class="tc"><div class="tn">Julianne Oshiro</div><div class="tr2">UCLA</div></div>
+  <div class="tc"><div class="tn">Andrew Grorud</div><div class="tr2">UCLA</div></div>
   <div class="tc"><div class="tn">Federico de Lima</div><div class="tr2">National Lab of the Rockies</div></div>
   <div class="tc"><div class="tn">Keju An</div><div class="tr2">National Lab of the Rockies</div></div>
-  <div class="tc"><div class="tn">Emily Chung</div><div class="tr2">UC Los Angeles</div></div>
+  <div class="tc"><div class="tn">Emily Chung</div><div class="tr2">UCLA</div></div>
   <div class="tc"><div class="tn">Seungin Lee</div><div class="tr2">GIST, South Korea</div></div>
-  <div class="tc"><div class="tn">Parncheewa Toommakorn</div><div class="tr2">UC Los Angeles</div></div>
-  <div class="tc"><div class="tn">Samuel Acker</div><div class="tr2">UC Los Angeles</div></div>
-  <div class="tc"><div class="tn">Shrey Khetan</div><div class="tr2">UC Los Angeles</div></div>
+  <div class="tc"><div class="tn">Parncheewa Toommakorn</div><div class="tr2">UCLA</div></div>
+  <div class="tc"><div class="tn">Samuel Acker</div><div class="tr2">UCLA</div></div>
+  <div class="tc"><div class="tn">Shrey Khetan</div><div class="tr2">UCLA</div></div>
   <div class="tc"><div class="tn">Chae Jeong-Potter</div><div class="tr2">Syracuse University</div></div>
   <div class="tc"><div class="tn">Joshua Schaidle</div><div class="tr2">National Lab of the Rockies</div></div>
-  <div class="tc"><div class="tn">Ah-Hyung Alissa Park</div><div class="tr2">UC Los Angeles</div></div>
+  <div class="tc"><div class="tn">Ah-Hyung Alissa Park</div><div class="tr2">UCLA</div></div>
 </div>
         <h3 style="margin-top:1.6rem">Affiliations</h3>
         <p style="font-size:.78rem;line-height:1.7"><sup>1</sup>University of California, Los Angeles, CA, USA &nbsp;&middot;&nbsp; <sup>2</sup>National Laboratory of the Rockies, Golden, CO, USA &nbsp;&middot;&nbsp; <sup>3</sup>Gwangju Institute of Science and Technology, South Korea &nbsp;&middot;&nbsp; <sup>4</sup>Syracuse University, NY, USA</p>
@@ -673,7 +670,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
         <h3>Data Collection</h3>
         <p>Text and numerical values were extracted from each paper; graphical data was digitized using WebPlotDigitizer. Each entry was independently checked by a second team member. Values not reported: <em>nr</em>; not applicable: <em>na</em>.</p>
         <h3 style="margin-top:1.6rem">Contribute Data</h3>
-        <p>We welcome contributions from the research community &mdash; new papers to add, corrections to existing entries, or questions about methodology.</p>
+        <p>We welcome contributions from the research community, new papers to add, corrections to existing entries, or questions about methodology.</p>
         <button class="ba" onclick="goP('contact')" style="margin-top:.5rem">Contact Us &rarr;</button>
       </div>
     </div>
@@ -700,7 +697,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
   <div class="dlb"><h3>Download Database</h3><p>Choose whether to download the full database or only the rows matching your current filters.</p>
     <div class="dlo">
       <label class="dlop"><input type="radio" name="dlt" value="filtered" checked><div><span class="dlol">Filtered dataset</span><span class="dlos"><span id="dl-rc">all</span> rows matching current filters</span></div></label>
-      <label class="dlop"><input type="radio" name="dlt" value="full"><div><span class="dlol">Full database</span><span class="dlos">All <span id="dl-tc">&mdash;</span> rows</span></div></label>
+      <label class="dlop"><input type="radio" name="dlt" value="full"><div><span class="dlol">Full database</span><span class="dlos">All <span id="dl-tc">, </span> rows</span></div></label>
     </div>
     <div class="dlft"><button class="bs" onclick="document.getElementById('dlbg').classList.remove('open')">Cancel</button><button class="bs ac2" onclick="doDL()">Download CSV</button></div>
   </div>
@@ -798,17 +795,17 @@ function onLoaded(){
 const FS=[
   {k:'Year',l:'Year',t:'num',tip:'Year of publication.'},
   {k:'Sorbent Class',l:'Sorbent class',t:'cat',tip:'Amine, MOF, Metal oxide, or Other.'},
-  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',t:'num',tip:'CO2 uptake in mmol/g.'},
-  {k:'Capture temperature (C)',l:'Capture temp (C)',t:'num',tip:'Temperature during CO2 adsorption.'},
+  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',t:'num',tip:'CO<sub>2</sub> uptake in mmol/g.'},
+  {k:'Capture temperature (C)',l:'Capture temp (C)',t:'num',tip:'Temperature during CO<sub>2</sub> adsorption.'},
   {k:'Release temperature (C)',l:'Release temp (C)',t:'num',tip:'Temperature during regeneration.'},
-  {k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)',t:'num',tip:'CO2 concentration in feed gas.'},
+  {k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)',t:'num',tip:'CO<sub>2</sub> concentration in feed gas.'},
   {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',t:'cat',tip:'Y=Air; N=Inert+CO2.'},
   {k:'Purging gas',l:'Regeneration gas',t:'cat',tip:'Gas used during regeneration.'},
   {k:'Moisture content (RH%)',l:'Rel. humidity (%)',t:'num',tip:'Relative humidity of capture gas.'},
   {k:'Capture-release cycles tested (#)',l:'No. of cycles',t:'num',tip:'Total adsorption-desorption cycles.'},
-  {k:'Degradation rate (%/cycle)',l:'Degrad. rate (%/cyc)',t:'num',tip:'Average % capacity loss per cycle.'},
+  {k:'Degradation rate (%/cycle)',l:'Degrad. rate (%/cyc)',t:'num',tip:'Average percent CO₂ capacity loss per adsorption-desorption cycle. Defined as [(q1-qlast)/q1] x 100/N.'},
   {k:'Degradation cause (Category)',l:'Degradation cause',t:'cat',tip:'Reported degradation mechanism.'},
-  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method',t:'cat',tip:'TGA, Breakthrough, Isotherm, Other.'},
+  {k:'Method of CO<sub>2</sub> capacity measurement (i.e. TGA)',l:'Measurement method',t:'cat',tip:'TGA, Breakthrough, Isotherm, Other.'},
   {k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)',t:'num',tip:'Flow rate during adsorption.'},
   {k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)',t:'num',tip:'Inner diameter of breakthrough column.'},
   {k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)',t:'num',tip:'Mass of sorbent.'},
@@ -819,7 +816,7 @@ const SK='Simulated air? (Y/N) during adsorption (Y = O2 is present during adsor
 const dbD={},dbA={};
 const cD={capacity:{},cycles:{},degrad:{}};
 const cA={capacity:{},cycles:{},degrad:{}};
-const HOME_KEYS=['Sorbent Class','Capture temperature (C)','Moisture content (RH%)','Year',SK,'Method of CO2 capacity measurement (i.e. TGA)'];
+const HOME_KEYS=['Sorbent Class','Capture temperature (C)','Moisture content (RH%)','Year',SK,'Method of CO<sub>2</sub> capacity measurement (i.e. TGA)'];
 const hD={},hA={};
 FS.forEach(s=>{
   dbD[s.k]={min:'',max:'',sel:[]};dbA[s.k]={min:'',max:'',sel:[]};
@@ -1083,16 +1080,16 @@ const DBC=[
   {k:'First author',l:'First author',tip:'Last name of first author.'},
   {k:'Material abbreviation',l:'Material',tip:'Short identifier from the source paper.'},
   {k:'Sorbent Class',l:'Class',tip:'Amine, MOF, Metal oxide, or Other.'},
-  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',c:'nc',tip:'CO2 uptake in mmol/g at ~400 ppm.'},
-  {k:'Capture temperature (C)',l:'Cap. T (C)',c:'nc',tip:'Temperature during CO2 adsorption.'},
+  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',c:'nc',tip:'CO₂ uptake per gram of sorbent (mmol/g), converted from reported units. Represents the working capacity under the stated conditions.'},
+  {k:'Capture temperature (C)',l:'Cap. T (C)',c:'nc',tip:'Temperature during CO<sub>2</sub> adsorption.'},
   {k:'Release temperature (C)',l:'Rel. T (C)',c:'nc',tip:'Temperature during regeneration.'},
-  {k:'CO2 Concentration (ppm)',l:'CO2 (ppm)',c:'nc',tip:'CO2 concentration in feed gas.'},
+  {k:'CO2 Concentration (ppm)',l:'CO2 (ppm)',c:'nc',tip:'CO<sub>2</sub> concentration in feed gas.'},
   {k:SK,l:'Capture gas',tip:'Y=Air (O2 present); N=Inert+CO2.'},
   {k:'Moisture content (RH%)',l:'RH%',c:'nc',tip:'Relative humidity of capture feed gas.'},
   {k:'Purging gas',l:'Regen. gas',tip:'Gas used during regeneration.'},
   {k:'Capture-release cycles tested (#)',l:'Cycles',c:'nc',tip:'Total adsorption-desorption cycles.'},
-  {k:'Degradation rate (%/cycle)',l:'Degrad.(%/cyc)',c:'nc',tip:'Average % capacity loss per cycle.'},
-  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Method',tip:'TGA, Breakthrough, Volumetric, Other.'},
+  {k:'Degradation rate (%/cycle)',l:'Degrad.(%/cyc)',c:'nc',tip:'Average percent CO₂ capacity loss per adsorption-desorption cycle. Defined as [(q1-qlast)/q1] x 100/N.'},
+  {k:'Method of CO<sub>2</sub> capacity measurement (i.e. TGA)',l:'Method',tip:'TGA, Breakthrough, Volumetric, Other.'},
   {k:'DOI',l:'DOI',tip:'Click to open the source paper.'},
 ];
 let dbs='Year',dbd=-1;
@@ -1137,7 +1134,7 @@ function doDL(){
   document.getElementById('dlbg').classList.remove('open');
 }
 
-const MF2=[{k:'Year',l:'Year'},{k:'First author',l:'First author'},{k:'Corresponding author 1',l:'Corresponding author'},{k:'Material',l:'Material (full)',f:true},{k:'Material abbreviation',l:'Abbreviation'},{k:'Sorbent Class',l:'Sorbent class'},{k:'Adsorption Capacity (reported)',l:'Capacity (reported)'},{k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)'},{k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method'},{k:'Capture temperature (C)',l:'Capture temp (C)'},{k:'Release temperature (C)',l:'Release temp (C)'},{k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)'},{k:'Purging gas',l:'Regeneration gas'},{k:SK,l:'Capture gas'},{k:'Moisture content (RH%)',l:'Humidity (RH%)'},{k:'dew point (C)',l:'Dew point (C)'},{k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)'},{k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)'},{k:'Capture-release cycles tested (#)',l:'Cycles'},{k:'Degradation rate (% total)',l:'Degrad. (% total)'},{k:'Degradation rate (%/cycle)',l:'Degrad. (%/cycle)'},{k:'Degradation cause (Category)',l:'Degrad. cause'},{k:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t95 (min)'},{k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)'},{k:'Productivity',l:'Productivity'},{k:'Cycle time (Min)',l:'Cycle time (min)'},{k:'Notes',l:'Notes',f:true},{k:'DOI',l:'DOI',f:true}];
+const MF2=[{k:'Year',l:'Year'},{k:'First author',l:'First author'},{k:'Corresponding author 1',l:'Corresponding author'},{k:'Material',l:'Material (full)',f:true},{k:'Material abbreviation',l:'Abbreviation'},{k:'Sorbent Class',l:'Sorbent class'},{k:'Adsorption Capacity (reported)',l:'Capacity (reported)'},{k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)'},{k:'Method of CO<sub>2</sub> capacity measurement (i.e. TGA)',l:'Measurement method'},{k:'Capture temperature (C)',l:'Capture temp (C)'},{k:'Release temperature (C)',l:'Release temp (C)'},{k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)'},{k:'Purging gas',l:'Regeneration gas'},{k:SK,l:'Capture gas'},{k:'Moisture content (RH%)',l:'Humidity (RH%)'},{k:'dew point (C)',l:'Dew point (C)'},{k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)'},{k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)'},{k:'Capture-release cycles tested (#)',l:'Cycles'},{k:'Degradation rate (% total)',l:'Degrad. (% total)'},{k:'Degradation rate (%/cycle)',l:'Degrad. (%/cycle)'},{k:'Degradation cause (Category)',l:'Degrad. cause'},{k:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t95 (min)'},{k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)'},{k:'Productivity',l:'Productivity'},{k:'Cycle time (Min)',l:'Cycle time (min)'},{k:'Notes',l:'Notes',f:true},{k:'DOI',l:'DOI',f:true}];
 function openM(idx){
   const r=ALL[idx];
   document.getElementById('m-title').textContent=r['Material abbreviation']||r['Material']||'Sorbent detail';
@@ -1155,9 +1152,9 @@ function openM(idx){
 const CC={'Amine':'#1a9e7e','MOF':'#c89a0a','Metal oxide':'#c0391c','Other':'#5b3fa0'};
 const CO=['Amine','MOF','Metal oxide','Other'];
 const CCFG={
-  capacity:{svgId:'svg-cap',legId:'cap-leg',cntId:'cap-cnt',tlId:'cap-tlbl',title:'CO2 capture capacity (mmol/g) vs. year of publication',xk:'Year',yk:'Adsorption capacity (mmol/g)',yl:'CO2 Capture Capacity (mmol/g)'},
-  cycles:{svgId:'svg-cyc',legId:'cyc-leg',cntId:'cyc-cnt',tlId:'cyc-tlbl',title:'Calculated standardized cycle time (min) vs. year',xk:'Year',yk:'Cycle time (Min)',yl:'Cycle Time (min)'},
-  degrad:{svgId:'svg-deg',legId:'deg-leg',cntId:'deg-cnt',tlId:'deg-tlbl',title:'Degradation rate (%/cycle) vs. year of publication',xk:'Year',yk:'Degradation rate (%/cycle)',yl:'Degradation Rate (%/cycle)'},
+  capacity:{svgId:'svg-cap',legId:'cap-leg',cntId:'cap-cnt',tlId:'cap-tlbl',title:'CO₂ capture capacity vs. year of publication',xk:'Year',yk:'Adsorption capacity (mmol/g)',yl:'mmol CO₂ / g sorbent'},
+  cycles:{svgId:'svg-cyc',legId:'cyc-leg',cntId:'cyc-cnt',tlId:'cyc-tlbl',title:'Normalized cycle time (min) vs. year of publication',xk:'Year',yk:'Cycle time (Min)',yl:'Normalized Cycle Time (min)'},
+  degrad:{svgId:'svg-deg',legId:'deg-leg',cntId:'deg-cnt',tlId:'deg-tlbl',title:'Degradation rate vs. year of publication',xk:'Year',yk:'Degradation rate (%/cycle)',yl:'% CO₂ capacity loss / cycle'},
 };
 
 function renderAll(){['capacity','cycles','degrad'].forEach(c=>renderSingle(c));}
@@ -1229,20 +1226,29 @@ function renderHome(){
 
 function showT(e,idx,type){
   const r=ALL[idx];
-  const cfg=type==='home'?{yk:'Adsorption capacity (mmol/g)',yl:'Capacity'}:CCFG[type];
+  const cfg=type==='home'?{yk:'Adsorption capacity (mmol/g)',yl:'CO₂ Capacity (mmol/g)'}:CCFG[type];
+  const matName=r['Material abbreviation']||r['Material']||'Unknown';
+  // Determine value label and value based on chart type
+  let valLabel, valVal;
+  if(type==='capacity'||type==='home'){valLabel='CO₂ Capacity (mmol/g)';valVal=r['Adsorption capacity (mmol/g)'];}
+  else if(type==='cycles'){valLabel='Norm. Cycle Time (min)';valVal=r['Cycle time (Min)'];}
+  else if(type==='degrad'){valLabel='Deg. Rate (%/cycle)';valVal=r['Degradation rate (%/cycle)'];}
   const fields=[
-    ['Material',r['Material abbreviation']||r['Material']],
-    [(cfg.yl||'').split('(')[0].trim()||'Capacity',r[cfg.yk||'Adsorption capacity (mmol/g)']],
-    ['Cap. temp (C)',r['Capture temperature (C)']],
-    ['Rel. temp (C)',r['Release temperature (C)']],
+    ['Cap. temp (°C)',r['Capture temperature (C)']],
+    ['Rel. temp (°C)',r['Release temperature (C)']],
     ['RH%',r['Moisture content (RH%)']],
-    ['CO2 (ppm)',r['CO2 Concentration (ppm)']],
-    ['Capture gas',(r[SK]||'').toUpperCase()==='Y'?'Air':'Inert+CO2'],
+    ['CO₂ conc. (ppm)',r['CO2 Concentration (ppm)']],
+    ['Capture gas',(r[SK]||'').toUpperCase()==='Y'?'Air':'Inert+CO₂'],
     ['Regen. gas',r['Purging gas']],
-    ['Cycles',r['Capture-release cycles tested (#)']],
+    ['No. of cycles',r['Capture-release cycles tested (#)']],
   ];
+  if(type==='cycles'||type==='degrad'){fields.unshift(['No. of cycles',r['Capture-release cycles tested (#)']]);}
   const tip=document.getElementById('tooltip');
-  tip.innerHTML=`<strong>${r['First author']||''} (${r['Year']||''})</strong>`+fields.filter(([,v])=>v&&v!=='na'&&v!=='nr').map(([l,v])=>`<div class="ttr"><span>${l}</span><span>${v}</span></div>`).join('');
+  tip.innerHTML=
+    `<strong>${matName}</strong>`+
+    `<div style="font-size:.63rem;color:rgba(255,255,255,.55);margin-bottom:.3rem">${r['First author']||''} (${r['Year']||''})</div>`+
+    (valVal&&valVal!=='na'&&valVal!=='nr'?`<div class="ttr"><span>${valLabel}</span><span>${valVal}</span></div>`:'')+
+    fields.filter(([,v])=>v&&v!=='na'&&v!=='nr'&&v).slice(0,6).map(([l,v])=>`<div class="ttr"><span>${l}</span><span>${v}</span></div>`).join('');
   tip.style.display='block';mvT(e);
 }
 function mvT(e){
@@ -1268,6 +1274,20 @@ window.addEventListener('resize',()=>{
     if(active){const type=active.id.replace('mpanel-','');renderSingle(type);}
   } else if(document.getElementById('page-home').classList.contains('act'))renderHome();
 });
+
+// DRAG-SCROLL on table
+(function(){
+  const el=document.querySelector('.tabw');
+  if(!el)return;
+  let isDown=false,startX,scrollLeft;
+  el.addEventListener('mousedown',e=>{
+    if(e.target.tagName==='A'||e.target.tagName==='BUTTON')return;
+    isDown=true;el.classList.add('dragging');startX=e.pageX-el.offsetLeft;scrollLeft=el.scrollLeft;e.preventDefault();
+  });
+  el.addEventListener('mouseleave',()=>{isDown=false;el.classList.remove('dragging');});
+  el.addEventListener('mouseup',()=>{isDown=false;el.classList.remove('dragging');});
+  el.addEventListener('mousemove',e=>{if(!isDown)return;const x=e.pageX-el.offsetLeft;el.scrollLeft=scrollLeft-(x-startX);});
+})();
 
 loadData();
 </script>
