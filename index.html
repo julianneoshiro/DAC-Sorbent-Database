@@ -4,367 +4,555 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DAC Sorbent Database</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
 :root{
-  --bg:#f7f5f0;--surface:#fff;--border:#e0ddd6;--text:#1a1916;--muted:#7a776e;
-  --accent:#2d5a3d;--accent-light:#e8f0ea;--accent-dark:#1a3324;
-  --info:#1e3a6e;--info-light:#e8eef8;--warn:#6b3020;--warn-light:#f5ece8;
+  --bg:#ffffff;--surface:#f8f7f4;--border:#e8e5de;--text:#111;--muted:#6b6860;
+  --accent:#1f4d30;--accent-light:#e6f0ea;--accent-mid:#2d6b43;
+  --info:#1a3460;--warn:#5c2010;
   --mono:'DM Mono',monospace;--sans:'Inter',sans-serif;--serif:'Source Serif 4',serif;
-  --nav-h:50px;--sidebar:210px;
-  --amine:#1a9e7e;--mof:#d4a017;--moxide:#cc4b2c;--other:#4b3a8c;
+  --nav-h:58px;
+  --amine:#1a9e7e;--mof:#c89a0a;--moxide:#c0391c;--other:#5b3fa0;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* ── FADE IN ON LOAD ── */
+body{opacity:0;transition:opacity .6s ease}
+body.loaded{opacity:1}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2.5rem;z-index:200}
-.nav-logo{font-family:var(--mono);font-size:.88rem;font-weight:500;color:var(--text);margin-right:2rem;white-space:nowrap;cursor:pointer;flex-shrink:0;letter-spacing:.02em}
-.nav-logo span{color:var(--accent)}
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 4rem;z-index:300;transition:background .3s}
+nav.dark{background:rgba(20,42,28,.92);border-bottom:1px solid rgba(255,255,255,.1)}
+nav.dark .nav-link{color:rgba(255,255,255,.65)}
+nav.dark .nav-link:hover{color:#fff;background:rgba(255,255,255,.08)}
+nav.dark .nav-link.active{color:#7ddbb8}
+nav.dark .nav-badge{color:rgba(255,255,255,.4);border-color:rgba(255,255,255,.2)}
+nav.dark .nav-dd{background:#1a3224;border-color:rgba(255,255,255,.12)}
+nav.dark .nav-dd a{color:rgba(255,255,255,.65)}
+nav.dark .nav-dd a:hover{color:#fff;background:rgba(255,255,255,.06)}
 .nav-links{display:flex;gap:0;flex:1;align-items:center}
 .nav-item{position:relative}
-.nav-link{padding:.42rem .78rem;font-size:.78rem;color:var(--muted);border-radius:5px;transition:all .15s;cursor:pointer;background:none;border:none;font-family:var(--sans);display:flex;align-items:center;gap:3px;white-space:nowrap;letter-spacing:.01em}
+.nav-link{padding:.42rem .78rem;font-size:.78rem;color:var(--muted);border-radius:5px;transition:all .15s;cursor:pointer;background:none;border:none;font-family:var(--sans);display:inline-flex;align-items:center;gap:3px;white-space:nowrap;letter-spacing:.01em}
 .nav-link:hover{color:var(--text);background:#f0ede6}
 .nav-link.active{color:var(--accent);font-weight:500}
-.nav-arrow{font-size:.55rem;opacity:.45;margin-left:1px}
-.nav-dd{position:absolute;top:calc(100% + 4px);left:0;background:var(--surface);border:1px solid var(--border);border-radius:7px;box-shadow:0 4px 20px rgba(0,0,0,.1);min-width:185px;padding:.4rem 0;display:none;z-index:300}
+.nav-arrow{font-size:.55rem;opacity:.45}
+.nav-dd{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.1);min-width:195px;padding:.4rem 0;display:none;z-index:400}
 .nav-item:hover .nav-dd{display:block}
-.nav-dd a{display:block;padding:.48rem 1rem;font-size:.77rem;color:var(--muted);text-decoration:none;cursor:pointer;transition:all .1s;font-family:var(--sans)}
-.nav-dd a:hover{color:var(--text);background:#f7f5f0}
-.nav-badge{margin-left:auto;font-family:var(--mono);font-size:.64rem;color:var(--muted);border:1px solid var(--border);padding:2px 7px;border-radius:3px;letter-spacing:.06em;white-space:nowrap;flex-shrink:0}
+.nav-dd a{display:block;padding:.5rem 1rem;font-size:.77rem;color:var(--muted);text-decoration:none;cursor:pointer;transition:all .1s;font-family:var(--sans)}
+.nav-dd a:hover{color:var(--text);background:#f8f7f4}
+.nav-badge{margin-left:auto;font-family:var(--mono);font-size:.63rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:3px;letter-spacing:.06em;white-space:nowrap;flex-shrink:0}
 
-/* ── PAGES ── */
-.page{display:none;padding-top:var(--nav-h)}
-.page.active{display:block}
+/* ── SCROLL SECTIONS ── */
+.scroll-page{min-height:100vh;display:flex;flex-direction:column;position:relative;opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.scroll-page.visible{opacity:1;transform:translateY(0)}
+.scroll-page.fade-out{opacity:0;transform:translateY(-20px)}
+.section-hero{min-height:100vh;display:flex;align-items:center}
 
-/* ── HOME ── */
-.home-hero{background:var(--accent-dark);min-height:300px;display:flex;align-items:center}
-.home-hero-inner{display:flex;align-items:center;justify-content:space-between;gap:3rem;padding:2.5rem 4rem;width:100%;max-width:1400px;margin:0 auto}
-.home-hero-text{flex:1;min-width:0}
-.home-hero-text h1{font-family:var(--serif);font-size:2rem;font-weight:400;line-height:1.3;margin-bottom:.75rem;color:#fff}
-.home-hero-text h1 em{color:#7ddbb8;font-style:normal}
-.home-hero-text p{font-family:var(--serif);font-size:.92rem;line-height:1.78;color:rgba(255,255,255,.78);max-width:560px;margin-bottom:.55rem;font-weight:300}
-.home-hero-cta{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1.25rem}
-.btn-hero{padding:.55rem 1.1rem;background:#fff;color:var(--accent);border:none;border-radius:5px;font-family:var(--sans);font-size:.8rem;font-weight:500;cursor:pointer;transition:opacity .15s}
-.btn-hero:hover{opacity:.88}
-.btn-hero-ol{padding:.55rem 1.1rem;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);border-radius:5px;font-family:var(--sans);font-size:.8rem;cursor:pointer;transition:all .15s}
-.btn-hero-ol:hover{border-color:#fff;background:rgba(255,255,255,.08)}
-.home-stats-panel{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;flex-shrink:0;min-width:260px}
-.stat-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:.8rem 1rem}
-.stat-card .n{font-family:var(--mono);font-size:1.55rem;font-weight:500;color:#7ddbb8;display:block}
-.stat-card .l{font-size:.66rem;color:rgba(255,255,255,.6);margin-top:.15rem;line-height:1.4}
-.home-main{padding:1.75rem 4rem 3rem;max-width:1400px;margin:0 auto}
-.home-cards-title{font-family:var(--sans);font-size:.74rem;color:var(--muted);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.06em}
-.home-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:.8rem}
-.home-card{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:1.05rem;cursor:pointer;transition:border-color .15s}
-.home-card:hover{border-color:var(--accent)}
-.home-card h3{font-size:.82rem;font-weight:500;margin-bottom:.28rem}
-.home-card p{font-size:.72rem;color:var(--muted);line-height:1.55;font-weight:300}
-.home-card .arrow{font-size:.72rem;color:var(--accent);margin-top:.4rem;display:block}
+/* ── HERO ── */
+#section-home{background:var(--accent);min-height:100vh;display:flex;flex-direction:column}
+.hero-inner{flex:1;display:flex;align-items:center;padding:0 4rem;max-width:1400px;width:100%;margin:0 auto;padding-top:var(--nav-h)}
+.hero-left{flex:1;min-width:0;padding-right:4rem}
+.hero-eyebrow{font-family:var(--mono);font-size:.72rem;color:#7ddbb8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.25rem}
+.hero-title{font-family:var(--serif);font-size:3.2rem;font-weight:300;line-height:1.18;color:#fff;margin-bottom:1.5rem;letter-spacing:-.02em}
+.hero-title strong{font-weight:600;color:#7ddbb8}
+.hero-desc{font-family:var(--serif);font-size:1.05rem;line-height:1.82;color:rgba(255,255,255,.72);max-width:540px;margin-bottom:.75rem;font-weight:300}
+.hero-desc strong{color:rgba(255,255,255,.9);font-weight:500}
+.hero-cta{display:flex;gap:.75rem;margin-top:2rem;flex-wrap:wrap}
+.btn-white{padding:.65rem 1.35rem;background:#fff;color:var(--accent);border:none;border-radius:6px;font-family:var(--sans);font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s;letter-spacing:.01em}
+.btn-white:hover{opacity:.88}
+.btn-outline-white{padding:.65rem 1.35rem;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4);border-radius:6px;font-family:var(--sans);font-size:.82rem;cursor:pointer;transition:all .15s;letter-spacing:.01em}
+.btn-outline-white:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+.hero-right{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;flex-shrink:0;width:300px}
+.stat-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.9rem 1.1rem}
+.stat-card .n{font-family:var(--mono);font-size:1.6rem;font-weight:500;color:#7ddbb8;display:block}
+.stat-card .l{font-size:.67rem;color:rgba(255,255,255,.55);margin-top:.15rem;line-height:1.4;letter-spacing:.01em}
+.hero-scroll-hint{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:1.5rem 0;color:rgba(255,255,255,.4);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+.scroll-arrow{animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
-/* ── BUTTONS ── */
-.btn-primary{padding:.48rem 1rem;background:var(--accent);color:#fff;border:none;border-radius:5px;font-family:var(--sans);font-size:.78rem;font-weight:500;cursor:pointer;transition:opacity .15s}
-.btn-primary:hover{opacity:.85}
-.btn-sm{padding:5px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.73rem;background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;letter-spacing:.01em}
-.btn-sm:hover{border-color:var(--text);color:var(--text)}
-.btn-sm.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn-sm.accent:hover{opacity:.85}
+/* ── SECTION WRAPPERS ── */
+.section-wrap{padding:5rem 4rem;max-width:1200px;margin:0 auto;width:100%}
+.section-label{font-family:var(--mono);font-size:.7rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem}
+.section-title{font-family:var(--serif);font-size:2.4rem;font-weight:300;line-height:1.25;margin-bottom:1rem;letter-spacing:-.015em}
+.section-title strong{font-weight:600}
+.section-desc{font-family:var(--serif);font-size:1rem;line-height:1.82;color:var(--muted);max-width:620px;font-weight:300}
 
-/* ── PAGE HEADER ── */
-.page-header{padding:1.4rem 4rem .9rem;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.page-header-left h2{font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:.15rem}
-.page-header-left p{font-size:.74rem;color:var(--muted);font-weight:300}
-.page-header-right{display:flex;gap:.5rem;flex-shrink:0}
+/* ── TRENDS SECTION ── */
+#section-trends{background:#fff;border-top:1px solid var(--border)}
+.trends-section-inner{width:100%}
+.chart-tabs-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.chart-tab{padding:.6rem 1.1rem;font-size:.78rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:all .15s;letter-spacing:.01em}
+.chart-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.chart-tab:hover{color:var(--text)}
+.trends-body{display:flex;gap:2rem;align-items:flex-start}
+.trends-filters-panel{width:220px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;position:sticky;top:calc(var(--nav-h) + 1rem)}
+.tf-title{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.75rem}
+.tf-group{margin-bottom:.8rem}
+.tf-label{font-size:.7rem;color:var(--text);font-weight:500;margin-bottom:.28rem;display:block}
+.tf-range-row{display:flex;gap:4px;align-items:center}
+.tf-range-row input[type=number]{width:64px;padding:3px 5px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:.69rem;background:#fff;color:var(--text);outline:none}
+.tf-range-row input[type=number]:focus{border-color:var(--accent)}
+.tf-range-row span{font-size:.62rem;color:var(--muted)}
+.tf-slider{position:relative;height:18px;margin-top:3px}
+.tf-track{position:absolute;top:7px;left:0;right:0;height:3px;background:var(--border);border-radius:2px}
+.tf-fill{position:absolute;top:7px;height:3px;background:var(--accent);border-radius:2px}
+.tf-thumb{position:absolute;top:2px;width:13px;height:13px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer;transform:translateX(-50%);z-index:2}
+.tf-cat select{width:100%;padding:4px 16px 4px 6px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:.69rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%236b6860' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 4px center;color:var(--text);appearance:none;outline:none;cursor:pointer}
+.tf-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px}
+.tf-tag{display:inline-flex;align-items:center;gap:2px;background:var(--accent-light);color:var(--accent);font-size:.61rem;font-family:var(--mono);padding:1px 5px;border-radius:3px}
+.tf-tag .rm{cursor:pointer;font-size:.68rem;opacity:.7}
+.tf-tag .rm:hover{opacity:1}
+.tf-footer{border-top:1px solid var(--border);padding-top:.65rem;margin-top:.5rem;display:flex;flex-direction:column;gap:.35rem}
+.chart-area{flex:1;min-width:0}
+.chart-metric-intro{margin-bottom:1.25rem}
+.chart-metric-intro h3{font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:.5rem}
+.chart-metric-intro p{font-family:var(--serif);font-size:.88rem;line-height:1.8;color:var(--muted);font-weight:300;margin-bottom:.4rem}
+.math-block{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.85rem 1.1rem;margin:.5rem 0 .6rem;font-family:var(--serif);font-size:.95rem;line-height:2}
+.math-block .eq{font-style:italic;color:var(--text)}
+.math-block .note{font-size:.75rem;color:var(--muted);margin-top:.3rem;font-style:normal;line-height:1.4}
+.calc-badge{font-family:var(--mono);font-size:.65rem;color:#a06020;margin-left:.3rem;vertical-align:middle}
+.chart-legend{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin-bottom:.5rem}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:.74rem;color:var(--text);font-weight:500}
+.chart-title-lbl{font-size:.7rem;color:var(--muted);margin-bottom:.28rem}
+.tr-count-lbl{font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-bottom:.4rem}
+.active-filter-chips{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:.5rem}
+.af-chip{display:inline-flex;align-items:center;gap:3px;background:var(--accent-light);color:var(--accent);font-size:.64rem;font-family:var(--mono);padding:2px 7px;border-radius:3px}
+.af-chip .rm{cursor:pointer;font-size:.7rem;opacity:.7}
+.af-chip .rm:hover{opacity:1}
+.tooltip{position:fixed;background:#111;color:#fff;border-radius:7px;padding:.6rem .85rem;font-size:.7rem;pointer-events:none;z-index:500;max-width:240px;box-shadow:0 4px 20px rgba(0,0,0,.2);display:none;font-family:var(--sans)}
+.tooltip strong{display:block;font-size:.68rem;margin-bottom:.25rem;color:#7ddbb8}
+.tt-row{display:flex;justify-content:space-between;gap:.65rem;color:rgba(255,255,255,.6);margin-bottom:2px}
+.tt-row span:last-child{color:#fff;font-family:var(--mono);font-size:.64rem}
 
-/* ── SPLIT LAYOUT ── */
-.split-layout{display:flex;height:calc(100vh - var(--nav-h) - 56px)}
-/* sidebar */
-.sidebar{width:var(--sidebar);flex-shrink:0;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;position:sticky;top:calc(var(--nav-h) + 56px);height:calc(100vh - var(--nav-h) - 56px)}
-.sidebar-scroll{flex:1;overflow-y:auto;padding:.8rem .75rem .4rem}
-.sidebar h4{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:.65rem}
-.sidebar-collapse-btn{display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--muted);cursor:pointer;background:none;border:none;font-family:var(--sans);padding:0;margin-bottom:.5rem;letter-spacing:.01em}
-.sidebar-collapse-btn:hover{color:var(--text)}
-/* accordion */
+/* ── GUIDELINES SECTION ── */
+#section-guidelines{background:var(--surface);border-top:1px solid var(--border)}
+.guide-tabs-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.guide-tab{padding:.58rem .95rem;font-size:.78rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:all .15s}
+.guide-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.hl-box{background:var(--accent-light);border-left:3px solid var(--accent);padding:.85rem 1.1rem;margin:.85rem 0 1rem;border-radius:0 6px 6px 0}
+.hl-box p{font-size:.85rem;line-height:1.65;color:#1a3324;font-family:var(--sans);margin:0}
+.info-box{background:#e8eef8;border-left:3px solid var(--info);padding:.85rem 1.1rem;margin:.85rem 0 1rem;border-radius:0 6px 6px 0}
+.info-box p{font-size:.85rem;line-height:1.65;color:#1a2e5a;font-family:var(--sans);margin:0}
+.warn-box{background:#f5ece8;border-left:3px solid var(--warn);padding:.85rem 1.1rem;margin:.85rem 0 1rem;border-radius:0 6px 6px 0}
+.warn-box p{font-size:.85rem;line-height:1.65;color:#4a2015;font-family:var(--sans);margin:0}
+.cond-tbl{width:100%;border-collapse:collapse;font-size:.79rem;margin:.85rem 0 1.05rem;font-family:var(--sans)}
+.cond-tbl th{padding:7px 12px;background:#eeece7;font-size:.63rem;font-weight:600;color:var(--muted);border:1px solid var(--border);text-align:left;letter-spacing:.02em}
+.cond-tbl td{padding:7px 12px;border:1px solid var(--border);color:var(--text);font-size:.79rem}
+.cond-tbl td:first-child{font-weight:500}
+.cond-tbl .val{color:var(--accent);font-size:.76rem}
+.bm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.85rem;margin:.85rem 0}
+.bm-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1rem}
+.bm-card .bm-name{font-family:var(--serif);font-size:.92rem;font-weight:600;margin-bottom:.22rem}
+.bm-card .bm-type{display:inline-block;padding:2px 7px;border-radius:3px;font-size:.64rem;margin-bottom:.42rem;font-family:var(--mono)}
+.bm-card .bm-desc{font-family:var(--serif);font-size:.79rem;line-height:1.55;color:var(--muted);font-weight:300}
+.guide-section{display:none}
+.guide-section.active{display:block}
+
+/* ── ARTICLE PROSE ── */
+.prose h4{font-family:var(--serif);font-size:.95rem;font-weight:600;margin:1rem 0 .3rem;color:var(--text)}
+.prose p{font-family:var(--serif);font-size:.9rem;line-height:1.82;color:#2a2820;font-weight:300;margin-bottom:.65rem}
+.prose ul{margin:.3rem 0 .65rem 1.35rem}
+.prose ul li{font-family:var(--serif);font-size:.88rem;line-height:1.7;color:#2a2820;font-weight:300;margin-bottom:.18rem}
+.prose strong{font-weight:600}
+
+/* ── PARAMETERS SECTION ── */
+#section-parameters{background:#fff;border-top:1px solid var(--border)}
+.param-two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.param-block{margin-bottom:1.5rem}
+.param-block h4{font-family:var(--sans);font-size:.8rem;font-weight:600;color:var(--text);margin-bottom:.2rem;letter-spacing:.01em}
+.param-block p{font-family:var(--serif);font-size:.84rem;line-height:1.72;color:var(--muted);font-weight:300}
+
+/* ── ABOUT/CONTACT SECTION ── */
+#section-about{background:var(--surface);border-top:1px solid var(--border)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+.about-col h3{font-family:var(--serif);font-size:1.15rem;font-weight:400;margin-bottom:1rem;color:var(--text)}
+.about-col p{font-family:var(--serif);font-size:.88rem;line-height:1.78;color:var(--muted);font-weight:300;margin-bottom:.65rem}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.65rem;margin-top:.5rem}
+.team-card{background:#fff;border:1px solid var(--border);border-radius:7px;padding:.8rem}
+.team-card .name{font-size:.8rem;font-weight:500}
+.team-card .role{font-size:.7rem;color:var(--muted);margin-top:2px}
+.cite-box{background:#eeece7;border-radius:6px;padding:.8rem 1rem;font-family:var(--mono);font-size:.69rem;line-height:1.65;color:var(--text);word-break:break-word;margin-top:.5rem}
+.form-row{margin-bottom:.85rem}
+.form-row label{display:block;font-size:.74rem;font-weight:500;margin-bottom:.22rem;color:var(--text)}
+.form-row input[type=text],.form-row textarea,.form-row select{width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.78rem;background:#fff;color:var(--text);outline:none}
+.form-row input[type=text]:focus,.form-row textarea:focus{border-color:var(--accent)}
+.form-row textarea{resize:vertical;min-height:90px;line-height:1.5}
+.btn-accent{padding:.52rem 1.05rem;background:var(--accent);color:#fff;border:none;border-radius:5px;font-family:var(--sans);font-size:.78rem;font-weight:500;cursor:pointer;transition:opacity .15s}
+.btn-accent:hover{opacity:.85}
+
+/* ── DATABASE PAGE ── */
+#page-database{display:none;padding-top:var(--nav-h);min-height:100vh}
+#page-database.active{display:block}
+.db-header{padding:1.5rem 4rem 1rem;border-bottom:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:space-between}
+.db-header-left h2{font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:.12rem}
+.db-header-left p{font-size:.73rem;color:var(--muted)}
+.split-layout{display:flex;height:calc(100vh - var(--nav-h) - 62px)}
+.sidebar{width:215px;flex-shrink:0;border-right:1px solid var(--border);background:#fff;display:flex;flex-direction:column;position:sticky;top:calc(var(--nav-h) + 62px);height:calc(100vh - var(--nav-h) - 62px)}
+.sidebar-scroll{flex:1;overflow-y:auto;padding:.75rem .7rem .4rem}
+.sidebar-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.sidebar-hdr span{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.sidebar-hdr button{font-size:.66rem;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans)}
+.sidebar-hdr button:hover{color:var(--text)}
 .sf-item{border-bottom:1px solid var(--border)}
-.sf-hdr{display:flex;align-items:center;justify-content:space-between;padding:.38rem .2rem;cursor:pointer;user-select:none}
-.sf-hdr-label{font-size:.71rem;color:var(--text);font-weight:400;letter-spacing:.01em}
+.sf-hdr{display:flex;align-items:center;justify-content:space-between;padding:.35rem .15rem;cursor:pointer;user-select:none}
+.sf-hdr-label{font-size:.69rem;color:var(--text);font-weight:400}
 .sf-hdr-right{display:flex;align-items:center;gap:4px}
 .sf-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);display:none}
 .sf-dot.on{display:block}
-.sf-chev{font-size:.58rem;color:var(--muted);transition:transform .15s}
+.sf-chev{font-size:.56rem;color:var(--muted);transition:transform .15s}
 .sf-chev.open{transform:rotate(180deg)}
-.sf-body{display:none;padding:.25rem .2rem .55rem}
+.sf-body{display:none;padding:.22rem .15rem .5rem}
 .sf-body.open{display:block}
-/* range slider */
-.sf-range-wrap{margin-top:2px}
-.sf-slider-row{display:flex;gap:4px;align-items:center;margin-bottom:4px}
-.sf-slider-row input[type=number]{width:62px;padding:3px 5px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:.69rem;background:var(--surface);color:var(--text);outline:none}
+.sf-range-wrap{}
+.sf-slider-row{display:flex;gap:4px;align-items:center;margin-bottom:3px}
+.sf-slider-row input[type=number]{width:60px;padding:3px 4px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:.67rem;background:#fff;color:var(--text);outline:none}
 .sf-slider-row input[type=number]:focus{border-color:var(--accent)}
-.sf-slider-row span{font-size:.62rem;color:var(--muted)}
-.sf-dual-slider{position:relative;height:20px;margin:2px 0 0}
-.sf-track{position:absolute;top:8px;left:0;right:0;height:3px;background:#e0ddd6;border-radius:2px}
-.sf-fill{position:absolute;top:8px;height:3px;background:var(--accent);border-radius:2px}
-.sf-thumb{position:absolute;top:3px;width:13px;height:13px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:pointer;transform:translateX(-50%);z-index:2}
-/* cat */
-.sf-cat select{width:100%;padding:4px 16px 4px 5px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:.69rem;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%237a776e' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 4px center;color:var(--text);appearance:none;outline:none;cursor:pointer}
+.sf-slider-row span{font-size:.6rem;color:var(--muted)}
+.sf-dual-slider{position:relative;height:18px;margin-top:2px}
+.sf-track{position:absolute;top:7px;left:0;right:0;height:3px;background:var(--border);border-radius:2px}
+.sf-fill{position:absolute;top:7px;height:3px;background:var(--accent);border-radius:2px}
+.sf-thumb{position:absolute;top:2px;width:13px;height:13px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;transform:translateX(-50%);z-index:2}
+.sf-cat select{width:100%;padding:3px 15px 3px 5px;border:1px solid var(--border);border-radius:4px;font-family:var(--sans);font-size:.67rem;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%236b6860' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 4px center;color:var(--text);appearance:none;outline:none;cursor:pointer}
 .sf-tags{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px}
-.sf-tag{display:inline-flex;align-items:center;gap:2px;background:var(--accent-light);color:var(--accent);font-size:.61rem;font-family:var(--mono);padding:1px 5px;border-radius:3px}
-.sf-tag .rm{cursor:pointer;font-size:.68rem;opacity:.7}
+.sf-tag{display:inline-flex;align-items:center;gap:2px;background:var(--accent-light);color:var(--accent);font-size:.59rem;font-family:var(--mono);padding:1px 4px;border-radius:3px}
+.sf-tag .rm{cursor:pointer;font-size:.66rem;opacity:.7}
 .sf-tag .rm:hover{opacity:1}
-.sidebar-footer{padding:.6rem .75rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.35rem;flex-shrink:0}
-
-/* ── MAIN CONTENT ── */
-.main-content{flex:1;min-width:0;overflow-y:auto;height:calc(100vh - var(--nav-h) - 56px)}
-/* toolbar */
-.toolbar-wrap{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.sidebar-footer{padding:.55rem .7rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.3rem;flex-shrink:0}
+.btn-sm{padding:5px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.72rem;background:#fff;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.btn-sm:hover{border-color:var(--text);color:var(--text)}
+.btn-sm.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-sm.accent:hover{opacity:.85}
+.main-content{flex:1;min-width:0;overflow-y:auto;height:calc(100vh - var(--nav-h) - 62px)}
+.toolbar-wrap{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
 .toolbar-main{display:flex;gap:6px;align-items:center;padding:.55rem 1.5rem}
 .ac-wrap{position:relative;flex:1;min-width:140px;max-width:320px}
 .ac-wrap svg{position:absolute;left:7px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
-input[type=text]{width:100%;padding:6px 8px 6px 26px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.78rem;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
+input[type=text]{width:100%;padding:6px 8px 6px 26px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.77rem;background:#fff;color:var(--text);outline:none;transition:border-color .15s}
 input[type=text]:focus{border-color:var(--accent)}
 input[type=text]::placeholder{color:var(--muted)}
-.ac-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 5px 5px;max-height:190px;overflow-y:auto;z-index:50;display:none}
+.ac-dropdown{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 6px 6px;max-height:190px;overflow-y:auto;z-index:50;display:none;box-shadow:0 4px 16px rgba(0,0,0,.08)}
 .ac-dropdown.open{display:block}
-.ac-item{padding:6px 8px;font-size:.76rem;cursor:pointer;color:var(--text);font-family:var(--sans)}
-.ac-item:hover{background:#f0ede6}
+.ac-item{padding:6px 9px;font-size:.76rem;cursor:pointer;color:var(--text);font-family:var(--sans)}
+.ac-item:hover{background:#f8f7f4}
 .ac-item em{color:var(--accent);font-style:normal}
-.af-bar{display:flex;flex-wrap:wrap;gap:3px;padding:.28rem 1.5rem;min-height:0}
+.af-bar{display:flex;flex-wrap:wrap;gap:3px;padding:.25rem 1.5rem;min-height:0}
 .af-bar:empty{display:none}
-.af-tag{display:inline-flex;align-items:center;gap:3px;background:var(--accent-light);color:var(--accent);font-size:.65rem;font-family:var(--mono);padding:2px 6px;border-radius:3px}
-.af-tag .rm{cursor:pointer;font-size:.72rem;opacity:.7}
+.af-tag{display:inline-flex;align-items:center;gap:3px;background:var(--accent-light);color:var(--accent);font-size:.64rem;font-family:var(--mono);padding:2px 6px;border-radius:3px}
+.af-tag .rm{cursor:pointer;font-size:.7rem;opacity:.7}
 .af-tag .rm:hover{opacity:1}
-.stats-bar{padding:.28rem 1.5rem;font-family:var(--mono);font-size:.65rem;color:var(--muted);border-top:1px solid var(--border)}
-
-/* ── TABLE ── */
-.table-wrap{overflow-x:auto;padding:0 1.5rem 3rem;margin-top:.4rem}
-table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:7px;overflow:hidden;font-size:.77rem;font-family:var(--sans)}
-thead{background:#f2f0eb;position:sticky;top:0;z-index:5}
-th{padding:7px 10px;text-align:left;font-family:var(--sans);font-size:.7rem;font-weight:500;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;letter-spacing:.01em}
+.stats-bar{padding:.25rem 1.5rem;font-family:var(--mono);font-size:.64rem;color:var(--muted);border-top:1px solid var(--border)}
+.table-wrap{overflow-x:auto;padding:0 1.5rem 3rem;margin-top:.4rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.table-wrap::-webkit-scrollbar{height:8px}
+.table-wrap::-webkit-scrollbar-track{background:transparent}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.scroll-hint{display:flex;align-items:center;gap:.4rem;font-size:.7rem;color:var(--muted);padding:.2rem 1.5rem .1rem;font-family:var(--sans)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:.76rem;font-family:var(--sans)}
+thead{background:#f5f3ee;position:sticky;top:0;z-index:5}
+th{padding:7px 10px;text-align:left;font-size:.68rem;font-weight:600;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;letter-spacing:.01em}
 th:hover .th-label{color:var(--text)}
 th.sorted .th-label{color:var(--accent)}
 .th-inner{display:inline-flex;align-items:center;gap:4px}
-.th-label{font-size:.7rem}
+.th-label{font-size:.68rem}
 .th-i{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:#e0ddd6;color:var(--muted);font-size:.58rem;font-weight:600;cursor:help;position:relative;flex-shrink:0;font-style:normal;line-height:1}
 .th-i:hover{background:var(--accent);color:#fff}
-.th-tooltip{display:none;position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#1a1916;color:#fff;font-size:.66rem;line-height:1.45;padding:.45rem .65rem;border-radius:5px;white-space:normal;width:200px;z-index:100;font-weight:400;letter-spacing:0;pointer-events:none}
+.th-tooltip{display:none;position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:.65rem;line-height:1.45;padding:.4rem .6rem;border-radius:5px;white-space:normal;width:195px;z-index:200;font-weight:400;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 .th-i:hover .th-tooltip{display:block}
-td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text);white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis;font-family:var(--sans);font-size:.77rem}
+td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text);white-space:nowrap;max-width:185px;overflow:hidden;text-overflow:ellipsis;font-size:.76rem}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#faf9f6;cursor:pointer}
-.year-c{font-size:.74rem;color:var(--muted)}
-.num-c{font-size:.76rem}
-.tag{display:inline-block;padding:2px 6px;border-radius:3px;font-size:.66rem;font-weight:500}
+.year-c{font-size:.72rem;color:var(--muted)}
+.num-c{font-size:.75rem}
+.tag{display:inline-block;padding:2px 6px;border-radius:3px;font-size:.65rem;font-weight:500}
 .t-amine{background:#d4f0e8;color:#0d6e52}
 .t-mof{background:#fdf3d0;color:#7a5500}
 .t-other,.t-oxide{background:#fde8e3;color:#a33015}
 .t-def{background:#f0ede6;color:var(--muted)}
-.sim-y{background:#d4f0e8;color:#0d6e52;display:inline-block;padding:2px 5px;border-radius:3px;font-size:.66rem}
-.sim-n{background:#f0ede6;color:var(--muted);display:inline-block;padding:2px 5px;border-radius:3px;font-size:.66rem}
-.ref-a{color:var(--accent);text-decoration:none;font-size:.68rem;border-bottom:1px solid var(--accent-light)}
+.sim-y{background:#d4f0e8;color:#0d6e52;display:inline-block;padding:2px 5px;border-radius:3px;font-size:.65rem}
+.sim-n{background:#f0ede6;color:var(--muted);display:inline-block;padding:2px 5px;border-radius:3px;font-size:.65rem}
+.ref-a{color:var(--accent);text-decoration:none;font-size:.67rem;border-bottom:1px solid var(--accent-light)}
 .ref-a:hover{border-color:var(--accent)}
 .empty-row{text-align:center;padding:3rem;color:var(--muted);font-size:.76rem}
-
-/* ── DOWNLOAD MODAL ── */
 .dl-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:500;align-items:center;justify-content:center}
 .dl-modal-bg.open{display:flex}
-.dl-modal{background:var(--surface);border-radius:9px;border:1px solid var(--border);width:min(420px,92vw);padding:1.5rem}
-.dl-modal h3{font-family:var(--serif);font-size:1rem;font-weight:400;margin-bottom:.75rem}
-.dl-modal p{font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;font-family:var(--sans)}
-.dl-opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
-.dl-opt{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .85rem;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:border-color .15s}
+.dl-modal{background:#fff;border-radius:10px;border:1px solid var(--border);width:min(420px,92vw);padding:1.5rem;box-shadow:0 8px 40px rgba(0,0,0,.12)}
+.dl-modal h3{font-family:var(--serif);font-size:1rem;font-weight:400;margin-bottom:.7rem}
+.dl-modal p{font-size:.79rem;color:var(--muted);line-height:1.6;margin-bottom:.9rem}
+.dl-opts{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.9rem}
+.dl-opt{display:flex;align-items:flex-start;gap:.55rem;padding:.65rem .8rem;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:border-color .15s}
 .dl-opt:hover{border-color:var(--accent)}
 .dl-opt input[type=radio]{margin-top:2px;accent-color:var(--accent)}
-.dl-opt-text{flex:1}
-.dl-opt-label{font-size:.8rem;font-weight:500;display:block;margin-bottom:2px}
-.dl-opt-sub{font-size:.72rem;color:var(--muted)}
+.dl-opt-label{font-size:.78rem;font-weight:500;display:block;margin-bottom:1px}
+.dl-opt-sub{font-size:.7rem;color:var(--muted)}
 .dl-foot{display:flex;gap:.5rem;justify-content:flex-end}
-
-/* ── MODAL ── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(20,18,14,.45);z-index:400;align-items:center;justify-content:center}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:400;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
-.modal{background:var(--surface);border-radius:9px;border:1px solid var(--border);width:min(680px,95vw);max-height:88vh;overflow-y:auto;padding:1.7rem}
+.modal{background:#fff;border-radius:10px;border:1px solid var(--border);width:min(680px,95vw);max-height:88vh;overflow-y:auto;padding:1.7rem;box-shadow:0 8px 40px rgba(0,0,0,.12)}
 .modal-close{float:right;background:none;border:none;font-size:1rem;cursor:pointer;color:var(--muted)}
 .modal-close:hover{color:var(--text)}
-.modal h3{font-family:var(--serif);font-size:.98rem;font-weight:400;margin-bottom:.18rem;padding-right:2rem}
-.modal .modal-sub{font-size:.72rem;color:var(--muted);margin-bottom:1rem}
+.modal h3{font-family:var(--serif);font-size:.97rem;font-weight:400;margin-bottom:.18rem;padding-right:2rem}
+.modal .modal-sub{font-size:.71rem;color:var(--muted);margin-bottom:1rem}
 .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:.3rem .7rem}
 .modal-row{display:flex;flex-direction:column;gap:1px}
 .modal-row.full{grid-column:1/-1}
-.modal-label{font-family:var(--mono);font-size:.59rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-.modal-val{font-size:.76rem;color:var(--text);word-break:break-word}
+.modal-label{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.modal-val{font-size:.75rem;color:var(--text);word-break:break-word}
 
-/* ── TRENDS ── */
-.trends-header{padding:1.4rem 4rem .9rem;border-bottom:1px solid var(--border);background:var(--surface)}
-.trends-header h2{font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:.15rem}
-.trends-header p{font-size:.74rem;color:var(--muted);font-weight:300}
-.chart-tabs-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 0 0 var(--sidebar)}
-.chart-tab{padding:.52rem .95rem;font-size:.77rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:all .15s}
-.chart-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500}
-.chart-tab:hover{color:var(--text)}
-.trends-split{display:flex;height:calc(100vh - var(--nav-h) - 96px)}
-.chart-scroll{flex:1;overflow-y:auto;padding:1.25rem 2.5rem 3rem;min-width:0}
-/* metric intro */
-.metric-intro{max-width:680px;margin:0 auto 1.25rem}
-.metric-intro h2{font-family:var(--serif);font-size:1.35rem;font-weight:400;margin-bottom:.6rem}
-.metric-intro p{font-family:var(--serif);font-size:.89rem;line-height:1.8;color:#2a2820;font-weight:300;margin-bottom:.45rem}
-.metric-intro .math-block{background:#f8f6f1;border:1px solid var(--border);border-radius:5px;padding:.9rem 1.15rem;margin:.55rem 0 .65rem;font-family:var(--serif);font-size:.97rem;line-height:2.1}
-.metric-intro .math-block .eq{font-style:italic;color:var(--text)}
-.metric-intro .math-block .note{font-size:.77rem;color:var(--muted);margin-top:.35rem;font-style:normal;line-height:1.42}
-.calc-badge{font-family:var(--mono);font-size:.66rem;color:#c17f3a;margin-left:.35rem;vertical-align:middle}
-/* chart frame */
-.chart-frame{max-width:680px;margin:0 auto}
-.chart-top{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem}
-.chart-legend{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--text);font-weight:500}
-.chart-title-label{font-size:.71rem;color:var(--muted);margin-bottom:.28rem}
-.tr-count{font-family:var(--mono);font-size:.63rem;color:var(--muted);margin-left:auto}
-.tooltip{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.58rem .78rem;font-size:.7rem;pointer-events:none;z-index:500;max-width:240px;box-shadow:0 4px 16px rgba(0,0,0,.1);display:none;font-family:var(--sans)}
-.tooltip strong{display:block;font-family:var(--mono);font-size:.67rem;margin-bottom:.25rem}
-.tt-row{display:flex;justify-content:space-between;gap:.65rem;color:var(--muted);margin-bottom:2px}
-.tt-row span:last-child{color:var(--text);font-family:var(--mono);font-size:.64rem}
+/* ── SECTION DIVIDERS ── */
+.section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent)}
 
-/* ── ARTICLE ── */
-.article-outer{padding:2rem 4rem 3rem}
-.article{max-width:800px;margin:0 auto}
-.article h2{font-family:var(--serif);font-size:1.6rem;font-weight:400;margin-bottom:1.3rem}
-.article h3{font-family:var(--serif);font-size:1.08rem;font-weight:600;margin:1.8rem 0 .5rem;border-bottom:1px solid var(--border);padding-bottom:.32rem}
-.article h4{font-family:var(--serif);font-size:.93rem;font-weight:600;margin:1.05rem 0 .32rem}
-.article p{font-family:var(--serif);font-size:.9rem;line-height:1.82;color:#2a2820;font-weight:300;margin-bottom:.65rem}
-.article ul{margin:.32rem 0 .65rem 1.35rem}
-.article ul li{font-family:var(--serif);font-size:.88rem;line-height:1.7;color:#2a2820;font-weight:300;margin-bottom:.18rem}
-.article strong{font-weight:600}
-.article em{font-style:italic}
-.hl-box{background:var(--accent-light);border-left:3px solid var(--accent);padding:.8rem 1.05rem;margin:.85rem 0 1rem;border-radius:0 5px 5px 0}
-.hl-box p{font-size:.84rem;line-height:1.62;color:#1a3324;margin:0}
-.info-box{background:var(--info-light);border-left:3px solid var(--info);padding:.8rem 1.05rem;margin:.85rem 0 1rem;border-radius:0 5px 5px 0}
-.info-box p{font-size:.84rem;line-height:1.62;color:#1a2e5a;margin:0}
-.warn-box{background:var(--warn-light);border-left:3px solid var(--warn);padding:.8rem 1.05rem;margin:.85rem 0 1rem;border-radius:0 5px 5px 0}
-.warn-box p{font-size:.84rem;line-height:1.62;color:#4a2015;margin:0}
-.cond-tbl{width:100%;border-collapse:collapse;font-size:.79rem;margin:.85rem 0 1.05rem}
-.cond-tbl th{padding:7px 11px;background:#f2f0eb;font-family:var(--sans);font-size:.62rem;font-weight:500;color:var(--muted);border:1px solid var(--border);text-align:left;letter-spacing:.01em}
-.cond-tbl td{padding:7px 11px;border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:.79rem}
-.cond-tbl td:first-child{font-weight:500}
-.cond-tbl .val{color:var(--accent);font-size:.76rem}
-.bm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:.85rem;margin:.85rem 0}
-.bm-card{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.95rem}
-.bm-card .bm-name{font-family:var(--serif);font-size:.9rem;font-weight:600;margin-bottom:.22rem}
-.bm-card .bm-type{display:inline-block;padding:2px 6px;border-radius:3px;font-size:.64rem;margin-bottom:.42rem}
-.bm-card .bm-desc{font-family:var(--serif);font-size:.78rem;line-height:1.55;color:var(--muted);font-weight:300}
-.guide-tabs-bar{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 4rem}
-.guide-tab{padding:.55rem .95rem;font-size:.77rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:all .15s;white-space:nowrap}
-.guide-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500}
-.guide-section{display:none}
-.guide-section.active{display:block}
-/* about / contact centered */
-.page-centered{padding:1.5rem 4rem 3rem;max-width:900px;margin:0 auto}
-.about-section{margin-bottom:1.75rem}
-.about-section h3{font-family:var(--serif);font-size:.96rem;font-weight:600;margin-bottom:.52rem;border-bottom:1px solid var(--border);padding-bottom:.28rem}
-.about-section p{font-family:var(--serif);font-size:.85rem;line-height:1.75;color:#3a3830;font-weight:300;margin-bottom:.42rem}
-.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:.6rem;margin-top:.42rem}
-.team-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.72rem}
-.team-card .name{font-size:.79rem;font-weight:500}
-.team-card .role{font-size:.7rem;color:var(--muted);margin-top:2px}
-.cite-box{background:#f2f0eb;border-radius:5px;padding:.75rem 1rem;font-family:var(--mono);font-size:.69rem;line-height:1.6;color:var(--text);word-break:break-word;margin-top:.42rem}
-.form-row{margin-bottom:.85rem}
-.form-row label{display:block;font-size:.74rem;font-weight:500;margin-bottom:.22rem}
-.form-row input[type=text],.form-row textarea,.form-row select{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.78rem;background:var(--surface);color:var(--text);outline:none}
-.form-row input[type=text]:focus,.form-row textarea:focus{border-color:var(--accent)}
-.form-row textarea{resize:vertical;min-height:85px;line-height:1.5}
-
-@media(max-width:820px){
-  nav{padding:0 1rem}
-  .sidebar,.chart-tabs-bar{display:none!important}
-  .split-layout,.trends-split{display:block;height:auto}
-  .main-content,.chart-scroll{height:auto;overflow-y:visible}
-  .home-hero-inner{flex-direction:column;padding:2rem 1.5rem}
-  .home-stats-panel{width:100%;grid-template-columns:repeat(4,1fr)}
-  .home-main,.page-header,.article-outer,.guide-tabs-bar,.guide-tab,.page-centered,.trends-header{padding-left:1rem;padding-right:1rem}
-  .toolbar-main,.af-bar,.stats-bar,.table-wrap,.chart-scroll{padding-left:1rem;padding-right:1rem}
+@media(max-width:900px){
+  nav{padding:0 1.5rem}
+  .hero-inner{flex-direction:column;padding:var(--nav-h) 1.5rem 2rem}
+  .hero-left{padding-right:0;margin-bottom:2rem}
+  .hero-right{width:100%;grid-template-columns:repeat(4,1fr)}
+  .section-wrap{padding:3rem 1.5rem}
+  .hero-title{font-size:2.2rem}
+  .trends-body{flex-direction:column}
+  .trends-filters-panel{width:100%;position:static}
+  .about-grid,.param-two-col{grid-template-columns:1fr}
+  .db-header,.split-layout{padding-left:1rem;padding-right:1rem}
+  .sidebar{display:none}
+  .split-layout{display:block;height:auto}
+  .main-content{height:auto;overflow-y:visible}
+  .toolbar-main,.af-bar,.stats-bar,.table-wrap,.scroll-hint{padding-left:1rem;padding-right:1rem}
   .modal-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-<nav>
-  <span class="nav-logo" onclick="goTo('home')">DAC<span>.</span>db</span>
+
+<nav id="main-nav">
   <div class="nav-links">
-    <button class="nav-link active" onclick="goTo('home')" id="nav-home">Home</button>
-    <button class="nav-link" onclick="goTo('database')" id="nav-database">Database</button>
+    <button class="nav-link active" onclick="scrollToSection('home')" id="nav-home">Home</button>
+    <button class="nav-link" onclick="goToDatabase()" id="nav-database">Database</button>
     <div class="nav-item">
-      <button class="nav-link" id="nav-trends" onclick="goTo('trends')">Trends <span class="nav-arrow">▾</span></button>
+      <button class="nav-link" onclick="scrollToSection('trends')" id="nav-trends">Trends <span class="nav-arrow">▾</span></button>
       <div class="nav-dd">
-        <a onclick="goTo('trends');showChart('capacity')">CO₂ Capture Capacity</a>
-        <a onclick="goTo('trends');showChart('cycles')">Cycle Time</a>
-        <a onclick="goTo('trends');showChart('degrad')">Degradation Rate</a>
+        <a onclick="scrollToSection('trends');setTimeout(()=>showChart('capacity'),400)">CO₂ Capture Capacity</a>
+        <a onclick="scrollToSection('trends');setTimeout(()=>showChart('cycles'),400)">Cycle Time</a>
+        <a onclick="scrollToSection('trends');setTimeout(()=>showChart('degrad'),400)">Degradation Rate</a>
       </div>
     </div>
-    <button class="nav-link" id="nav-parameters" onclick="goTo('parameters')">Parameters</button>
     <div class="nav-item">
-      <button class="nav-link" id="nav-guidelines" onclick="goTo('guidelines')">Guidelines <span class="nav-arrow">▾</span></button>
+      <button class="nav-link" onclick="scrollToSection('guidelines')" id="nav-guidelines">Guidelines <span class="nav-arrow">▾</span></button>
       <div class="nav-dd">
-        <a onclick="goTo('guidelines');showGuide('standard')">Standard Conditions</a>
-        <a onclick="goTo('guidelines');showGuide('deployment')">Deployment Relevance</a>
-        <a onclick="goTo('guidelines');showGuide('benchmark')">Benchmark Materials</a>
+        <a onclick="scrollToSection('guidelines');setTimeout(()=>showGuide('standard'),400)">Standard Conditions</a>
+        <a onclick="scrollToSection('guidelines');setTimeout(()=>showGuide('deployment'),400)">Deployment Relevance</a>
+        <a onclick="scrollToSection('guidelines');setTimeout(()=>showGuide('benchmark'),400)">Benchmark Materials</a>
       </div>
     </div>
-    <button class="nav-link" id="nav-about" onclick="goTo('about')">About</button>
-    <button class="nav-link" id="nav-contact" onclick="goTo('contact')">Contact</button>
+    <button class="nav-link" onclick="scrollToSection('parameters')" id="nav-parameters">Parameters</button>
+    <button class="nav-link" onclick="scrollToSection('about')" id="nav-about">About & Contact</button>
   </div>
   <span class="nav-badge">BETA · 2025</span>
 </nav>
 
-<!-- HOME -->
-<div class="page active" id="page-home">
-  <div class="home-hero">
-    <div class="home-hero-inner">
-      <div class="home-hero-text">
-        <h1>The DAC Solid Sorbent<br><em>Benchmarking Database</em></h1>
-        <p>A curated, open-access dataset of solid direct air capture sorbents from peer-reviewed literature (2011–2025), built to support systematic comparison of sorbent performance.</p>
-        <p>This database represents a <strong style="color:#fff">representative sample</strong> of published DAC sorbents — not a complete catalog — and will be continuously updated.</p>
-        <div class="home-hero-cta">
-          <button class="btn-hero" onclick="goTo('database')">Explore the Database →</button>
-          <button class="btn-hero-ol" onclick="goTo('trends')">View Trends</button>
-          <button class="btn-hero-ol" onclick="goTo('guidelines')">Guidelines</button>
+<!-- ══════ SCROLLABLE SITE ══════ -->
+<div id="scroll-site">
+
+<!-- HERO -->
+<section id="section-home" class="scroll-page">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Open-access research database</div>
+      <h1 class="hero-title">The DAC Solid Sorbent<br><strong>Benchmarking Database</strong></h1>
+      <p class="hero-desc">A curated dataset of solid direct air capture sorbents from peer-reviewed literature (2011–2025), built to support systematic comparison of sorbent performance and accelerate solid DAC development.</p>
+      <p class="hero-desc"><strong>A representative sample</strong> of published DAC sorbents — not a complete catalog — continuously updated as new studies are published.</p>
+      <div class="hero-cta">
+        <button class="btn-white" onclick="goToDatabase()">Explore the Database →</button>
+        <button class="btn-outline-white" onclick="scrollToSection('trends')">View Trends</button>
+        <button class="btn-outline-white" onclick="scrollToSection('guidelines')">Guidelines</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-card"><span class="n" id="stat-sorbents">—</span><span class="l">Unique sorbents</span></div>
+      <div class="stat-card"><span class="n" id="stat-papers">—</span><span class="l">Publications</span></div>
+      <div class="stat-card"><span class="n">18</span><span class="l">Parameters recorded</span></div>
+      <div class="stat-card"><span class="n" id="stat-dp">—</span><span class="l">Total data points</span></div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll to explore</span>
+    <span class="scroll-arrow">↓</span>
+  </div>
+</section>
+
+<!-- TRENDS -->
+<section id="section-trends" class="scroll-page">
+  <div class="section-wrap" style="max-width:1200px">
+    <div class="section-label">Performance data</div>
+    <div class="section-title" style="margin-bottom:.5rem">Trends Over Time</div>
+    <p style="font-family:var(--serif);font-size:.95rem;color:var(--muted);font-weight:300;margin-bottom:1.75rem">Hover over points to see experimental conditions. Click a point to open the full data entry. Use the filters below to focus on specific subsets — click Apply to update.</p>
+    <div class="trends-section-inner">
+      <div class="chart-tabs-row">
+        <button class="chart-tab active" onclick="showChart('capacity')" id="tab-capacity">CO₂ Capture Capacity</button>
+        <button class="chart-tab" onclick="showChart('cycles')" id="tab-cycles">Cycle Time</button>
+        <button class="chart-tab" onclick="showChart('degrad')" id="tab-degrad">Degradation Rate</button>
+      </div>
+      <div class="trends-body">
+        <div class="trends-filters-panel">
+          <div class="tf-title">Filters</div>
+          <div id="tr-filter-fields"></div>
+          <div class="tf-footer">
+            <button class="btn-sm accent" style="width:100%" onclick="applyTrFilters()">Apply filters</button>
+            <button class="btn-sm" style="width:100%" onclick="clearAllTrFilters()">✕ Clear all</button>
+          </div>
+        </div>
+        <div class="chart-area">
+          <div class="chart-metric-intro" id="metric-intro"></div>
+          <div class="active-filter-chips" id="tr-active-filters"></div>
+          <div class="chart-top" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.45rem">
+            <div class="chart-legend" id="chart-legend"></div>
+            <span class="tr-count-lbl" id="tr-count"></span>
+          </div>
+          <div class="chart-title-lbl" id="chart-title"></div>
+          <div style="width:100%;overflow-x:auto"><svg id="scatter-svg" style="display:block"></svg></div>
         </div>
       </div>
-      <div class="home-stats-panel">
-        <div class="stat-card"><span class="n" id="stat-sorbents">—</span><span class="l">Unique sorbents</span></div>
-        <div class="stat-card"><span class="n" id="stat-papers">—</span><span class="l">Publications</span></div>
-        <div class="stat-card"><span class="n">18</span><span class="l">Parameters recorded</span></div>
-        <div class="stat-card"><span class="n" id="stat-dp">—</span><span class="l">Total data points</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDELINES -->
+<section id="section-guidelines" class="scroll-page">
+  <div class="section-wrap" style="max-width:1000px">
+    <div class="section-label">Methodology</div>
+    <div class="section-title">Reporting Guidelines</div>
+    <p style="font-family:var(--serif);font-size:.95rem;color:var(--muted);font-weight:300;margin-bottom:1.5rem">Recommendations from our database analysis to improve comparability and deployment-relevance of DAC sorbent studies.</p>
+    <div class="guide-tabs-row">
+      <button class="guide-tab active" onclick="showGuide('standard')" id="gtab-standard">Standard Conditions</button>
+      <button class="guide-tab" onclick="showGuide('deployment')" id="gtab-deployment">Deployment-Relevant Reporting</button>
+      <button class="guide-tab" onclick="showGuide('benchmark')" id="gtab-benchmark">Benchmark Materials</button>
+    </div>
+    <div class="guide-section active" id="gsec-standard">
+      <div class="hl-box"><p>When CO₂ capacity is plotted for all sorbents under all conditions, every class appears to show a positive trend. Once only sorbents tested under standard conditions are isolated, only amine sorbents show a statistically meaningful positive trend — MOF and metal oxide sorbents have too few entries to analyze.</p></div>
+      <p style="font-family:var(--serif);font-size:.9rem;line-height:1.82;color:#2a2820;font-weight:300;margin-bottom:.85rem">Standard conditions were identified as the most frequently reported (mode) value for each parameter within each sorbent class. The percentage in parentheses is the fraction of that class tested under that condition.</p>
+      <table class="cond-tbl">
+        <thead><tr><th>Parameter</th><th>Unit</th><th>Amine (%)</th><th>MOF (%)</th><th>Metal Oxide (%)</th><th>Other (%)</th></tr></thead>
+        <tbody>
+          <tr><td>Capture temperature</td><td>°C</td><td class="val">25 (61%)</td><td class="val">25 (64%)</td><td class="val">25 (45%)</td><td class="val">25 (72%)</td></tr>
+          <tr><td>Regeneration temperature</td><td>°C</td><td class="val">110 (31%)</td><td class="val">100 (31%)</td><td class="val">200 (54%)</td><td class="val">250 (24%)</td></tr>
+          <tr><td>Relative humidity</td><td>%</td><td class="val">0 (82%)</td><td class="val">0 (79%)</td><td class="val">0 (59%)</td><td class="val">0 (48%)</td></tr>
+          <tr><td>CO₂ in feed gas</td><td>ppm</td><td class="val">400 (83%)</td><td class="val">400 (93%)</td><td class="val">400 (70%)</td><td class="val">400 (89%)</td></tr>
+          <tr><td>Capture gas</td><td>—</td><td class="val">Inert+CO₂ (80%)</td><td class="val">Inert+CO₂ (79%)</td><td class="val">Air (79%)</td><td class="val">Inert+CO₂ (61%)</td></tr>
+          <tr><td>Regeneration gas</td><td>—</td><td class="val">Inert dry (88%)</td><td class="val">Inert dry (91%)</td><td class="val">Inert dry (75%)</td><td class="val">Inert dry (63%)</td></tr>
+          <tr><td>Measurement method</td><td>—</td><td class="val">Gravimetric (59%)</td><td class="val">Volumetric (67%)</td><td class="val">Breakthrough (52%)</td><td class="val">Breakthrough (59%)</td></tr>
+        </tbody>
+      </table>
+      <p style="font-family:var(--serif);font-size:.88rem;line-height:1.78;color:#2a2820;font-weight:300">Applying the standard conditions sequentially reduces 914 sorbents to just 335 (37%). For amine sorbents: 312 of 710 (44%). For MOFs: only 4 of 42 (10%). For metal oxides: 15 of 56 (27%), but zero have sufficient breakthrough data to calculate cycle time.</p>
+      <div class="info-box" style="margin-top:.85rem"><p><strong>Recommendation:</strong> Adopt standard conditions analogous to NREL's photovoltaic testing program. Always report all experimental conditions — even small differences substantially alter measured performance values.</p></div>
+    </div>
+    <div class="guide-section" id="gsec-deployment">
+      <div class="warn-box"><p>Only about 8% of sorbents in the database have been characterized under all four deployment-relevant conditions: atmospheric CO₂ concentrations, oxidative environments, humid conditions, and breakthrough measurements.</p></div>
+      <div class="prose">
+        <h4>Relative Humidity</h4><p>At moderate humidity (20–60% RH), water can increase CO₂ capacity of amine sorbents by shifting the reaction mechanism toward ammonium bicarbonate. At high humidity, excess water loading raises regeneration energy and blocks binding sites.</p>
+        <h4>Ambient Temperature</h4><p>Lower temperatures increase adsorption affinity but raise desorption energy. DAC sites range from hot-dry desert to cold subarctic conditions.</p>
+        <h4>Altitude and CO₂ Partial Pressure</h4><p>At 2,000 m elevation, CO₂ partial pressure is ~0.34 mbar vs. ~0.42 mbar at sea level. We recommend reporting CO₂ isotherms across 0.35–0.45 mbar.</p>
+        <h4>Oxygen Exposure</h4><p>DAC operates in ~21% O₂. Oxygen at elevated regeneration temperatures causes oxidative amine degradation. Stability testing must include simulated air conditions.</p>
+      </div>
+      <div class="hl-box" style="margin-top:.85rem"><p>Varying working capacity, cycle time, regeneration energy, and sorbent lifetime by ±30% can shift the modeled cost of CO₂ removal by hundreds of dollars per ton.</p></div>
+    </div>
+    <div class="guide-section" id="gsec-benchmark">
+      <p style="font-family:var(--serif);font-size:.9rem;line-height:1.78;color:#2a2820;font-weight:300;margin-bottom:1rem">Benchmarks were identified as commercially available materials tested under standard conditions for their class with the highest deployment-relevance characterization.</p>
+      <div class="bm-grid">
+        <div class="bm-card"><div class="bm-name">Lewatit VP OC 1065</div><span class="bm-type t-amine">Amine</span><div class="bm-desc">Polyamine-functionalized polymer bead. Most widely studied amine sorbent in the database and the reference for our technoeconomic sensitivity analysis.</div></div>
+        <div class="bm-card"><div class="bm-name">ZIF-8</div><span class="bm-type t-mof" style="background:#fdf3d0;color:#7a5500">MOF</span><div class="bm-desc">Zeolitic imidazolate framework (Zn-based). Commercially available, thermally stable, widely studied for gas adsorption.</div></div>
+        <div class="bm-card"><div class="bm-name">γ-Al₂O₃</div><span class="bm-type t-other">Metal oxide</span><div class="bm-desc">Widely available metal oxide support with well-documented CO₂ adsorption properties under DAC conditions.</div></div>
+        <div class="bm-card"><div class="bm-name">Zeolite 13X</div><span class="bm-type t-def">Other</span><div class="bm-desc">Commercially available sodium aluminosilicate zeolite, well-characterized for CO₂ adsorption.</div></div>
       </div>
     </div>
   </div>
-  <div class="home-main">
-    <p class="home-cards-title">Explore</p>
-    <div class="home-cards">
-      <div class="home-card" onclick="goTo('database')"><h3>📊 Full Database</h3><p>Search, filter, and download sorbent entries by material class, year, method, humidity, and more.</p><span class="arrow">Explore →</span></div>
-      <div class="home-card" onclick="goTo('trends')"><h3>📈 Trends Over Time</h3><p>Interactive scatter plots of CO₂ capacity, cycle time, and degradation rate vs. year with hover details.</p><span class="arrow">View →</span></div>
-      <div class="home-card" onclick="goTo('parameters')"><h3>🔬 Parameters</h3><p>Documentation of all 18 recorded parameters, collection methods, and classification rules.</p><span class="arrow">Read →</span></div>
-      <div class="home-card" onclick="goTo('guidelines')"><h3>📋 Guidelines</h3><p>Standard testing conditions, deployment-relevant reporting, and recommended benchmark materials.</p><span class="arrow">Read →</span></div>
-      <div class="home-card" onclick="goTo('contact')"><h3>✉️ Contribute</h3><p>Submit a new paper, report a data error, or ask a question about the database.</p><span class="arrow">Get in touch →</span></div>
+</section>
+
+<!-- PARAMETERS -->
+<section id="section-parameters" class="scroll-page">
+  <div class="section-wrap" style="max-width:1000px">
+    <div class="section-label">Data collection</div>
+    <div class="section-title">Recorded Parameters</div>
+    <p style="font-family:var(--serif);font-size:.95rem;color:var(--muted);font-weight:300;margin-bottom:2rem">18 parameters were recorded for each entry. Text and numerical values were extracted from each paper; graphical data was digitized using WebPlotDigitizer. Values not reported are marked <em>nr</em>; not-applicable values are marked <em>na</em>.</p>
+    <div class="param-two-col">
+      <div>
+        <div class="param-block"><h4>Year</h4><p>Year of publication of the source paper.</p></div>
+        <div class="param-block"><h4>Sorbent Class</h4><p>Amine (any amine functional group interacting with CO₂), MOF (without amine CO₂-binding), Metal oxide (inorganic metal–oxygen compounds), or Other (COFs, zeolites, ionic liquids, etc.).</p></div>
+        <div class="param-block"><h4>Material Abbreviation</h4><p>Short identifier from the source paper. Additional descriptors added where necessary to distinguish similar materials.</p></div>
+        <div class="param-block"><h4>CO₂ Adsorption Capacity</h4><p>CO₂ uptake in mmol per gram of sorbent, converted from whatever units were reported. For isotherms, the value at ~400 ppm CO₂.</p></div>
+        <div class="param-block"><h4>Capture Temperature</h4><p>Temperature (°C) during CO₂ adsorption. "Room temperature" entries recorded as 25 °C.</p></div>
+        <div class="param-block"><h4>Release Temperature</h4><p>Temperature (°C) during regeneration. For vacuum-swing materials, the temperature at which vacuum was applied.</p></div>
+        <div class="param-block"><h4>CO₂ Concentration</h4><p>CO₂ concentration (ppm) in the feed gas. "Ambient air" entries recorded as 425 ppm. Only sorbents below 5,000 ppm were included.</p></div>
+        <div class="param-block"><h4>Capture Gas</h4><p>Y = Air (O₂ present during adsorption); N = Inert + CO₂ (no oxygen). Oxygen can drive oxidative amine degradation.</p></div>
+        <div class="param-block"><h4>Regeneration Gas</h4><p>Gas used during desorption. Common values: N₂, He, Ar, vacuum, or mixtures with CO₂ or H₂O.</p></div>
+      </div>
+      <div>
+        <div class="param-block"><h4>Relative Humidity</h4><p>RH (%) of the capture feed gas. Also converted to mole percent and dew point (°C). 0% = dry conditions.</p></div>
+        <div class="param-block"><h4>Number of Cycles</h4><p>Total adsorption–desorption cycles tested. Zero = single adsorption. ~20% of sorbents report any cycling data.</p></div>
+        <div class="param-block"><h4>Degradation Rate (%/cycle)</h4><p>Average percent capacity loss per cycle: [(q₁ − q_last) / q₁] × 100 / N. Only sorbents with ≥2 cycles and first/last capacities reported.</p></div>
+        <div class="param-block"><h4>Degradation Cause</h4><p>Mechanism of degradation as reported. Categories: Thermal, Oxidation, Hydrolysis, CO₂-catalyzed, Pore blockage, Structural, Negligible, No mechanism suggested, and combinations.</p></div>
+        <div class="param-block"><h4>CO₂ Measurement Method</h4><p>Gravimetric (TGA), Breakthrough (packed bed), Volumetric (isotherm), or Other.</p></div>
+        <div class="param-block"><h4>Gas Flow Rate</h4><p>Volumetric flow rate (mL/min) during adsorption. Not applicable for isotherm measurements.</p></div>
+        <div class="param-block"><h4>t₉₅</h4><p>Time (min) for breakthrough column CO₂ outlet to reach 95% of inlet concentration. Used to calculate cycle time.</p></div>
+        <div class="param-block"><h4>Column Diameter</h4><p>Inner diameter (cm) of the breakthrough column.</p></div>
+        <div class="param-block"><h4>Sorbent Mass / Cycle Time</h4><p>Mass (g) in the column or TGA pan. Cycle time is calculated (not directly recorded) from standardized breakthrough parameters.</p></div>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- DATABASE -->
-<div class="page" id="page-database">
-  <div class="page-header">
-    <div class="page-header-left">
-      <h2>Full Sorbent Database</h2>
-      <p>Click any row for full detail. Use sidebar filters then Apply. Hover column headers for descriptions.</p>
+<!-- ABOUT & CONTACT -->
+<section id="section-about" class="scroll-page">
+  <div class="section-wrap" style="max-width:1000px">
+    <div class="about-grid">
+      <div class="about-col">
+        <div class="section-label">About this project</div>
+        <h3>The Database</h3>
+        <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. A SciFinder search for "Direct Air Capture" yielded 1,242 publications as of October 2024. After screening, 163 papers totalling over 900 unique sorbent entries were included. This is a <strong>representative sample</strong>, not a complete catalog, and will be continuously updated.</p>
+        <h3 style="margin-top:1.5rem">Team</h3>
+        <div class="team-grid">
+          <div class="team-card"><div class="name">First A. Author</div><div class="role">UC Los Angeles</div></div>
+          <div class="team-card"><div class="name">Second B. Author</div><div class="role">UC Los Angeles</div></div>
+          <div class="team-card"><div class="name">Third C. Author</div><div class="role">National Lab of the Rockies</div></div>
+        </div>
+        <h3 style="margin-top:1.5rem">How to Cite</h3>
+        <div class="cite-box">Author et al., "Direct Air Capture Solid Sorbents: Trends, Challenges, and Recommendations," <em>Journal</em>, 2025. [DOI pending]</div>
+      </div>
+      <div class="about-col">
+        <div class="section-label">Get in touch</div>
+        <h3>Contact & Contribute</h3>
+        <p>We welcome contributions from the research community — new papers to add, corrections to existing entries, or questions about methodology. Email us at <strong>[email address]</strong>.</p>
+        <div style="margin-top:1rem">
+          <div class="form-row"><label>Your name</label><input type="text" placeholder="Jane Smith"></div>
+          <div class="form-row"><label>Your email</label><input type="text" placeholder="you@institution.edu"></div>
+          <div class="form-row"><label>Type of inquiry</label><select style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.77rem;background:#fff;outline:none"><option>Add a paper</option><option>Correct a data point</option><option>Question about methodology</option><option>Collaboration</option><option>Other</option></select></div>
+          <div class="form-row"><label>Message</label><textarea placeholder="Describe your inquiry, including relevant DOIs or sorbent names…"></textarea></div>
+          <button class="btn-accent" onclick="alert('Please email us directly at the address listed in the paper.')">Send message</button>
+        </div>
+      </div>
     </div>
-    <div class="page-header-right">
+  </div>
+</section>
+
+</div><!-- end scroll-site -->
+
+<!-- ══════ DATABASE PAGE ══════ -->
+<div id="page-database">
+  <div class="db-header">
+    <div class="db-header-left">
+      <h2>Full Sorbent Database</h2>
+      <p>Click any row for full detail · Use sidebar filters then Apply · Hover column headers for descriptions</p>
+    </div>
+    <div style="display:flex;gap:.5rem;align-items:center">
+      <button class="btn-sm" onclick="goToScroll()" style="color:var(--accent);border-color:var(--accent-light)">← Back to site</button>
       <button class="btn-sm accent" onclick="openDLModal()">⬇ Download CSV</button>
     </div>
   </div>
   <div class="split-layout">
     <div class="sidebar">
       <div class="sidebar-scroll">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.55rem">
-          <span style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)">Filters</span>
-          <button class="sidebar-collapse-btn" id="db-collapse-btn" onclick="collapseAll('db')">Collapse all</button>
+        <div class="sidebar-hdr">
+          <span>Filters</span>
+          <button onclick="collapseAllDB()">Collapse all</button>
         </div>
         <div id="db-filter-fields"></div>
       </div>
@@ -387,6 +575,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
         <div class="af-bar" id="db-active-filters"></div>
         <div class="stats-bar" id="db-stats">Loading…</div>
       </div>
+      <div class="scroll-hint">← → Scroll horizontally to see all columns</div>
       <div class="table-wrap">
         <table><thead id="db-thead"></thead><tbody id="db-tbody"><tr><td colspan="15" class="empty-row">Loading data…</td></tr></tbody></table>
       </div>
@@ -394,183 +583,14 @@ tr:hover td{background:#faf9f6;cursor:pointer}
   </div>
 </div>
 
-<!-- TRENDS -->
-<div class="page" id="page-trends">
-  <div class="trends-header">
-    <h2>Performance Trends Over Time</h2>
-    <p>Hover points for conditions · Click a point for full detail · Use sidebar filters then Apply</p>
-  </div>
-  <div class="chart-tabs-bar">
-    <button class="chart-tab active" onclick="showChart('capacity')" id="tab-capacity">CO₂ Capture Capacity</button>
-    <button class="chart-tab" onclick="showChart('cycles')" id="tab-cycles">Cycle Time</button>
-    <button class="chart-tab" onclick="showChart('degrad')" id="tab-degrad">Degradation Rate</button>
-  </div>
-  <div class="trends-split">
-    <div class="sidebar">
-      <div class="sidebar-scroll">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.55rem">
-          <span style="font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)">Filters</span>
-          <button class="sidebar-collapse-btn" id="tr-collapse-btn" onclick="collapseAll('tr')">Collapse all</button>
-        </div>
-        <div id="tr-filter-fields"></div>
-      </div>
-      <div class="sidebar-footer">
-        <button class="btn-sm accent" style="width:100%" onclick="applyTrFilters()">Apply filters</button>
-        <button class="btn-sm" style="width:100%" onclick="clearAllTrFilters()">✕ Clear all</button>
-      </div>
-    </div>
-    <div class="main-content">
-      <div class="chart-scroll">
-        <div class="metric-intro" id="metric-intro"></div>
-        <div class="chart-frame">
-          <div class="chart-top">
-            <div class="chart-legend" id="chart-legend"></div>
-            <span class="tr-count" id="tr-count"></span>
-          </div>
-          <div class="af-bar" id="tr-active-filters"></div>
-          <div class="chart-title-label" id="chart-title"></div>
-          <div style="width:100%;overflow-x:auto"><svg id="scatter-svg" style="display:block"></svg></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PARAMETERS -->
-<div class="page" id="page-parameters">
-  <div class="article-outer"><div class="article">
-    <h2>Recorded Parameters</h2>
-    <p>Each entry corresponds to one experimental measurement under a specific set of conditions. A total of 18 parameters were recorded per entry. Text and numerical values were extracted from each paper; graphical data was digitized using WebPlotDigitizer. Values not reported are marked <em>nr</em>; not-applicable values are marked <em>na</em>.</p>
-    <p>For detailed descriptions of CO₂ Adsorption Capacity, Degradation Rate, and Cycle Time — including definitions, equations, and limitations — see the <strong>Trends</strong> page under each tab.</p>
-    <h3>Sorbent Identity</h3>
-    <h4>Year</h4><p>Year of publication of the paper in which the sorbent data was reported.</p>
-    <h4>Sorbent Class</h4><p>Classification based on the active CO₂-capture functionality. <strong>Amine:</strong> any material with an amine functional group that interacts with CO₂, regardless of support. <strong>MOF:</strong> crystalline metal–organic frameworks without amine CO₂-binding groups. <strong>Metal oxide:</strong> inorganic metal–oxygen compounds. <strong>Other:</strong> COFs, zeolites, ionic liquids, moisture-swing sorbents, and all remaining types.</p>
-    <h4>Material Abbreviation</h4><p>Short identifier from the source paper. Additional descriptors are included where necessary to distinguish similar materials from the same study.</p>
-    <h3>Experimental Conditions</h3>
-    <h4>Capture Temperature</h4><p>Temperature (°C) during CO₂ adsorption. Sorbents reported as "room temperature" or "ambient" were recorded as 25 °C.</p>
-    <h4>Release Temperature</h4><p>Temperature (°C) during regeneration. For vacuum-swing materials, the temperature at which vacuum was applied.</p>
-    <h4>CO₂ Concentration</h4><p>CO₂ concentration (ppm) in the feed gas. Sorbents reported as "ambient air" were recorded as 425 ppm. Only sorbents below 5,000 ppm were included.</p>
-    <h4>Capture Gas</h4><p>Whether oxygen was present during adsorption. <strong>N (Inert + CO₂):</strong> inert carrier with CO₂, no O₂. <strong>Y (Air):</strong> feed contains O₂. Inert-only testing may overestimate stability.</p>
-    <h4>Regeneration Gas</h4><p>Gas used during desorption. Common values: N₂, He, Ar, vacuum, or mixtures with CO₂ or H₂O.</p>
-    <h4>Relative Humidity</h4><p>Relative humidity (%) of the capture gas. Also converted to mole percent and dew point (°C). A value of 0% = dry.</p>
-    <h4>Number of Cycles</h4><p>Total adsorption–desorption cycles. Zero = single adsorption, no cycling. ~20% of sorbents report any cycling data.</p>
-    <h4>Degradation Cause</h4><p>Mechanism of degradation as reported. Categories: Thermal, Oxidation, Hydrolysis, CO₂-catalyzed, Pore blockage, Structural, Negligible, No mechanism suggested, and combinations.</p>
-    <h4>CO₂ Measurement Method</h4><p><strong>Gravimetric (TGA):</strong> mass change in thermogravimetric analyzer. <strong>Breakthrough:</strong> CO₂ outlet in packed-bed column. <strong>Volumetric (Isotherm):</strong> equilibrium uptake. <strong>Other.</strong></p>
-    <h4>Gas Flow Rate</h4><p>Volumetric flow rate (mL/min) during adsorption. Not applicable for isotherm measurements.</p>
-    <h4>t₉₅</h4><p>Time (min) for breakthrough column CO₂ outlet to reach 95% of inlet concentration. Used to calculate cycle time.</p>
-    <h4>Column Diameter</h4><p>Inner diameter (cm) of the breakthrough column. Required to normalize kinetic data across reactor geometries.</p>
-    <h4>Mass of Sorbent</h4><p>Mass (g) in the column or TGA pan. Ranges &lt;0.1 g to &gt;10 g across studies, significantly affecting reported adsorption times.</p>
-  </div></div>
-</div>
-
-<!-- GUIDELINES -->
-<div class="page" id="page-guidelines">
-  <div style="padding:1.4rem 4rem .9rem;border-bottom:1px solid var(--border);background:var(--surface)">
-    <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:.15rem">Reporting Guidelines</h2>
-    <p style="font-size:.74rem;color:var(--muted);font-weight:300">Recommendations from our database analysis to improve comparability and deployment-relevance of DAC sorbent studies.</p>
-  </div>
-  <div class="guide-tabs-bar">
-    <button class="guide-tab active" onclick="showGuide('standard')" id="gtab-standard">Standard Conditions</button>
-    <button class="guide-tab" onclick="showGuide('deployment')" id="gtab-deployment">Deployment-Relevant Reporting</button>
-    <button class="guide-tab" onclick="showGuide('benchmark')" id="gtab-benchmark">Benchmark Materials</button>
-  </div>
-  <div class="guide-section active" id="gsec-standard">
-    <div class="article-outer"><div class="article">
-      <h2>Standardized Testing Conditions</h2>
-      <p>A key challenge in assessing progress in DAC sorbent development is the wide variation in testing conditions used across studies. Without a consistent framework, differences in reported performance may reflect experimental variation rather than genuine material improvements.</p>
-      <div class="hl-box"><p>When CO₂ capacity is plotted for all sorbents under all conditions, every class shows a positive trend over time. But once only sorbents tested under the same standard conditions are isolated, only amine sorbents show a statistically meaningful positive trend — MOF and metal oxide sorbents have too few entries to analyze.</p></div>
-      <p>Standard conditions were identified as the most frequently reported (mode) value for each parameter within each sorbent class. The percentage in parentheses is the fraction of that class tested under that condition.</p>
-      <h3>Recommended Standard Conditions</h3>
-      <table class="cond-tbl">
-        <thead><tr><th>Parameter</th><th>Unit</th><th>Amine<br><span style="font-weight:300;font-size:.58rem;text-transform:none">(% of amine sorbents)</span></th><th>MOF<br><span style="font-weight:300;font-size:.58rem;text-transform:none">(% of MOF sorbents)</span></th><th>Metal Oxide<br><span style="font-weight:300;font-size:.58rem;text-transform:none">(% of metal oxide sorbents)</span></th><th>Other<br><span style="font-weight:300;font-size:.58rem;text-transform:none">(% of other sorbents)</span></th></tr></thead>
-        <tbody>
-          <tr><td>Capture temperature</td><td>°C</td><td class="val">25 (61%)</td><td class="val">25 (64%)</td><td class="val">25 (45%)</td><td class="val">25 (72%)</td></tr>
-          <tr><td>Regeneration temperature</td><td>°C</td><td class="val">110 (31%)</td><td class="val">100 (31%)</td><td class="val">200 (54%)</td><td class="val">250 (24%)</td></tr>
-          <tr><td>Relative humidity</td><td>%</td><td class="val">0 (82%)</td><td class="val">0 (79%)</td><td class="val">0 (59%)</td><td class="val">0 (48%)</td></tr>
-          <tr><td>CO₂ in feed gas</td><td>ppm</td><td class="val">400 (83%)</td><td class="val">400 (93%)</td><td class="val">400 (70%)</td><td class="val">400 (89%)</td></tr>
-          <tr><td>Capture gas</td><td>—</td><td class="val">Inert + CO₂ (80%)</td><td class="val">Inert + CO₂ (79%)</td><td class="val">Air (79%)</td><td class="val">Inert + CO₂ (61%)</td></tr>
-          <tr><td>Regeneration gas</td><td>—</td><td class="val">Inert dry (88%)</td><td class="val">Inert dry (91%)</td><td class="val">Inert dry (75%)</td><td class="val">Inert dry (63%)</td></tr>
-          <tr><td>Measurement method</td><td>—</td><td class="val">Gravimetric (59%)</td><td class="val">Volumetric (67%)</td><td class="val">Breakthrough (52%)</td><td class="val">Breakthrough (59%)</td></tr>
-        </tbody>
-      </table>
-      <h3>How Many Sorbents Meet Standard Conditions?</h3>
-      <p>Applying the standard conditions sequentially reduces 914 sorbents to just 335 (37%). For amine sorbents: 312 of 710 (44%). For MOFs: only 4 of 42 (10%). For metal oxides: 15 of 56 (27%), but zero have sufficient breakthrough data to calculate cycle time.</p>
-      <h3>Reporting Kinetics and Degradation</h3>
-      <p>CO₂ capacity is available for ~96% of sorbents, but cycle time can only be calculated for ~12% and degradation rate for ~4%. These metrics do not require additional experiments — they can be derived from existing data if key parameters are also reported.</p>
-      <div class="info-box"><p><strong>Recommendation:</strong> Adopt standard conditions analogous to NREL's photovoltaic testing program. Always report all experimental conditions — even small differences substantially alter measured performance values.</p></div>
-    </div></div>
-  </div>
-  <div class="guide-section" id="gsec-deployment">
-    <div class="article-outer"><div class="article">
-      <h2>Deployment-Relevant Reporting</h2>
-      <p>While standardized testing enables comparability, real DAC systems operate across a wide range of environmental conditions. A sensitivity analysis on Lewatit VP OC 1065 showed that varying humidity, temperature, and altitude across U.S. deployment sites can shift the modeled net CO₂ removal cost by more than $400 per ton.</p>
-      <div class="warn-box"><p>Only about 8% of sorbents in the database have been characterized under all four deployment-relevant conditions: atmospheric CO₂ concentrations, oxidative environments, humid conditions, and breakthrough measurements.</p></div>
-      <h3>Key Environmental Factors</h3>
-      <h4>Relative Humidity</h4><p>At moderate humidity (20–60% RH), water can increase CO₂ capacity of amine sorbents by shifting the reaction mechanism toward ammonium bicarbonate. At high humidity, excess water loading raises regeneration energy and blocks binding sites.</p>
-      <h4>Ambient Temperature</h4><p>Lower temperatures increase adsorption affinity but raise desorption energy. DAC sites range from hot-dry desert to cold subarctic conditions.</p>
-      <h4>Altitude and CO₂ Partial Pressure</h4><p>At 2,000 m elevation, CO₂ partial pressure is ~0.34 mbar vs. ~0.42 mbar at sea level. We recommend reporting CO₂ isotherms across 0.35–0.45 mbar.</p>
-      <h4>Oxygen Exposure</h4><p>DAC operates in ~21% O₂. Oxygen at elevated regeneration temperatures causes oxidative amine degradation. Stability testing must include simulated air conditions.</p>
-      <h3>What to Report</h3>
-      <ul>
-        <li>Capacity and kinetics at <strong>multiple humidity levels</strong> (min: 0% and ~40–60% RH)</li>
-        <li>Capacity at <strong>multiple capture temperatures</strong></li>
-        <li>Capacity across <strong>CO₂ partial pressure</strong> 0.35–0.45 mbar</li>
-        <li>Degradation under <strong>simulated air</strong> during adsorption and regeneration</li>
-        <li>At least <strong>10 cycles</strong> with first and last cycle capacities reported</li>
-      </ul>
-      <div class="hl-box"><p>Varying working capacity, cycle time, regeneration energy, and sorbent lifetime by ±30% can shift the modeled cost of CO₂ removal by hundreds of dollars per ton. Deployment-relevant testing is essential, not optional.</p></div>
-    </div></div>
-  </div>
-  <div class="guide-section" id="gsec-benchmark">
-    <div class="article-outer"><div class="article">
-      <h2>Recommended Benchmark Materials</h2>
-      <p>Including well-characterized reference materials is critical for measurement reliability and long-term comparability. Over 60% of sorbents in the database were reported in only a single publication.</p>
-      <h3>Selection Approach</h3>
-      <p>Benchmarks were identified as commercially available materials tested under standard conditions for their class with the highest deployment-relevance characterization among qualifying candidates.</p>
-      <div class="bm-grid">
-        <div class="bm-card"><div class="bm-name">Lewatit VP OC 1065</div><span class="bm-type t-amine">Amine</span><div class="bm-desc">Polyamine-functionalized polymer bead from Lanxess. Most widely studied amine sorbent in the database and the reference for our technoeconomic sensitivity analysis.</div></div>
-        <div class="bm-card"><div class="bm-name">ZIF-8</div><span class="bm-type t-mof" style="background:#fdf3d0;color:#7a5500">MOF</span><div class="bm-desc">Zeolitic imidazolate framework (Zn-based). Commercially available, thermally stable, widely studied for gas adsorption.</div></div>
-        <div class="bm-card"><div class="bm-name">γ-Al₂O₃</div><span class="bm-type t-other">Metal oxide</span><div class="bm-desc">Widely available metal oxide support with well-documented CO₂ adsorption properties under DAC conditions.</div></div>
-        <div class="bm-card"><div class="bm-name">Zeolite 13X</div><span class="bm-type t-def">Other</span><div class="bm-desc">Commercially available sodium aluminosilicate zeolite, well-characterized for CO₂ adsorption.</div></div>
-      </div>
-      <div class="info-box"><p>If you have tested any of these materials under standard conditions and would like to contribute data, please <span style="color:var(--accent);cursor:pointer" onclick="goTo('contact')">contact us</span>.</p></div>
-    </div></div>
-  </div>
-</div>
-
-<!-- ABOUT -->
-<div class="page" id="page-about">
-  <div style="padding:1.4rem 4rem .9rem;border-bottom:1px solid var(--border);background:var(--surface)"><h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:.15rem">About</h2><p style="font-size:.74rem;color:var(--muted)">Methods, team, and citation information.</p></div>
-  <div class="page-centered">
-    <div class="about-section"><h3>Overview</h3><p>This database was compiled as part of a study on benchmarking strategies for solid DAC sorbents. A SciFinder search for "Direct Air Capture" yielded 1,242 publications as of October 2024. After screening, 163 papers totalling over 900 unique sorbent entries were included. This is a <strong>representative sample</strong>, not a complete catalog, and will be continuously updated.</p></div>
-    <div class="about-section"><h3>Team</h3><div class="team-grid"><div class="team-card"><div class="name">First A. Author</div><div class="role">UC Los Angeles</div></div><div class="team-card"><div class="name">Second B. Author</div><div class="role">UC Los Angeles</div></div><div class="team-card"><div class="name">Third C. Author</div><div class="role">National Lab of the Rockies</div></div></div></div>
-    <div class="about-section"><h3>How to Cite</h3><p>If you use this database, please cite:</p><div class="cite-box">Author et al., "Direct Air Capture Solid Sorbents: Trends, Challenges, and Recommendations," <em>Journal</em>, 2025. [DOI pending]</div></div>
-  </div>
-</div>
-
-<!-- CONTACT -->
-<div class="page" id="page-contact">
-  <div style="padding:1.4rem 4rem .9rem;border-bottom:1px solid var(--border);background:var(--surface)"><h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:400;margin-bottom:.15rem">Contact</h2><p style="font-size:.74rem;color:var(--muted)">Questions, data submissions, corrections, and collaboration inquiries.</p></div>
-  <div class="page-centered">
-    <p style="font-family:var(--serif);font-size:.9rem;line-height:1.8;color:#3a3830;margin-bottom:1rem">We welcome contributions from the research community. Please reach out if you have a new paper to add, a correction to an existing entry, or questions about methodology. Email us directly at <strong>[email address]</strong>.</p>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:1.35rem;max-width:500px">
-      <div class="form-row"><label>Your name</label><input type="text" placeholder="Jane Smith"></div>
-      <div class="form-row"><label>Your email</label><input type="text" placeholder="you@institution.edu"></div>
-      <div class="form-row"><label>Type of inquiry</label><select style="width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:.78rem;background:var(--surface);outline:none"><option>Add a paper</option><option>Correct a data point</option><option>Question about methodology</option><option>Collaboration</option><option>Other</option></select></div>
-      <div class="form-row"><label>Message</label><textarea placeholder="Describe your inquiry, including any relevant DOIs or sorbent names…"></textarea></div>
-      <button class="btn-primary" onclick="alert('Please email us directly at the address listed in the paper.')">Send message</button>
-    </div>
-  </div>
-</div>
-
-<!-- DOWNLOAD MODAL -->
+<!-- Download modal -->
 <div class="dl-modal-bg" id="dl-modal-bg" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="dl-modal">
     <h3>Download Database</h3>
-    <p>Choose whether to download the full database or only the rows matching your current search and filters.</p>
+    <p>Choose whether to download the full database or only rows matching your current filters.</p>
     <div class="dl-opts">
-      <label class="dl-opt"><input type="radio" name="dl-type" value="filtered" checked><div class="dl-opt-text"><span class="dl-opt-label">Filtered dataset</span><span class="dl-opt-sub">Only rows matching your current filters — <span id="dl-row-count">all</span> rows</span></div></label>
-      <label class="dl-opt"><input type="radio" name="dl-type" value="full"><div class="dl-opt-text"><span class="dl-opt-label">Full database</span><span class="dl-opt-sub">All <span id="dl-total-count">—</span> rows, no filters applied</span></div></label>
+      <label class="dl-opt"><input type="radio" name="dl-type" value="filtered" checked><div><span class="dl-opt-label">Filtered dataset</span><span class="dl-opt-sub"><span id="dl-row-count">all</span> rows matching current filters</span></div></label>
+      <label class="dl-opt"><input type="radio" name="dl-type" value="full"><div><span class="dl-opt-label">Full database</span><span class="dl-opt-sub">All <span id="dl-total-count">—</span> rows, no filters applied</span></div></label>
     </div>
     <div class="dl-foot">
       <button class="btn-sm" onclick="document.getElementById('dl-modal-bg').classList.remove('open')">Cancel</button>
@@ -593,20 +613,73 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRwFX5ySIouDa_kLljce19yeT_w3hrP7Gh1DAJflDKFptbXHahHB0CeMv-BeZFPjByIUlT1LiQr40KO/pub?gid=1105970839&single=true&output=csv";
 let ALL=[];
 
-// ── ROUTING ──────────────────────────────────────
-const PAGES=['home','database','trends','parameters','guidelines','about','contact'];
-function goTo(id,push=true){
-  if(!PAGES.includes(id))id='home';
-  PAGES.forEach(p=>{
-    document.getElementById('page-'+p).classList.toggle('active',p===id);
-    document.getElementById('nav-'+p).classList.toggle('active',p===id);
-  });
-  if(push)history.pushState({page:id},'','#'+id);
+// ── FADE IN ──────────────────────────────────────
+window.addEventListener('load',()=>setTimeout(()=>document.body.classList.add('loaded'),50));
+
+// ── SITE MODE ────────────────────────────────────
+let inDB=false;
+function goToDatabase(){
+  inDB=true;
+  document.getElementById('scroll-site').style.display='none';
+  document.getElementById('page-database').classList.add('active');
+  document.getElementById('main-nav').classList.remove('dark');
+  updateNavActive();
   window.scrollTo(0,0);
-  if(id==='trends')setTimeout(()=>renderChart(currentChart),30);
 }
-window.addEventListener('popstate',e=>{const id=(e.state&&e.state.page)||location.hash.replace('#','')||'home';goTo(id,false);});
-(()=>{const h=location.hash.replace('#','');if(PAGES.includes(h))goTo(h,false);else history.replaceState({page:'home'},'','#home');})();
+function goToScroll(){
+  inDB=false;
+  document.getElementById('scroll-site').style.display='block';
+  document.getElementById('page-database').classList.remove('active');
+  updateNavActive();
+  setTimeout(()=>observeSections(),100);
+}
+
+// ── SCROLL SECTIONS ──────────────────────────────
+const SECTIONS=['home','trends','guidelines','parameters','about'];
+function scrollToSection(id){
+  if(inDB)goToScroll();
+  setTimeout(()=>{
+    const el=document.getElementById('section-'+id);
+    if(el)el.scrollIntoView({behavior:'smooth'});
+  },inDB?200:0);
+}
+
+// Intersection observer for fade-in + nav highlight
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.classList.remove('fade-out');
+      const id=e.target.id.replace('section-','');
+      setNavActive(id);
+      // dark nav only for home section
+      const nav=document.getElementById('main-nav');
+      if(id==='home')nav.classList.add('dark');
+      else nav.classList.remove('dark');
+    }
+  });
+},{threshold:0.15,rootMargin:'-50px 0px -50px 0px'});
+
+function observeSections(){
+  SECTIONS.forEach(id=>{
+    const el=document.getElementById('section-'+id);
+    if(el)io.observe(el);
+  });
+}
+observeSections();
+
+function setNavActive(sectionId){
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const map={home:'nav-home',trends:'nav-trends',guidelines:'nav-guidelines',parameters:'nav-parameters',about:'nav-about'};
+  const el=document.getElementById(map[sectionId]);
+  if(el)el.classList.add('active');
+}
+function updateNavActive(){
+  if(inDB){
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+    document.getElementById('nav-database').classList.add('active');
+  }
+}
 
 // ── DATA ─────────────────────────────────────────
 function loadData(){
@@ -624,8 +697,9 @@ function onLoaded(){
   const ud=new Set(ALL.map(r=>r['DOI']).filter(Boolean));
   document.getElementById('stat-papers').textContent=ud.size;
   document.getElementById('stat-dp').textContent=(ALL.length*18).toLocaleString();
+  computeRanges();
   buildSidebarFilters('db');
-  buildSidebarFilters('tr');
+  buildTrendFilters();
   buildAC();
   renderDB();
   renderChart('capacity');
@@ -633,23 +707,23 @@ function onLoaded(){
 
 // ── FILTER SPEC ──────────────────────────────────
 const FILTER_SPEC=[
-  {k:'Year',l:'Year',type:'num',desc:'Year of publication of the source paper.'},
+  {k:'Year',l:'Year',type:'num',desc:'Year of publication.'},
   {k:'Sorbent Class',l:'Sorbent class',type:'cat',desc:'Amine, MOF, Metal oxide, or Other.'},
-  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',type:'num',desc:'CO₂ uptake in mmol per gram of sorbent at ~400 ppm CO₂.'},
-  {k:'Capture temperature (C)',l:'Capture temp (°C)',type:'num',desc:'Temperature during CO₂ adsorption phase.'},
-  {k:'Release temperature (C)',l:'Release temp (°C)',type:'num',desc:'Temperature during regeneration/desorption phase.'},
-  {k:'CO2 Concentration (ppm)',l:'CO₂ conc. (ppm)',type:'num',desc:'CO₂ concentration in the feed gas during adsorption.'},
-  {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',type:'cat',desc:'Y = Air (O₂ present); N = Inert + CO₂ (no O₂).'},
-  {k:'Purging gas',l:'Regeneration gas',type:'cat',desc:'Gas used during the desorption/regeneration phase.'},
-  {k:'Moisture content (RH%)',l:'Rel. humidity (%)',type:'num',desc:'Relative humidity of the capture feed gas.'},
-  {k:'Capture-release cycles tested (#)',l:'No. of cycles',type:'num',desc:'Total adsorption–desorption cycles tested.'},
-  {k:'Degradation rate (%/cycle)',l:'Degrad. rate (%/cyc)',type:'num',desc:'Average percent capacity loss per cycle.'},
-  {k:'Degradation cause (Category)',l:'Degradation cause',type:'cat',desc:'Reported mechanism of degradation.'},
-  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method',type:'cat',desc:'Gravimetric (TGA), Breakthrough, Volumetric (Isotherm), or Other.'},
-  {k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)',type:'num',desc:'Volumetric flow rate of capture gas during adsorption.'},
-  {k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)',type:'num',desc:'Inner diameter of the breakthrough column.'},
-  {k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)',type:'num',desc:'Mass of sorbent loaded in column or TGA pan.'},
-  {k:'Cycle time (Min)',l:'Cycle time (min)',type:'num',desc:'Calculated standardized cycle time for breakthrough experiments.'},
+  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',type:'num',desc:'CO₂ uptake in mmol/g at ~400 ppm.'},
+  {k:'Capture temperature (C)',l:'Capture temp (°C)',type:'num',desc:'Temperature during CO₂ adsorption.'},
+  {k:'Release temperature (C)',l:'Release temp (°C)',type:'num',desc:'Temperature during regeneration.'},
+  {k:'CO2 Concentration (ppm)',l:'CO₂ conc. (ppm)',type:'num',desc:'CO₂ concentration in feed gas.'},
+  {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',type:'cat',desc:'Y = Air; N = Inert + CO₂.'},
+  {k:'Purging gas',l:'Regeneration gas',type:'cat',desc:'Gas used during regeneration.'},
+  {k:'Moisture content (RH%)',l:'Rel. humidity (%)',type:'num',desc:'Relative humidity of capture gas.'},
+  {k:'Capture-release cycles tested (#)',l:'No. of cycles',type:'num',desc:'Total adsorption–desorption cycles.'},
+  {k:'Degradation rate (%/cycle)',l:'Degrad. rate (%/cyc)',type:'num',desc:'Average % capacity loss per cycle.'},
+  {k:'Degradation cause (Category)',l:'Degradation cause',type:'cat',desc:'Reported degradation mechanism.'},
+  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method',type:'cat',desc:'TGA, Breakthrough, Isotherm, or Other.'},
+  {k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)',type:'num',desc:'Volumetric flow rate during adsorption.'},
+  {k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)',type:'num',desc:'Inner diameter of breakthrough column.'},
+  {k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)',type:'num',desc:'Mass of sorbent in column or pan.'},
+  {k:'Cycle time (Min)',l:'Cycle time (min)',type:'num',desc:'Calculated standardized cycle time.'},
 ];
 
 const dbDraft={},dbApplied={},trDraft={},trApplied={};
@@ -657,14 +731,11 @@ FILTER_SPEC.forEach(s=>{
   dbDraft[s.k]={min:'',max:'',selected:[]};dbApplied[s.k]={min:'',max:'',selected:[]};
   trDraft[s.k]={min:'',max:'',selected:[]};trApplied[s.k]={min:'',max:'',selected:[]};
 });
-
-// compute data ranges for sliders
 const dataRanges={};
 function computeRanges(){
   FILTER_SPEC.filter(s=>s.type==='num').forEach(s=>{
-    const vals=ALL.map(r=>parseFloat(r[s.k])).filter(v=>!isNaN(v));
-    if(vals.length){dataRanges[s.k]={min:Math.min(...vals),max:Math.max(...vals)};}
-    else{dataRanges[s.k]={min:0,max:100};}
+    const v=ALL.map(r=>parseFloat(r[s.k])).filter(v=>!isNaN(v));
+    dataRanges[s.k]=v.length?{min:Math.min(...v),max:Math.max(...v)}:{min:0,max:100};
   });
 }
 
@@ -672,40 +743,38 @@ function fmLabel(k,v){const sk='Simulated air? (Y/N) during adsorption (Y = O2 i
 function uniq(arr){return[...new Set(arr.filter(v=>v&&v!=='na'&&v!=='nr'))].sort();}
 function numVal(s){const v=parseFloat(s);return isNaN(v)?null:v;}
 
+// ── SIDEBAR FILTERS (DB) ─────────────────────────
 function buildSidebarFilters(mode){
-  if(!ALL.length)return;
-  if(!Object.keys(dataRanges).length)computeRanges();
+  if(!ALL.length||!Object.keys(dataRanges).length)return;
   const container=document.getElementById(mode+'-filter-fields');
+  if(!container)return;
   container.innerHTML='';
   const draft=mode==='db'?dbDraft:trDraft;
   FILTER_SPEC.forEach(s=>{
     const fid=`${mode}_sf_${s.k.replace(/[^a-z0-9]/gi,'_')}`;
     const hasActive=draft[s.k].min!==''||draft[s.k].max!==''||draft[s.k].selected.length>0;
-    const div=document.createElement('div');
-    div.className='sf-item';
+    const div=document.createElement('div');div.className='sf-item';
     if(s.type==='num'){
       const r=dataRanges[s.k]||{min:0,max:100};
-      const curMin=draft[s.k].min!==''?parseFloat(draft[s.k].min):r.min;
-      const curMax=draft[s.k].max!==''?parseFloat(draft[s.k].max):r.max;
-      const pMin=r.max>r.min?((curMin-r.min)/(r.max-r.min)*100):0;
-      const pMax=r.max>r.min?((curMax-r.min)/(r.max-r.min)*100):100;
+      const cMin=draft[s.k].min!==''?parseFloat(draft[s.k].min):r.min;
+      const cMax=draft[s.k].max!==''?parseFloat(draft[s.k].max):r.max;
+      const pMin=r.max>r.min?((cMin-r.min)/(r.max-r.min)*100):0;
+      const pMax=r.max>r.min?((cMax-r.min)/(r.max-r.min)*100):100;
       div.innerHTML=`<div class="sf-hdr" onclick="toggleSF('${fid}')">
         <span class="sf-hdr-label">${s.l}</span>
         <div class="sf-hdr-right"><span class="sf-dot${hasActive?' on':''}" id="${fid}_dot"></span><span class="sf-chev" id="${fid}_chev">▾</span></div>
       </div>
       <div class="sf-body" id="${fid}_body">
-        <div class="sf-range-wrap">
-          <div class="sf-slider-row">
-            <input type="number" id="${fid}_min" placeholder="${r.min.toFixed(1)}" value="${draft[s.k].min}" step="any" oninput="sfNumInput('${mode}','${s.k}','min',this.value,'${fid}')">
-            <span>–</span>
-            <input type="number" id="${fid}_max" placeholder="${r.max.toFixed(1)}" value="${draft[s.k].max}" step="any" oninput="sfNumInput('${mode}','${s.k}','max',this.value,'${fid}')">
-          </div>
-          <div class="sf-dual-slider" id="${fid}_slider">
-            <div class="sf-track"></div>
-            <div class="sf-fill" id="${fid}_fill" style="left:${pMin}%;width:${pMax-pMin}%"></div>
-            <div class="sf-thumb" id="${fid}_tmin" style="left:${pMin}%" onmousedown="startThumb(event,'${mode}','${s.k}','min','${fid}')"></div>
-            <div class="sf-thumb" id="${fid}_tmax" style="left:${pMax}%" onmousedown="startThumb(event,'${mode}','${s.k}','max','${fid}')"></div>
-          </div>
+        <div class="sf-slider-row">
+          <input type="number" id="${fid}_min" placeholder="${r.min.toFixed(1)}" value="${draft[s.k].min}" step="any" oninput="sfNumIn('${mode}','${s.k}','min',this.value,'${fid}')">
+          <span>–</span>
+          <input type="number" id="${fid}_max" placeholder="${r.max.toFixed(1)}" value="${draft[s.k].max}" step="any" oninput="sfNumIn('${mode}','${s.k}','max',this.value,'${fid}')">
+        </div>
+        <div class="sf-dual-slider" id="${fid}_slider">
+          <div class="sf-track"></div>
+          <div class="sf-fill" id="${fid}_fill" style="left:${pMin}%;width:${pMax-pMin}%"></div>
+          <div class="sf-thumb" id="${fid}_tmin" style="left:${pMin}%" onmousedown="startThumb(event,'${mode}','${s.k}','min','${fid}')"></div>
+          <div class="sf-thumb" id="${fid}_tmax" style="left:${pMax}%" onmousedown="startThumb(event,'${mode}','${s.k}','max','${fid}')"></div>
         </div>
       </div>`;
     } else {
@@ -715,50 +784,25 @@ function buildSidebarFilters(mode){
         <div class="sf-hdr-right"><span class="sf-dot${hasActive?' on':''}" id="${fid}_dot"></span><span class="sf-chev" id="${fid}_chev">▾</span></div>
       </div>
       <div class="sf-body" id="${fid}_body">
-        <div class="sf-cat">
-          <select onchange="sfCatAdd('${mode}','${s.k}',this,'${fid}')">
-            <option value="">Any…</option>
-            ${vals.map(v=>`<option value="${v}">${fmLabel(s.k,v)}</option>`).join('')}
-          </select>
-        </div>
+        <div class="sf-cat"><select onchange="sfCatAdd('${mode}','${s.k}',this,'${fid}')">
+          <option value="">Any…</option>
+          ${vals.map(v=>`<option value="${v}">${fmLabel(s.k,v)}</option>`).join('')}
+        </select></div>
         <div class="sf-tags" id="${fid}_tags">${draft[s.k].selected.map(v=>`<span class="sf-tag">${fmLabel(s.k,v)}<span class="rm" onclick="sfCatRm('${mode}','${s.k}','${v}','${fid}')">×</span></span>`).join('')}</div>
       </div>`;
     }
     container.appendChild(div);
   });
 }
+function toggleSF(fid){const b=document.getElementById(fid+'_body');const c=document.getElementById(fid+'_chev');if(b)b.classList.toggle('open');if(c)c.classList.toggle('open');}
+function collapseAllDB(){FILTER_SPEC.forEach(s=>{const fid='db_sf_'+s.k.replace(/[^a-z0-9]/gi,'_');const b=document.getElementById(fid+'_body');const c=document.getElementById(fid+'_chev');if(b)b.classList.remove('open');if(c)c.classList.remove('open');});}
 
-function toggleSF(fid){
-  const b=document.getElementById(fid+'_body');const c=document.getElementById(fid+'_chev');
-  if(b)b.classList.toggle('open');if(c)c.classList.toggle('open');
-}
-
-let allOpen={db:false,tr:false};
-function collapseAll(mode){
-  const open=allOpen[mode];
-  FILTER_SPEC.forEach(s=>{
-    const fid=`${mode}_sf_${s.k.replace(/[^a-z0-9]/gi,'_')}`;
-    const b=document.getElementById(fid+'_body');const c=document.getElementById(fid+'_chev');
-    if(b){if(open){b.classList.remove('open');}else{b.classList.add('open');}if(c){c.classList.toggle('open',!open);}}
-  });
-  allOpen[mode]=!open;
-  const btn=document.getElementById(mode+'-collapse-btn');
-  if(btn)btn.textContent=allOpen[mode]?'Collapse all':'Expand all';
-}
-
-// dual range slider
 let activeThumb=null;
-function startThumb(e,mode,key,side,fid){
-  e.preventDefault();
-  activeThumb={mode,key,side,fid};
-  document.addEventListener('mousemove',moveThumb);
-  document.addEventListener('mouseup',stopThumb);
-}
+function startThumb(e,mode,key,side,fid){e.preventDefault();activeThumb={mode,key,side,fid};document.addEventListener('mousemove',moveThumb);document.addEventListener('mouseup',stopThumb);}
 function moveThumb(e){
   if(!activeThumb)return;
   const {mode,key,side,fid}=activeThumb;
-  const slider=document.getElementById(fid+'_slider');
-  if(!slider)return;
+  const slider=document.getElementById(fid+'_slider');if(!slider)return;
   const r=dataRanges[key]||{min:0,max:100};
   const rect=slider.getBoundingClientRect();
   let pct=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));
@@ -766,18 +810,11 @@ function moveThumb(e){
   const draft=mode==='db'?dbDraft:trDraft;
   const dp=r.max>1000?0:r.max>10?1:2;
   const valStr=val.toFixed(dp);
-  if(side==='min'){
-    const curMax=draft[key].max!==''?parseFloat(draft[key].max):r.max;
-    if(val>curMax)return;
-    draft[key].min=valStr;
-  } else {
-    const curMin=draft[key].min!==''?parseFloat(draft[key].min):r.min;
-    if(val<curMin)return;
-    draft[key].max=valStr;
-  }
+  if(side==='min'){const cMax=draft[key].max!==''?parseFloat(draft[key].max):r.max;if(val>cMax)return;}
+  else{const cMin=draft[key].min!==''?parseFloat(draft[key].min):r.min;if(val<cMin)return;}
+  draft[key][side]=valStr;
   updateSliderUI(fid,key,mode,r);
-  const inp=document.getElementById(fid+'_'+side);
-  if(inp)inp.value=valStr;
+  const inp=document.getElementById(fid+'_'+side);if(inp)inp.value=valStr;
   updateDot(fid,key,mode);
 }
 function stopThumb(){activeThumb=null;document.removeEventListener('mousemove',moveThumb);document.removeEventListener('mouseup',stopThumb);}
@@ -788,65 +825,23 @@ function updateSliderUI(fid,key,mode,r){
   const cMax=draft[key].max!==''?parseFloat(draft[key].max):r.max;
   const pMin=r.max>r.min?((cMin-r.min)/(r.max-r.min)*100):0;
   const pMax=r.max>r.min?((cMax-r.min)/(r.max-r.min)*100):100;
-  const fill=document.getElementById(fid+'_fill');
-  const tmin=document.getElementById(fid+'_tmin');
-  const tmax=document.getElementById(fid+'_tmax');
+  const fill=document.getElementById(fid+'_fill');const tmin=document.getElementById(fid+'_tmin');const tmax=document.getElementById(fid+'_tmax');
   if(fill){fill.style.left=pMin+'%';fill.style.width=(pMax-pMin)+'%';}
-  if(tmin)tmin.style.left=pMin+'%';
-  if(tmax)tmax.style.left=pMax+'%';
+  if(tmin)tmin.style.left=pMin+'%';if(tmax)tmax.style.left=pMax+'%';
 }
-function sfNumInput(mode,key,side,val,fid){
-  const draft=mode==='db'?dbDraft:trDraft;
-  draft[key][side]=val;
-  updateSliderUI(fid,key,mode,dataRanges[key]);
-  updateDot(fid,key,mode);
-}
-function sfCatAdd(mode,key,sel,fid){
-  const v=sel.value;if(!v)return;
-  const draft=mode==='db'?dbDraft:trDraft;
-  if(!draft[key].selected.includes(v)){draft[key].selected.push(v);rebuildTags(fid,key,mode);}
-  sel.value='';updateDot(fid,key,mode);
-}
-function sfCatRm(mode,key,val,fid){
-  const draft=mode==='db'?dbDraft:trDraft;
-  draft[key].selected=draft[key].selected.filter(v=>v!==val);
-  rebuildTags(fid,key,mode);updateDot(fid,key,mode);
-}
-function rebuildTags(fid,key,mode){
-  const el=document.getElementById(fid+'_tags');if(!el)return;
-  const draft=mode==='db'?dbDraft:trDraft;
-  el.innerHTML=draft[key].selected.map(v=>`<span class="sf-tag">${fmLabel(key,v)}<span class="rm" onclick="sfCatRm('${mode}','${key}','${v}','${fid}')">×</span></span>`).join('');
-}
-function updateDot(fid,key,mode){
-  const dot=document.getElementById(fid+'_dot');if(!dot)return;
-  const draft=mode==='db'?dbDraft:trDraft;
-  dot.classList.toggle('on',draft[key].min!==''||draft[key].max!==''||draft[key].selected.length>0);
-}
+function sfNumIn(mode,key,side,val,fid){const draft=mode==='db'?dbDraft:trDraft;draft[key][side]=val;updateSliderUI(fid,key,mode,dataRanges[key]);updateDot(fid,key,mode);}
+function sfCatAdd(mode,key,sel,fid){const v=sel.value;if(!v)return;const draft=mode==='db'?dbDraft:trDraft;if(!draft[key].selected.includes(v)){draft[key].selected.push(v);rebuildTags(fid,key,mode);}sel.value='';updateDot(fid,key,mode);}
+function sfCatRm(mode,key,val,fid){const draft=mode==='db'?dbDraft:trDraft;draft[key].selected=draft[key].selected.filter(v=>v!==val);rebuildTags(fid,key,mode);updateDot(fid,key,mode);}
+function rebuildTags(fid,key,mode){const el=document.getElementById(fid+'_tags');if(!el)return;const draft=mode==='db'?dbDraft:trDraft;el.innerHTML=draft[key].selected.map(v=>`<span class="sf-tag">${fmLabel(key,v)}<span class="rm" onclick="sfCatRm('${mode}','${key}','${v}','${fid}')">×</span></span>`).join('');}
+function updateDot(fid,key,mode){const dot=document.getElementById(fid+'_dot');if(!dot)return;const draft=mode==='db'?dbDraft:trDraft;dot.classList.toggle('on',draft[key].min!==''||draft[key].max!==''||draft[key].selected.length>0);}
 
-function applyDBFilters(){
-  FILTER_SPEC.forEach(s=>{dbApplied[s.k]={min:dbDraft[s.k].min,max:dbDraft[s.k].max,selected:[...dbDraft[s.k].selected]};});
-  renderDB();updateActiveTags('db');
-}
-function applyTrFilters(){
-  FILTER_SPEC.forEach(s=>{trApplied[s.k]={min:trDraft[s.k].min,max:trDraft[s.k].max,selected:[...trDraft[s.k].selected]};});
-  renderChart(currentChart);updateActiveTags('tr');
-}
-function clearAllDBFilters(){
-  document.getElementById('db-srch').value='';
-  FILTER_SPEC.forEach(s=>{dbDraft[s.k]={min:'',max:'',selected:[]};dbApplied[s.k]={min:'',max:'',selected:[]};});
-  buildSidebarFilters('db');renderDB();updateActiveTags('db');
-}
-function clearAllTrFilters(){
-  FILTER_SPEC.forEach(s=>{trDraft[s.k]={min:'',max:'',selected:[]};trApplied[s.k]={min:'',max:'',selected:[]};});
-  buildSidebarFilters('tr');renderChart(currentChart);updateActiveTags('tr');
-}
+function applyDBFilters(){FILTER_SPEC.forEach(s=>{dbApplied[s.k]={min:dbDraft[s.k].min,max:dbDraft[s.k].max,selected:[...dbDraft[s.k].selected]};});renderDB();updateActiveTags('db');}
+function applyTrFilters(){FILTER_SPEC.forEach(s=>{trApplied[s.k]={min:trDraft[s.k].min,max:trDraft[s.k].max,selected:[...trDraft[s.k].selected]};});renderChart(currentChart);updateActiveTags('tr');}
+function clearAllDBFilters(){document.getElementById('db-srch').value='';FILTER_SPEC.forEach(s=>{dbDraft[s.k]={min:'',max:'',selected:[]};dbApplied[s.k]={min:'',max:'',selected:[]};});buildSidebarFilters('db');renderDB();updateActiveTags('db');}
+function clearAllTrFilters(){FILTER_SPEC.forEach(s=>{trDraft[s.k]={min:'',max:'',selected:[]};trApplied[s.k]={min:'',max:'',selected:[]};});buildTrendFilters();renderChart(currentChart);updateActiveTags('tr');}
 function applyFilters(rows,applied){
   return rows.filter(r=>{
-    for(const s of FILTER_SPEC){
-      const f=applied[s.k];
-      if(s.type==='num'){const v=numVal(r[s.k]);if(f.min!==''&&(v===null||v<parseFloat(f.min)))return false;if(f.max!==''&&(v===null||v>parseFloat(f.max)))return false;}
-      else if(f.selected.length>0){if(!f.selected.includes(r[s.k]))return false;}
-    }
+    for(const s of FILTER_SPEC){const f=applied[s.k];if(s.type==='num'){const v=numVal(r[s.k]);if(f.min!==''&&(v===null||v<parseFloat(f.min)))return false;if(f.max!==''&&(v===null||v>parseFloat(f.max)))return false;}else if(f.selected.length>0){if(!f.selected.includes(r[s.k]))return false;}}
     return true;
   });
 }
@@ -854,20 +849,49 @@ function updateActiveTags(mode){
   const applied=mode==='db'?dbApplied:trApplied;
   const el=document.getElementById(mode==='db'?'db-active-filters':'tr-active-filters');if(!el)return;
   const tags=[];
-  FILTER_SPEC.forEach(s=>{
-    const f=applied[s.k];
-    if(f.min!==''||f.max!=='')tags.push(`<span class="af-tag">${s.l}: ${f.min||'…'}–${f.max||'…'}<span class="rm" onclick="rmTag('${mode}','${s.k}','range')">×</span></span>`);
-    f.selected.forEach(v=>tags.push(`<span class="af-tag">${s.l}: ${fmLabel(s.k,v)}<span class="rm" onclick="rmTag('${mode}','${s.k}','cat','${v}')">×</span></span>`));
-  });
+  FILTER_SPEC.forEach(s=>{const f=applied[s.k];if(f.min!==''||f.max!=='')tags.push(`<span class="af-${mode==='db'?'tag':'chip'}">${s.l}: ${f.min||'…'}–${f.max||'…'}<span class="rm" onclick="rmTag('${mode}','${s.k}','range')">×</span></span>`);f.selected.forEach(v=>tags.push(`<span class="af-${mode==='db'?'tag':'chip'}">${s.l}: ${fmLabel(s.k,v)}<span class="rm" onclick="rmTag('${mode}','${s.k}','cat','${v}')">×</span></span>`));});
   el.innerHTML=tags.join('');
 }
-function rmTag(mode,key,type,val){
-  const draft=mode==='db'?dbDraft:trDraft;const applied=mode==='db'?dbApplied:trApplied;
-  if(type==='range'){draft[key].min='';draft[key].max='';applied[key].min='';applied[key].max='';}
-  else{draft[key].selected=draft[key].selected.filter(v=>v!==val);applied[key].selected=applied[key].selected.filter(v=>v!==val);}
-  buildSidebarFilters(mode);
-  if(mode==='db')renderDB();else renderChart(currentChart);
-  updateActiveTags(mode);
+function rmTag(mode,key,type,val){const draft=mode==='db'?dbDraft:trDraft;const applied=mode==='db'?dbApplied:trApplied;if(type==='range'){draft[key].min='';draft[key].max='';applied[key].min='';applied[key].max='';}else{draft[key].selected=draft[key].selected.filter(v=>v!==val);applied[key].selected=applied[key].selected.filter(v=>v!==val);}buildSidebarFilters(mode);if(mode==='db')renderDB();else renderChart(currentChart);updateActiveTags(mode);}
+
+// ── TREND FILTERS (inline panel) ─────────────────
+function buildTrendFilters(){
+  if(!ALL.length||!Object.keys(dataRanges).length)return;
+  const container=document.getElementById('tr-filter-fields');if(!container)return;
+  container.innerHTML='';
+  FILTER_SPEC.forEach(s=>{
+    const fid=`tr_sf_${s.k.replace(/[^a-z0-9]/gi,'_')}`;
+    const draft=trDraft;const hasActive=draft[s.k].min!==''||draft[s.k].max!==''||draft[s.k].selected.length>0;
+    const div=document.createElement('div');div.className='tf-group';
+    if(s.type==='num'){
+      const r=dataRanges[s.k]||{min:0,max:100};
+      const cMin=draft[s.k].min!==''?parseFloat(draft[s.k].min):r.min;
+      const cMax=draft[s.k].max!==''?parseFloat(draft[s.k].max):r.max;
+      const pMin=r.max>r.min?((cMin-r.min)/(r.max-r.min)*100):0;
+      const pMax=r.max>r.min?((cMax-r.min)/(r.max-r.min)*100):100;
+      div.innerHTML=`<span class="tf-label">${s.l}</span>
+        <div class="tf-range-row">
+          <input type="number" id="${fid}_min" placeholder="${r.min.toFixed(1)}" value="${draft[s.k].min}" step="any" oninput="sfNumIn('tr','${s.k}','min',this.value,'${fid}')">
+          <span>–</span>
+          <input type="number" id="${fid}_max" placeholder="${r.max.toFixed(1)}" value="${draft[s.k].max}" step="any" oninput="sfNumIn('tr','${s.k}','max',this.value,'${fid}')">
+        </div>
+        <div class="tf-slider" id="${fid}_slider">
+          <div class="tf-track"></div>
+          <div class="tf-fill" id="${fid}_fill" style="left:${pMin}%;width:${pMax-pMin}%"></div>
+          <div class="tf-thumb" id="${fid}_tmin" style="left:${pMin}%" onmousedown="startThumb(event,'tr','${s.k}','min','${fid}')"></div>
+          <div class="tf-thumb" id="${fid}_tmax" style="left:${pMax}%" onmousedown="startThumb(event,'tr','${s.k}','max','${fid}')"></div>
+        </div>`;
+    } else {
+      const vals=uniq(ALL.map(r=>r[s.k]));
+      div.innerHTML=`<span class="tf-label">${s.l}</span>
+        <div class="tf-cat"><select onchange="sfCatAdd('tr','${s.k}',this,'${fid}')">
+          <option value="">Any…</option>
+          ${vals.map(v=>`<option value="${v}">${fmLabel(s.k,v)}</option>`).join('')}
+        </select></div>
+        <div class="tf-tags" id="${fid}_tags">${draft[s.k].selected.map(v=>`<span class="tf-tag">${fmLabel(s.k,v)}<span class="rm" onclick="sfCatRm('tr','${s.k}','${v}','${fid}')">×</span></span>`).join('')}</div>`;
+    }
+    container.appendChild(div);
+  });
 }
 
 // ── AUTOCOMPLETE ─────────────────────────────────
@@ -889,22 +913,22 @@ function buildAC(){
 }
 function selectAC(val){document.getElementById('db-srch').value=val;document.getElementById('ac-dropdown').classList.remove('open');}
 
-// ── DB COLUMNS + TOOLTIPS ─────────────────────────
+// ── DATABASE ─────────────────────────────────────
 const DB_COLS=[
   {k:'Year',l:'Year',cls:'year-c',tip:'Year of publication.'},
   {k:'First author',l:'First author',tip:'Last name of first author.'},
   {k:'Material abbreviation',l:'Material',tip:'Short identifier for the sorbent from the source paper.'},
   {k:'Sorbent Class',l:'Class',tip:'Amine, MOF, Metal oxide, or Other.'},
-  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',cls:'num-c',tip:'CO₂ uptake in mmol per gram of sorbent at ~400 ppm CO₂.'},
+  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',cls:'num-c',tip:'CO₂ uptake in mmol/g at ~400 ppm CO₂.'},
   {k:'Capture temperature (C)',l:'Cap. T (°C)',cls:'num-c',tip:'Temperature (°C) during CO₂ adsorption.'},
-  {k:'Release temperature (C)',l:'Rel. T (°C)',cls:'num-c',tip:'Temperature (°C) during regeneration/desorption.'},
+  {k:'Release temperature (C)',l:'Rel. T (°C)',cls:'num-c',tip:'Temperature (°C) during regeneration.'},
   {k:'CO2 Concentration (ppm)',l:'CO₂ (ppm)',cls:'num-c',tip:'CO₂ concentration in feed gas (ppm).'},
-  {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',tip:'Y = Air (O₂ present); N = Inert + CO₂ (no oxygen).'},
-  {k:'Moisture content (RH%)',l:'RH%',cls:'num-c',tip:'Relative humidity (%) of the capture feed gas.'},
-  {k:'Purging gas',l:'Regen. gas',tip:'Gas used during the desorption/regeneration phase.'},
+  {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',tip:'Y = Air (O₂ present); N = Inert + CO₂.'},
+  {k:'Moisture content (RH%)',l:'RH%',cls:'num-c',tip:'Relative humidity (%) of capture feed gas.'},
+  {k:'Purging gas',l:'Regen. gas',tip:'Gas used during regeneration.'},
   {k:'Capture-release cycles tested (#)',l:'Cycles',cls:'num-c',tip:'Total adsorption–desorption cycles tested.'},
-  {k:'Degradation rate (%/cycle)',l:'Degrad.(%/cyc)',cls:'num-c',tip:'Average percent capacity loss per adsorption–desorption cycle.'},
-  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Method',tip:'Gravimetric (TGA), Breakthrough, Volumetric (Isotherm), or Other.'},
+  {k:'Degradation rate (%/cycle)',l:'Degrad.(%/cyc)',cls:'num-c',tip:'Average % capacity loss per cycle.'},
+  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Method',tip:'Gravimetric (TGA), Breakthrough, Volumetric, or Other.'},
   {k:'DOI',l:'DOI',tip:'Digital Object Identifier — click to open the source paper.'},
 ];
 let dbSort='Year',dbDir=-1;
@@ -925,11 +949,9 @@ function getDBFiltered(){
   return applyFilters(rows,dbApplied);
 }
 function renderDB(){
-  // header with info icons
   const tr=document.createElement('tr');
   DB_COLS.forEach(col=>{
-    const th=document.createElement('th');
-    const isSorted=dbSort===col.k;
+    const th=document.createElement('th');const isSorted=dbSort===col.k;
     th.innerHTML=`<div class="th-inner"><span class="th-label">${col.l}${isSorted?(dbDir===1?' ↑':' ↓'):''}</span><span class="th-i">i<span class="th-tooltip">${col.tip}</span></span></div>`;
     if(isSorted)th.classList.add('sorted');
     th.onclick=()=>{dbSort===col.k?dbDir*=-1:(dbSort=col.k,dbDir=1);renderDB();};
@@ -943,79 +965,24 @@ function renderDB(){
   if(!rows.length){const q=document.getElementById('db-srch').value.trim();tb.innerHTML=`<tr><td colspan="${DB_COLS.length}" class="empty-row">No matching entries${q?` for "${q}" — try a different spelling or abbreviation`:''}.</td></tr>`;return;}
   tb.innerHTML=rows.map(r=>`<tr onclick="openModal(${ALL.indexOf(r)})">${DB_COLS.map(col=>cellHTML(col,r)).join('')}</tr>`).join('');
 }
+function openDLModal(){const f=getDBFiltered();document.getElementById('dl-row-count').textContent=f.length+' rows';document.getElementById('dl-total-count').textContent=ALL.length;document.getElementById('dl-modal-bg').classList.add('open');}
+function doDownload(){const type=document.querySelector('input[name="dl-type"]:checked').value;const rows=type==='full'?ALL:getDBFiltered();if(!rows.length){alert('No rows.');return;}const keys=Object.keys(rows[0]);const csv=[keys.join(','),...rows.map(r=>keys.map(k=>{const v=(r[k]||'').replace(/"/g,'""');return v.includes(',')||v.includes('"')||v.includes('\n')?`"${v}"`:v;}).join(','))].join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='dac_sorbents.csv';a.click();document.getElementById('dl-modal-bg').classList.remove('open');}
 
-// ── DOWNLOAD ─────────────────────────────────────
-function openDLModal(){
-  const filtered=getDBFiltered();
-  document.getElementById('dl-row-count').textContent=filtered.length+' rows';
-  document.getElementById('dl-total-count').textContent=ALL.length;
-  document.getElementById('dl-modal-bg').classList.add('open');
-}
-function doDownload(){
-  const type=document.querySelector('input[name="dl-type"]:checked').value;
-  const rows=type==='full'?ALL:getDBFiltered();
-  if(!rows.length){alert('No rows.');return;}
-  const keys=Object.keys(rows[0]);
-  const csv=[keys.join(','),...rows.map(r=>keys.map(k=>{const v=(r[k]||'').replace(/"/g,'""');return v.includes(',')||v.includes('"')||v.includes('\n')?`"${v}"`:v;}).join(','))].join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='dac_sorbents.csv';a.click();
-  document.getElementById('dl-modal-bg').classList.remove('open');
-}
-
-// ── MODAL ────────────────────────────────────────
-const MF=[
-  {k:'Year',l:'Year'},{k:'First author',l:'First author'},{k:'Corresponding author 1',l:'Corresponding author'},
-  {k:'Material',l:'Material (full)',full:true},{k:'Material abbreviation',l:'Abbreviation'},{k:'Sorbent Class',l:'Sorbent class'},
-  {k:'Adsorption Capacity (reported)',l:'Capacity (reported)'},{k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)'},
-  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method'},
-  {k:'Capture temperature (C)',l:'Capture temp (°C)'},{k:'Release temperature (C)',l:'Release temp (°C)'},
-  {k:'CO2 Concentration (ppm)',l:'CO₂ conc. (ppm)'},{k:'Purging gas',l:'Regeneration gas'},
-  {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas'},
-  {k:'Moisture content (RH%)',l:'Humidity (RH%)'},{k:'dew point (C)',l:'Dew point (°C)'},
-  {k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)'},{k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)'},
-  {k:'Capture-release cycles tested (#)',l:'Cycles'},{k:'Degradation rate (% total)',l:'Degrad. (% total)'},
-  {k:'Degradation rate (%/cycle)',l:'Degrad. (%/cycle)'},{k:'Degradation cause (Category)',l:'Degrad. cause'},
-  {k:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t₉₅ (min)'},
-  {k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)'},
-  {k:'Productivity',l:'Productivity'},{k:'Cycle time (Min)',l:'Cycle time (min)'},
-  {k:'Notes',l:'Notes',full:true},{k:'DOI',l:'DOI',full:true},
-];
-function openModal(idx){
-  const r=ALL[idx];
-  document.getElementById('modal-title').textContent=r['Material abbreviation']||r['Material']||'Sorbent detail';
-  document.getElementById('modal-sub').textContent=`${r['First author']||''} · ${r['Year']||''} · ${r['Sorbent Class']||''}`;
-  document.getElementById('modal-grid').innerHTML=MF.map(f=>{const v=r[f.k]||'';if(!v||v==='na'||v==='nr')return'';const full=f.full?' full':'';let val=f.k==='DOI'&&v?`<a class="ref-a" href="https://doi.org/${v}" target="_blank">${v}</a>`:v;return`<div class="modal-row${full}"><span class="modal-label">${f.l}</span><span class="modal-val">${val}</span></div>`;}).join('');
-  document.getElementById('modal-bg').classList.add('open');
-}
+const MF=[{k:'Year',l:'Year'},{k:'First author',l:'First author'},{k:'Corresponding author 1',l:'Corresponding author'},{k:'Material',l:'Material (full)',full:true},{k:'Material abbreviation',l:'Abbreviation'},{k:'Sorbent Class',l:'Sorbent class'},{k:'Adsorption Capacity (reported)',l:'Capacity (reported)'},{k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)'},{k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method'},{k:'Capture temperature (C)',l:'Capture temp (°C)'},{k:'Release temperature (C)',l:'Release temp (°C)'},{k:'CO2 Concentration (ppm)',l:'CO₂ conc. (ppm)'},{k:'Purging gas',l:'Regeneration gas'},{k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas'},{k:'Moisture content (RH%)',l:'Humidity (RH%)'},{k:'dew point (C)',l:'Dew point (°C)'},{k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)'},{k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)'},{k:'Capture-release cycles tested (#)',l:'Cycles'},{k:'Degradation rate (% total)',l:'Degrad. (% total)'},{k:'Degradation rate (%/cycle)',l:'Degrad. (%/cycle)'},{k:'Degradation cause (Category)',l:'Degrad. cause'},{k:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t₉₅ (min)'},{k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)'},{k:'Productivity',l:'Productivity'},{k:'Cycle time (Min)',l:'Cycle time (min)'},{k:'Notes',l:'Notes',full:true},{k:'DOI',l:'DOI',full:true}];
+function openModal(idx){const r=ALL[idx];document.getElementById('modal-title').textContent=r['Material abbreviation']||r['Material']||'Sorbent detail';document.getElementById('modal-sub').textContent=`${r['First author']||''} · ${r['Year']||''} · ${r['Sorbent Class']||''}`;document.getElementById('modal-grid').innerHTML=MF.map(f=>{const v=r[f.k]||'';if(!v||v==='na'||v==='nr')return'';const full=f.full?' full':'';let val=f.k==='DOI'&&v?`<a class="ref-a" href="https://doi.org/${v}" target="_blank">${v}</a>`:v;return`<div class="modal-row${full}"><span class="modal-label">${f.l}</span><span class="modal-val">${val}</span></div>`;}).join('');document.getElementById('modal-bg').classList.add('open');}
 function closeModal(e){if(e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
 
 // ── TRENDS ───────────────────────────────────────
 let currentChart='capacity';
 const CHART_CFG={
   capacity:{title:'CO₂ capture capacity (mmol/g) vs. year of publication',xKey:'Year',yKey:'Adsorption capacity (mmol/g)',yLabel:'CO₂ Capture Capacity (mmol/g)',
-    intro:`<h2>CO₂ Capture Capacity</h2>
-      <p>How much CO₂ can a sorbent actually hold? CO₂ capture capacity — measured in mmol of CO₂ per gram of sorbent — is the most fundamental performance metric for any direct air capture material and the most consistently reported parameter in the literature.</p>
-      <p>An upward trend over time would indicate genuine progress in material design, but this trend is only meaningful when sorbents are compared under the same testing conditions. When all conditions are included, the apparent trend reflects variation in experimental protocols as much as true improvements.</p>`},
+    intro:`<h3>CO₂ Capture Capacity</h3><p>How much CO₂ can a sorbent actually hold? CO₂ capture capacity — measured in mmol per gram — is the most fundamental performance metric and the most consistently reported in the literature. An upward trend over time indicates genuine progress in material design, but only when sorbents are compared under the same testing conditions.</p>`},
   cycles:{title:'Calculated standardized cycle time (min) vs. year — breakthrough experiments only',xKey:'Year',yKey:'Cycle time (Min)',yLabel:'Cycle Time (min)',
-    intro:`<h2>Cycle Time <span class="calc-badge">CALCULATED</span></h2>
-      <p>How fast does a sorbent reach capacity? Cycle time is a normalized kinetic metric enabling comparison of adsorption dynamics across different laboratory setups — something raw breakthrough data cannot provide, since each lab uses different column sizes, mass loadings, and flow rates.</p>
-      <p>Cycle time is calculated from breakthrough experiments using a standardized reactor model (mass = 100 mg, flow = 400 mL/min, CO₂ = 400 ppm):</p>
-      <div class="math-block">
-        <div class="eq">CO₂ uptake efficiency = <sup style="font-size:.82em"><em>q</em> × <em>m</em></sup>⁄<sub style="font-size:.82em"><em>t</em><sub>95</sub> × <em>F</em> × <em>C</em>/22.4</sub></div>
-        <div class="note"><em>q</em> = capacity (mmol/g), <em>m</em> = mass (g), <em>t</em><sub>95</sub> = time to 95% outlet (min), <em>F</em> = flow rate (mL/min), <em>C</em> = CO₂ conc. (ppm)</div>
-      </div>
-      <div class="math-block"><div class="eq">Cycle time = <em>t</em><sub>95,std</sub> × 3</div></div>
-      <p>A lower cycle time means faster kinetics — more capture–release cycles per day and higher DAC productivity.</p>`},
+    intro:`<h3>Cycle Time <span class="calc-badge">CALCULATED</span></h3><p>How fast does a sorbent reach capacity? Cycle time is a normalized kinetic metric enabling comparison of adsorption dynamics across different laboratory setups. Calculated from breakthrough experiments using a standardized reactor (mass = 100 mg, flow = 400 mL/min, CO₂ = 400 ppm).</p><div class="math-block"><div class="eq">Cycle time = <em>t</em><sub>95,std</sub> × 3</div><div class="note">where <em>t</em><sub>95,std</sub> is modeled from the measured uptake efficiency scaled to standard reactor conditions.</div></div>`},
   degrad:{title:'Degradation rate (%/cycle) vs. year of publication',xKey:'Year',yKey:'Degradation rate (%/cycle)',yLabel:'Degradation Rate (%/cycle)',
-    intro:`<h2>Degradation Rate</h2>
-      <p>Does the sorbent hold up over repeated use? Degradation rate captures how quickly a material loses CO₂ capture capacity over successive cycles — a critical but severely under-reported parameter. Only about 20% of sorbents in this database have any cycling data at all.</p>
-      <p>We define degradation rate as the average percent capacity loss per cycle:</p>
-      <div class="math-block">
-        <div class="eq">Degradation rate (%/cycle) = <sup style="font-size:.82em"><em>q</em><sub>1</sub> − <em>q</em><sub>last</sub></sup>⁄<sub style="font-size:.82em"><em>q</em><sub>1</sub></sub> × <sup style="font-size:.82em">100</sup>⁄<sub style="font-size:.82em"><em>N</em></sub></div>
-        <div class="note"><em>q</em><sub>1</sub> = first cycle capacity, <em>q</em><sub>last</sub> = last cycle capacity, <em>N</em> = total cycles tested</div>
-      </div>
-      <p>An apparent increase in reported degradation rates in recent years likely reflects a growing emphasis on stability testing under more realistic conditions, rather than materials becoming less stable.</p>`},
+    intro:`<h3>Degradation Rate</h3><p>Does the sorbent hold up over repeated use? Only ~20% of sorbents in this database have any cycling data at all. We define degradation rate as the average percent capacity loss per cycle:</p><div class="math-block"><div class="eq">Degradation rate = <sup style="font-size:.82em"><em>q</em><sub>1</sub> − <em>q</em><sub>last</sub></sup>⁄<sub style="font-size:.82em"><em>q</em><sub>1</sub></sub> × <sup style="font-size:.82em">100</sup>⁄<sub style="font-size:.82em"><em>N</em></sub></div></div>`},
 };
-const CLS_COLOR={'Amine':'#1a9e7e','MOF':'#d4a017','Metal oxide':'#cc4b2c','Other':'#4b3a8c'};
+const CLS_COLOR={'Amine':'#1a9e7e','MOF':'#c89a0a','Metal oxide':'#c0391c','Other':'#5b3fa0'};
 const CLS_ORDER=['Amine','MOF','Metal oxide','Other'];
 function getColor(cls){if(!cls)return'#888';for(const[k,v]of Object.entries(CLS_COLOR)){if(cls&&cls.toLowerCase().includes(k.toLowerCase()))return v;}return'#888';}
 
@@ -1024,7 +991,6 @@ function showChart(type){
   document.querySelectorAll('.chart-tab').forEach(t=>t.classList.remove('active'));
   const el=document.getElementById('tab-'+type);if(el)el.classList.add('active');
   renderChart(type);
-  const scroll=document.querySelector('.chart-scroll');if(scroll)scroll.scrollTop=0;
 }
 
 function renderChart(type){
@@ -1037,61 +1003,38 @@ function renderChart(type){
   const cEl=document.getElementById('tr-count');if(cEl)cEl.textContent=`${pts.length} points`;
   const svgEl=document.getElementById('scatter-svg');if(!svgEl)return;
   const container=svgEl.parentElement;
-  const W=Math.max(380,container?container.offsetWidth-4:580);
-  // taller: 0.66 aspect ratio
-  const H=Math.round(W*0.66);
-  const PAD={t:20,r:25,b:60,l:78};
+  const W=Math.max(360,container?container.offsetWidth-4:600);
+  const H=Math.round(W*0.62);
+  const PAD={t:18,r:22,b:58,l:76};
   const cw=W-PAD.l-PAD.r,ch=H-PAD.t-PAD.b;
   svgEl.setAttribute('width',W);svgEl.setAttribute('height',H);svgEl.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  if(!pts.length){
-    svgEl.innerHTML=`<rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="${PAD.l+cw/2}" y="${PAD.t+ch/2}" text-anchor="middle" fill="#999" font-size="13" font-family="Arial,sans-serif">No data for current filters</text>`;
-    document.getElementById('chart-legend').innerHTML='';return;
-  }
+  if(!pts.length){svgEl.innerHTML=`<rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}" fill="#fff" stroke="#ccc" stroke-width="1.5"/><text x="${PAD.l+cw/2}" y="${PAD.t+ch/2}" text-anchor="middle" fill="#999" font-size="13" font-family="Inter,sans-serif">No data for current filters</text>`;document.getElementById('chart-legend').innerHTML='';return;}
   const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
   const xMin=Math.floor(Math.min(...xs))-1,xMax=Math.ceil(Math.max(...xs))+1;
-  // y axis: start slightly below 0 so zero-value points aren't clipped
-  const yMinRaw=0,yMax=Math.max(...ys)*1.15;
-  const yPad=(yMax-yMinRaw)*0.04; // 4% padding below 0
-  const yMin=yMinRaw-yPad;
+  const yMaxRaw=Math.max(...ys);const yPad=yMaxRaw*0.04;
+  const yMin=-yPad;const yMax=yMaxRaw*1.15;
   const sx=x=>PAD.l+(x-xMin)/(xMax-xMin)*cw;
   const sy=y=>PAD.t+ch-(y-yMin)/(yMax-yMin)*ch;
-  function jx(p){return sx(p.x+(((p.idx*7919+type.charCodeAt(0)*31)%200)/200-.5)*0.4);}
+  function jx(p){return sx(p.x+(((p.idx*7919+type.charCodeAt(0)*31)%200)/200-.5)*0.42);}
   const xTicks=[];for(let y=Math.ceil(xMin);y<=Math.floor(xMax);y++){if(y%2===0||(xMax-xMin)<10)xTicks.push(y);}
-  const yTicks=[];const nTicks=6;for(let i=0;i<=nTicks;i++){const v=yMinRaw+(yMax-yMinRaw)*i/nTicks;yTicks.push(v);}
+  const yTicks=[];for(let i=0;i<=5;i++)yTicks.push(0+yMaxRaw*i/5);
   const F="Arial,Helvetica,sans-serif";
   let html=`<rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}" fill="#fff" stroke="#333" stroke-width="1.5"/>`;
-  yTicks.forEach(yv=>{if(yv>=0)html+=`<line x1="${PAD.l}" y1="${sy(yv)}" x2="${PAD.l+cw}" y2="${sy(yv)}" stroke="#e8e8e8" stroke-width="0.8"/>`;});
-  xTicks.forEach(xv=>{html+=`<line x1="${sx(xv)}" y1="${PAD.t}" x2="${sx(xv)}" y2="${PAD.t+ch}" stroke="#e8e8e8" stroke-width="0.8"/>`;});
-  xTicks.forEach(xv=>{
-    html+=`<line x1="${sx(xv)}" y1="${PAD.t+ch}" x2="${sx(xv)}" y2="${PAD.t+ch+6}" stroke="#333" stroke-width="1.2"/>`;
-    html+=`<line x1="${sx(xv)}" y1="${PAD.t}" x2="${sx(xv)}" y2="${PAD.t-4}" stroke="#333" stroke-width="1"/>`;
-    html+=`<text x="${sx(xv)}" y="${PAD.t+ch+22}" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="14" fill="#222">${xv}</text>`;
-  });
-  yTicks.forEach(yv=>{
-    if(yv<0)return;
-    html+=`<line x1="${PAD.l-6}" y1="${sy(yv)}" x2="${PAD.l}" y2="${sy(yv)}" stroke="#333" stroke-width="1.2"/>`;
-    html+=`<line x1="${PAD.l+cw}" y1="${sy(yv)}" x2="${PAD.l+cw+4}" y2="${sy(yv)}" stroke="#333" stroke-width="1"/>`;
-    const lbl=yv>=1000?(yv/1000).toFixed(1)+'k':yv<1&&yv>0?yv.toFixed(2):yv.toFixed(1);
-    html+=`<text x="${PAD.l-10}" y="${sy(yv)+5}" text-anchor="end" font-weight="bold" font-family="${F}" font-size="14" fill="#222">${lbl}</text>`;
-  });
-  html+=`<text x="${PAD.l+cw/2}" y="${H-8}" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="15" fill="#222">Year Published</text>`;
-  html+=`<text transform="rotate(-90)" x="${-(PAD.t+ch/2)}" y="20" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="13" fill="#222">${cfg.yLabel}</text>`;
+  yTicks.forEach(yv=>{if(yv>0)html+=`<line x1="${PAD.l}" y1="${sy(yv)}" x2="${PAD.l+cw}" y2="${sy(yv)}" stroke="#eeece8" stroke-width="0.8"/>`;});
+  xTicks.forEach(xv=>{html+=`<line x1="${sx(xv)}" y1="${PAD.t}" x2="${sx(xv)}" y2="${PAD.t+ch}" stroke="#eeece8" stroke-width="0.8"/>`;});
+  xTicks.forEach(xv=>{html+=`<line x1="${sx(xv)}" y1="${PAD.t+ch}" x2="${sx(xv)}" y2="${PAD.t+ch+5}" stroke="#333" stroke-width="1.2"/>`;html+=`<line x1="${sx(xv)}" y1="${PAD.t}" x2="${sx(xv)}" y2="${PAD.t-3}" stroke="#333" stroke-width="1"/>`;html+=`<text x="${sx(xv)}" y="${PAD.t+ch+20}" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="13" fill="#222">${xv}</text>`;});
+  yTicks.forEach(yv=>{html+=`<line x1="${PAD.l-5}" y1="${sy(yv)}" x2="${PAD.l}" y2="${sy(yv)}" stroke="#333" stroke-width="1.2"/>`;html+=`<line x1="${PAD.l+cw}" y1="${sy(yv)}" x2="${PAD.l+cw+3}" y2="${sy(yv)}" stroke="#333" stroke-width="1"/>`;const lbl=yv>=1000?(yv/1000).toFixed(1)+'k':yv<1&&yv>0?yv.toFixed(2):yv.toFixed(1);html+=`<text x="${PAD.l-9}" y="${sy(yv)+4}" text-anchor="end" font-weight="bold" font-family="${F}" font-size="13" fill="#222">${lbl}</text>`;});
+  html+=`<text x="${PAD.l+cw/2}" y="${H-7}" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="14" fill="#222">Year Published</text>`;
+  html+=`<text transform="rotate(-90)" x="${-(PAD.t+ch/2)}" y="19" text-anchor="middle" font-weight="bold" font-family="${F}" font-size="13" fill="#222">${cfg.yLabel}</text>`;
   html+=`<defs><clipPath id="pc_${type}"><rect x="${PAD.l}" y="${PAD.t}" width="${cw}" height="${ch}"/></clipPath></defs><g clip-path="url(#pc_${type})">`;
-  CLS_ORDER.forEach(cls=>{
-    pts.filter(p=>{const c=p.r['Sorbent Class']||'';return cls==='Other'?!CLS_ORDER.slice(0,3).some(k=>c.toLowerCase().includes(k.toLowerCase())):(c.toLowerCase().includes(cls.toLowerCase()));}).forEach(p=>{
-      const col=CLS_COLOR[cls]||'#888';
-      html+=`<circle cx="${jx(p)}" cy="${sy(p.y)}" r="3.5" fill="${col}" fill-opacity="0.78" stroke="${col}" stroke-width="0.5" style="cursor:pointer" onmouseenter="showTip(event,${p.idx},'${type}')" onmouseleave="hideTip()" onclick="openModal(${p.idx})"/>`;
-    });
-  });
-  html+='</g>';
-  svgEl.innerHTML=html;
+  CLS_ORDER.forEach(cls=>{pts.filter(p=>{const c=p.r['Sorbent Class']||'';return cls==='Other'?!CLS_ORDER.slice(0,3).some(k=>c.toLowerCase().includes(k.toLowerCase())):(c.toLowerCase().includes(cls.toLowerCase()));}).forEach(p=>{const col=CLS_COLOR[cls]||'#888';html+=`<circle cx="${jx(p)}" cy="${sy(p.y)}" r="3.5" fill="${col}" fill-opacity="0.78" stroke="${col}" stroke-width="0.5" style="cursor:pointer" onmouseenter="showTip(event,${p.idx},'${type}')" onmouseleave="hideTip()" onclick="openModal(${p.idx})"/>`;});});
+  html+='</g>';svgEl.innerHTML=html;
   const presentCls=CLS_ORDER.filter(cls=>pts.some(p=>{const c=p.r['Sorbent Class']||'';return cls==='Other'?!CLS_ORDER.slice(0,3).some(k=>c.toLowerCase().includes(k.toLowerCase())):(c.toLowerCase().includes(cls.toLowerCase()));}));
-  document.getElementById('chart-legend').innerHTML=presentCls.map(cls=>`<div class="legend-item"><svg width="13" height="13" style="flex-shrink:0;vertical-align:middle"><circle cx="6.5" cy="6.5" r="5.5" fill="${CLS_COLOR[cls]}" fill-opacity="0.78"/></svg>${cls}</div>`).join('');
+  document.getElementById('chart-legend').innerHTML=presentCls.map(cls=>`<div class="legend-item"><svg width="13" height="13" style="flex-shrink:0;vertical-align:middle"><circle cx="6.5" cy="6.5" r="5.5" fill="${CLS_COLOR[cls]}" fill-opacity="0.8"/></svg>${cls}</div>`).join('');
 }
 
 function showTip(e,idx,type){
-  const r=ALL[idx];const cfg=CHART_CFG[type];
-  const sk='Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)';
+  const r=ALL[idx];const cfg=CHART_CFG[type];const sk='Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)';
   const fields=[['Material',r['Material abbreviation']||r['Material']],[cfg.yLabel.split('(')[0].trim(),r[cfg.yKey]],['Cap. temp (°C)',r['Capture temperature (C)']],['Rel. temp (°C)',r['Release temperature (C)']],['RH%',r['Moisture content (RH%)']],['CO₂ (ppm)',r['CO2 Concentration (ppm)']],['Capture gas',(r[sk]||'').toUpperCase()==='Y'?'Air':'Inert+CO₂'],['Regen. gas',r['Purging gas']],['Cycles',r['Capture-release cycles tested (#)']],];
   const tip=document.getElementById('tooltip');
   tip.innerHTML=`<strong>${r['First author']||''} (${r['Year']||''})</strong>`+fields.filter(([,v])=>v&&v!=='na'&&v!=='nr').map(([l,v])=>`<div class="tt-row"><span>${l}</span><span>${v}</span></div>`).join('');
@@ -1102,15 +1045,10 @@ function hideTip(){document.getElementById('tooltip').style.display='none';}
 document.addEventListener('mousemove',e=>{if(document.getElementById('tooltip').style.display==='block')moveTip(e);});
 
 // ── GUIDELINES ───────────────────────────────────
-function showGuide(id){
-  document.querySelectorAll('.guide-section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.guide-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('gsec-'+id).classList.add('active');
-  document.getElementById('gtab-'+id).classList.add('active');
-}
+function showGuide(id){document.querySelectorAll('.guide-section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.guide-tab').forEach(t=>t.classList.remove('active'));document.getElementById('gsec-'+id).classList.add('active');document.getElementById('gtab-'+id).classList.add('active');}
 
 // ── RESIZE ───────────────────────────────────────
-window.addEventListener('resize',()=>{if(document.getElementById('page-trends').classList.contains('active'))renderChart(currentChart);});
+window.addEventListener('resize',()=>{if(!inDB)renderChart(currentChart);});
 
 // ── INIT ─────────────────────────────────────────
 loadData();
