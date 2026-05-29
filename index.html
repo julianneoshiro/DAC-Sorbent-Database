@@ -795,17 +795,17 @@ function onLoaded(){
 const FS=[
   {k:'Year',l:'Year',t:'num',tip:'Year of publication.'},
   {k:'Sorbent Class',l:'Sorbent class',t:'cat',tip:'Amine, MOF, Metal oxide, or Other.'},
-  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',t:'num',tip:'CO<sub>2</sub> uptake in mmol/g.'},
-  {k:'Capture temperature (C)',l:'Capture temp (C)',t:'num',tip:'Temperature during CO<sub>2</sub> adsorption.'},
+  {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',t:'num',tip:'CO₂ uptake in mmol/g.'},
+  {k:'Capture temperature (C)',l:'Capture temp (C)',t:'num',tip:'Temperature during CO₂ adsorption.'},
   {k:'Release temperature (C)',l:'Release temp (C)',t:'num',tip:'Temperature during regeneration.'},
-  {k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)',t:'num',tip:'CO<sub>2</sub> concentration in feed gas.'},
+  {k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)',t:'num',tip:'CO₂ concentration in feed gas.'},
   {k:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',t:'cat',tip:'Y=Air; N=Inert+CO2.'},
   {k:'Purging gas',l:'Regeneration gas',t:'cat',tip:'Gas used during regeneration.'},
   {k:'Moisture content (RH%)',l:'Rel. humidity (%)',t:'num',tip:'Relative humidity of capture gas.'},
   {k:'Capture-release cycles tested (#)',l:'No. of cycles',t:'num',tip:'Total adsorption-desorption cycles.'},
   {k:'Degradation rate (%/cycle)',l:'Degrad. rate (%/cyc)',t:'num',tip:'Average percent CO₂ capacity loss per adsorption-desorption cycle. Defined as [(q1-qlast)/q1] x 100/N.'},
   {k:'Degradation cause (Category)',l:'Degradation cause',t:'cat',tip:'Reported degradation mechanism.'},
-  {k:'Method of CO<sub>2</sub> capacity measurement (i.e. TGA)',l:'Measurement method',t:'cat',tip:'TGA, Breakthrough, Isotherm, Other.'},
+  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method',t:'cat',tip:'TGA, Breakthrough, Isotherm, Other.'},
   {k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)',t:'num',tip:'Flow rate during adsorption.'},
   {k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)',t:'num',tip:'Inner diameter of breakthrough column.'},
   {k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)',t:'num',tip:'Mass of sorbent.'},
@@ -816,7 +816,7 @@ const SK='Simulated air? (Y/N) during adsorption (Y = O2 is present during adsor
 const dbD={},dbA={};
 const cD={capacity:{},cycles:{},degrad:{}};
 const cA={capacity:{},cycles:{},degrad:{}};
-const HOME_KEYS=['Sorbent Class','Capture temperature (C)','Moisture content (RH%)','Year',SK,'Method of CO<sub>2</sub> capacity measurement (i.e. TGA)'];
+const HOME_KEYS=['Sorbent Class','Capture temperature (C)','Moisture content (RH%)','Year',SK,'Method of CO2 capacity measurement (i.e. TGA)'];
 const hD={},hA={};
 FS.forEach(s=>{
   dbD[s.k]={min:'',max:'',sel:[]};dbA[s.k]={min:'',max:'',sel:[]};
@@ -1081,15 +1081,15 @@ const DBC=[
   {k:'Material abbreviation',l:'Material',tip:'Short identifier from the source paper.'},
   {k:'Sorbent Class',l:'Class',tip:'Amine, MOF, Metal oxide, or Other.'},
   {k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)',c:'nc',tip:'CO₂ uptake per gram of sorbent (mmol/g), converted from reported units. Represents the working capacity under the stated conditions.'},
-  {k:'Capture temperature (C)',l:'Cap. T (C)',c:'nc',tip:'Temperature during CO<sub>2</sub> adsorption.'},
+  {k:'Capture temperature (C)',l:'Cap. T (C)',c:'nc',tip:'Temperature during CO₂ adsorption.'},
   {k:'Release temperature (C)',l:'Rel. T (C)',c:'nc',tip:'Temperature during regeneration.'},
-  {k:'CO2 Concentration (ppm)',l:'CO2 (ppm)',c:'nc',tip:'CO<sub>2</sub> concentration in feed gas.'},
+  {k:'CO2 Concentration (ppm)',l:'CO2 (ppm)',c:'nc',tip:'CO₂ concentration in feed gas.'},
   {k:SK,l:'Capture gas',tip:'Y=Air (O2 present); N=Inert+CO2.'},
   {k:'Moisture content (RH%)',l:'RH%',c:'nc',tip:'Relative humidity of capture feed gas.'},
   {k:'Purging gas',l:'Regen. gas',tip:'Gas used during regeneration.'},
   {k:'Capture-release cycles tested (#)',l:'Cycles',c:'nc',tip:'Total adsorption-desorption cycles.'},
   {k:'Degradation rate (%/cycle)',l:'Degrad.(%/cyc)',c:'nc',tip:'Average percent CO₂ capacity loss per adsorption-desorption cycle. Defined as [(q1-qlast)/q1] x 100/N.'},
-  {k:'Method of CO<sub>2</sub> capacity measurement (i.e. TGA)',l:'Method',tip:'TGA, Breakthrough, Volumetric, Other.'},
+  {k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Method',tip:'TGA, Breakthrough, Volumetric, Other.'},
   {k:'DOI',l:'DOI',tip:'Click to open the source paper.'},
 ];
 let dbs='Year',dbd=-1;
@@ -1134,7 +1134,7 @@ function doDL(){
   document.getElementById('dlbg').classList.remove('open');
 }
 
-const MF2=[{k:'Year',l:'Year'},{k:'First author',l:'First author'},{k:'Corresponding author 1',l:'Corresponding author'},{k:'Material',l:'Material (full)',f:true},{k:'Material abbreviation',l:'Abbreviation'},{k:'Sorbent Class',l:'Sorbent class'},{k:'Adsorption Capacity (reported)',l:'Capacity (reported)'},{k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)'},{k:'Method of CO<sub>2</sub> capacity measurement (i.e. TGA)',l:'Measurement method'},{k:'Capture temperature (C)',l:'Capture temp (C)'},{k:'Release temperature (C)',l:'Release temp (C)'},{k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)'},{k:'Purging gas',l:'Regeneration gas'},{k:SK,l:'Capture gas'},{k:'Moisture content (RH%)',l:'Humidity (RH%)'},{k:'dew point (C)',l:'Dew point (C)'},{k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)'},{k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)'},{k:'Capture-release cycles tested (#)',l:'Cycles'},{k:'Degradation rate (% total)',l:'Degrad. (% total)'},{k:'Degradation rate (%/cycle)',l:'Degrad. (%/cycle)'},{k:'Degradation cause (Category)',l:'Degrad. cause'},{k:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t95 (min)'},{k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)'},{k:'Productivity',l:'Productivity'},{k:'Cycle time (Min)',l:'Cycle time (min)'},{k:'Notes',l:'Notes',f:true},{k:'DOI',l:'DOI',f:true}];
+const MF2=[{k:'Year',l:'Year'},{k:'First author',l:'First author'},{k:'Corresponding author 1',l:'Corresponding author'},{k:'Material',l:'Material (full)',f:true},{k:'Material abbreviation',l:'Abbreviation'},{k:'Sorbent Class',l:'Sorbent class'},{k:'Adsorption Capacity (reported)',l:'Capacity (reported)'},{k:'Adsorption capacity (mmol/g)',l:'Capacity (mmol/g)'},{k:'Method of CO2 capacity measurement (i.e. TGA)',l:'Measurement method'},{k:'Capture temperature (C)',l:'Capture temp (C)'},{k:'Release temperature (C)',l:'Release temp (C)'},{k:'CO2 Concentration (ppm)',l:'CO2 conc. (ppm)'},{k:'Purging gas',l:'Regeneration gas'},{k:SK,l:'Capture gas'},{k:'Moisture content (RH%)',l:'Humidity (RH%)'},{k:'dew point (C)',l:'Dew point (C)'},{k:'Gas flow rate during adsorption (mL/min)',l:'Flow rate (mL/min)'},{k:'Mass of sorbent loaded in column/sample pan (g)',l:'Sorbent mass (g)'},{k:'Capture-release cycles tested (#)',l:'Cycles'},{k:'Degradation rate (% total)',l:'Degrad. (% total)'},{k:'Degradation rate (%/cycle)',l:'Degrad. (%/cycle)'},{k:'Degradation cause (Category)',l:'Degrad. cause'},{k:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t95 (min)'},{k:'Column Diameter (cm) - only for breakthrough',l:'Column diam. (cm)'},{k:'Productivity',l:'Productivity'},{k:'Cycle time (Min)',l:'Cycle time (min)'},{k:'Notes',l:'Notes',f:true},{k:'DOI',l:'DOI',f:true}];
 function openM(idx){
   const r=ALL[idx];
   document.getElementById('m-title').textContent=r['Material abbreviation']||r['Material']||'Sorbent detail';
