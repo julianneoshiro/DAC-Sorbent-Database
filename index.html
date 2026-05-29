@@ -124,9 +124,10 @@ nav.dk .ndd a:hover{color:#fff;background:rgba(255,255,255,.06)}
 .sfeat-n{font-family:var(--mo);font-size:2.6rem;font-weight:500;color:var(--ac);display:block;margin-bottom:.4rem}
 .sfeat-l{font-size:.76rem;color:var(--mu);line-height:1.45;display:block}
 @media(max-width:700px){.stats-feature-grid{grid-template-columns:1fr 1fr}}
-.hfoot{background:var(--ad);padding:2.5rem 3.5rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
-.hfoot p{font-family:var(--se);font-size:.88rem;color:rgba(255,255,255,.62);font-weight:300;max-width:500px;line-height:1.7}
+.hfoot{background:var(--ad);padding:2.75rem 3.5rem;text-align:center}
+.hfoot p{font-family:var(--se);font-size:.9rem;color:rgba(255,255,255,.62);font-weight:300;max-width:680px;line-height:1.85;margin:0 auto}
 .hfoot p strong{color:#7ddbb8;font-weight:500}
+.hfoot .lk{color:#7ddbb8;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 /* PAGE HEADER */
 .phdr{padding:1.5rem 3.5rem .9rem;border-bottom:1px solid var(--bo);background:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
 .phdr h2{font-family:var(--se);font-size:1.3rem;font-weight:400;margin-bottom:.12rem}
@@ -455,11 +456,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 
   <div class="dv"></div>
   <div class="hfoot">
-    <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. The database will be continuously updated; contributions and corrections are welcome.</p>
-    <div style="display:flex;gap:.65rem;flex-wrap:wrap">
-      <button class="bw" onclick="goP('about')">About the Project</button>
-      <button class="bol" onclick="goP('contact')">Contact Us</button>
-    </div>
+    <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. The database will be continuously updated; contributions and corrections are welcome. Feel free to <strong class="lk" onclick="goP('contact')">contact us</strong>.</p>
   </div>
 </div><!-- end home -->
 
@@ -582,10 +579,10 @@ tr:hover td{background:#faf9f6;cursor:pointer}
     <div class="ao"><div class="art">
       <h2>Standardized Testing Conditions</h2>
       <p>A key challenge in assessing progress is the wide variation in testing conditions across studies. Without a consistent framework, differences in reported performance may reflect experimental variation rather than genuine material improvements.</p>
-      <div class="hlb"><p>Because different sorbent classes are studied and operated in different ways, each sorbent type is assigned its own set of standard conditions. Amines, MOFs, metal oxides, and other materials each have a distinct set of recommended testing conditions reflecting how that class is most commonly evaluated.</p></div>
-      <p>Standard conditions were identified as the most frequently reported (mode) value for each parameter within each class. The percentage in parentheses is the fraction of that class tested under that condition.</p>
+      <div class="hlb"><p>Because different sorbent classes interact with CO&#x2082; and the environment in different ways, each sorbent type is assigned its own set of standard conditions. Amines, MOFs, metal oxides, and other materials each have a distinct set of recommended testing conditions reflecting how that class is most commonly evaluated.</p></div>
+      <p>Standard conditions were identified as the most frequently reported (mode) value for each parameter within each class. The percentage in parentheses is the fraction of sorbents <strong>within that class</strong> tested under that condition, not a fraction of the full database.</p>
       <h3>Recommended Standard Conditions</h3>
-      <table class="ctbl"><thead><tr><th>Parameter</th><th>Unit</th><th>Amine (%)</th><th>MOF (%)</th><th>Metal Oxide (%)</th><th>Other (%)</th></tr></thead>
+      <table class="ctbl"><thead><tr><th>Parameter</th><th>Unit</th><th>Amine (% of amines)</th><th>MOF (% of MOFs)</th><th>Metal Oxide (% of metal oxides)</th><th>Other (% of others)</th></tr></thead>
         <tbody>
           <tr><td>Capture temperature</td><td>&#xb0;C</td><td class="val">25 (61%)</td><td class="val">25 (64%)</td><td class="val">25 (45%)</td><td class="val">25 (72%)</td></tr>
           <tr><td>Regeneration temperature</td><td>&#xb0;C</td><td class="val">110 (31%)</td><td class="val">100 (31%)</td><td class="val">200 (54%)</td><td class="val">250 (24%)</td></tr>
@@ -604,7 +601,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
     <div class="ao"><div class="art">
       <h2>Deployment-Relevant Reporting</h2>
       <p>While standardized testing enables comparability, real DAC systems operate across wide environmental variation.</p>
-      <div class="warnb"><p>Only about 8% of sorbents have been characterized under all four deployment-relevant conditions: atmospheric CO&#x2082; concentrations, oxidative environments, humid conditions, and breakthrough measurements.</p></div>
+      <div class="warnb"><p>Only about 8% of sorbents have been characterized across the full range of deployment-relevant conditions, which include atmospheric CO&#x2082; concentrations, oxidative environments, humid conditions, and breakthrough measurements, among others.</p></div>
       <h3>Key Environmental Factors</h3>
       <h4>Relative Humidity</h4><p>At moderate humidity (20-60% RH), water can increase CO&#x2082; capacity of amine sorbents by shifting the mechanism toward ammonium bicarbonate. At high humidity, excess water loading raises regeneration energy and blocks binding sites.</p>
       <h4>Ambient Temperature</h4><p>Lower temperatures increase adsorption affinity but raise desorption energy. DAC sites range from hot-dry desert to cold subarctic conditions.</p>
@@ -621,7 +618,6 @@ tr:hover td{background:#faf9f6;cursor:pointer}
       <ul>
         <li>Commercially available, so any lab can obtain the same material</li>
         <li>Well-characterized, with reproducible and widely reported performance</li>
-        <li>Chemically and thermally stable under repeated cycling</li>
         <li>Representative of its sorbent class</li>
         <li>Tested under standard conditions for its class</li>
         <li>Strong deployment-relevant characterization</li>
@@ -1153,9 +1149,9 @@ function openM(idx){
 const CC={'Amine':'#1a9e7e','MOF':'#c89a0a','Metal oxide':'#c0391c','Other':'#5b3fa0'};
 const CO=['Amine','MOF','Metal oxide','Other'];
 const CCFG={
-  capacity:{svgId:'svg-cap',legId:'cap-leg',cntId:'cap-cnt',tlId:'cap-tlbl',title:'CO\u2082 capture capacity (mmol/g) vs. year of publication',xk:'Year',yk:'Adsorption capacity (mmol/g)',yl:'mmol<tspan dy="4" font-size="11">CO\u2082</tspan><tspan dy="-4"> / g</tspan><tspan dy="4" font-size="11">sorbent</tspan>'},
+  capacity:{svgId:'svg-cap',legId:'cap-leg',cntId:'cap-cnt',tlId:'cap-tlbl',title:'CO\u2082 capture capacity (mmol/g) vs. year of publication',xk:'Year',yk:'Adsorption capacity (mmol/g)',yl:'CO\u2082 Capacity (mmol<tspan dy="4" font-size="11">CO\u2082</tspan><tspan dy="-4"> / g</tspan><tspan dy="4" font-size="11">sorbent</tspan><tspan dy="-4">)</tspan>'},
   cycles:{svgId:'svg-cyc',legId:'cyc-leg',cntId:'cyc-cnt',tlId:'cyc-tlbl',title:'Normalized cycle time (min) vs. year of publication',xk:'Year',yk:'Cycle time (Min)',yl:'Normalized Cycle Time (min)'},
-  degrad:{svgId:'svg-deg',legId:'deg-leg',cntId:'deg-cnt',tlId:'deg-tlbl',title:'Degradation rate (%/cycle) vs. year of publication',xk:'Year',yk:'Degradation rate (%/cycle)',yl:'(% CO<tspan dy="4" font-size="11">2</tspan><tspan dy="-4"> capacity loss / cycle)</tspan>'},
+  degrad:{svgId:'svg-deg',legId:'deg-leg',cntId:'deg-cnt',tlId:'deg-tlbl',title:'Degradation rate (%/cycle) vs. year of publication',xk:'Year',yk:'Degradation rate (%/cycle)',yl:'Degradation Rate (% CO<tspan dy="4" font-size="11">2</tspan><tspan dy="-4"> capacity loss / cycle)</tspan>'},
 };
 
 function renderAll(){['capacity','cycles','degrad'].forEach(c=>renderSingle(c));}
@@ -1235,7 +1231,7 @@ function showT(e,idx,type){
   const fields=[
     [valLabel,r[valKey]],
     ['Cap. temp (\u00b0C)',r['Capture temperature (C)']],
-    ['Rel. temp (\u00b0C)',r['Release temperature (C)']],
+    ['Regen. Temp (\u00b0C)',r['Release temperature (C)']],
     ['RH%',r['Moisture content (RH%)']],
     ['CO\u2082 (ppm)',r['CO2 Concentration (ppm)']],
     ['Capture gas',(r[SK]||'').toUpperCase()==='Y'?'Air':'Inert+CO\u2082'],
