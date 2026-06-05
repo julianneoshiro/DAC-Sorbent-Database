@@ -325,39 +325,49 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 .bac{padding:.46rem .92rem;background:var(--ac);color:#fff;border:none;border-radius:5px;font-family:var(--sa);font-size:.75rem;font-weight:500;cursor:pointer;transition:opacity .15s}
 .bac:hover{opacity:.85}
 /* CONTRIBUTE FORM */
-.cbwrap{max-width:760px;margin:0 auto;padding:2.5rem 1.4rem 4rem}
-.cbsteps{display:flex;gap:.4rem;margin-bottom:1.8rem;flex-wrap:wrap}
-.cbstep{flex:1;min-width:90px;text-align:center;padding:.5rem .3rem;border-radius:6px;border:1px solid var(--bo);background:#fff;font-size:.66rem;color:var(--mu);font-family:var(--mo);letter-spacing:.04em;cursor:pointer;transition:.15s}
-.cbstep.act{background:var(--ac);color:#fff;border-color:var(--ac)}
-.cbstep.done{border-color:var(--ac);color:var(--ac)}
-.cbstep .cbsn{display:block;font-size:.9rem;font-weight:600;margin-bottom:.1rem}
-.cbpanel{display:none;background:#fff;border:1px solid var(--bo);border-radius:10px;padding:1.8rem}
-.cbpanel.act{display:block}
-.cbpanel h3{font-family:var(--se);font-size:1.4rem;font-weight:400;margin-bottom:.3rem}
-.cbpanel .cbintro{font-family:var(--se);font-size:.86rem;line-height:1.7;color:var(--mu);font-weight:300;margin-bottom:1.4rem}
-.cbgrid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 1.1rem}
-.cbgrid .full{grid-column:1/-1}
-.cbf{margin-bottom:.5rem}
-.cbf label{display:block;font-size:.74rem;font-weight:500;margin-bottom:.22rem}
+.cbwrap{max-width:1180px;margin:0 auto;padding:2rem 1.4rem 4rem}
+.cbinfo{background:var(--al);border:1px solid #cfe3d7;border-radius:8px;padding:1rem 1.2rem;font-family:var(--se);font-size:.82rem;line-height:1.6;color:var(--ac);margin-bottom:1.6rem}
+.cbtips{margin:.55rem 0 0;padding-left:1.1rem}
+.cbtips li{margin-bottom:.4rem}
+.cbtips li:last-child{margin-bottom:0}
+.cbsec{font-family:var(--se);font-size:1.15rem;font-weight:500;margin:1.6rem 0 .7rem;letter-spacing:-.01em}
+.cbcount{font-family:var(--mo);font-size:.72rem;color:var(--mu);font-weight:400;margin-left:.4rem}
+.cbgridhint{font-family:var(--se);font-size:.78rem;color:var(--mu);margin-bottom:.7rem}
+.cbpaper{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.55rem 1rem;background:#fff;border:1px solid var(--bo);border-radius:9px;padding:1.2rem 1.3rem}
+.cbf label{display:block;font-size:.73rem;font-weight:500;margin-bottom:.2rem}
 .cbf .req{color:#c0392b;margin-left:2px}
-.cbf .hint{display:block;font-size:.66rem;color:var(--mu);font-weight:300;font-family:var(--se);margin-bottom:.3rem;line-height:1.45}
-.cbf input,.cbf select,.cbf textarea{width:100%;padding:7px 9px;border:1px solid var(--bo);border-radius:5px;font-family:var(--sa);font-size:.78rem;background:#fff;color:var(--tx);outline:none}
-.cbf input:focus,.cbf select:focus,.cbf textarea:focus{border-color:var(--ac)}
-.cbf textarea{resize:vertical;min-height:64px;line-height:1.5}
+.cbf input,.cbf select{width:100%;padding:7px 9px;border:1px solid var(--bo);border-radius:5px;font-family:var(--sa);font-size:.78rem;background:#fff;color:var(--tx);outline:none}
+.cbf input:focus,.cbf select:focus{border-color:var(--ac)}
 .cbf input.err,.cbf select.err{border-color:#c0392b;background:#fdf3f2}
-.cbnav{display:flex;justify-content:space-between;margin-top:1.6rem;gap:.6rem}
+/* editable grid */
+.cbgridwrap{overflow-x:auto;border:1px solid var(--bo);border-radius:9px;background:#fff;scrollbar-width:thin;scrollbar-color:var(--bo) transparent}
+.cbtable{border-collapse:separate;border-spacing:0;font-size:.74rem;font-family:var(--sa);width:max-content;min-width:100%;border:none}
+.cbtable th{position:sticky;top:0;background:#f5f3ee;text-align:left;font-size:.63rem;font-weight:600;color:var(--mu);padding:7px 8px;white-space:nowrap;border-bottom:1px solid var(--bo);vertical-align:bottom;cursor:default}
+.cbtable th .req{color:#c0392b}
+.cbtable td{padding:3px 5px;border-bottom:1px solid var(--bo);vertical-align:middle}
+.cbtable tr:last-child td{border-bottom:none}
+.cbtable input,.cbtable select{border:1px solid transparent;border-radius:4px;padding:5px 6px;font-family:var(--sa);font-size:.74rem;background:transparent;color:var(--tx);outline:none;min-width:90px}
+.cbtable input:focus,.cbtable select:focus{border-color:var(--ac);background:#fff}
+.cbtable input.err,.cbtable select.err{border-color:#c0392b;background:#fdf3f2}
+.cbtable input::placeholder{color:#bdb9b0}
+.cbcell-wide input{min-width:160px}
+.cbcell-src input{min-width:140px}
+.cbrownum{font-family:var(--mo);font-size:.7rem;color:var(--mu);text-align:center;padding:0 6px}
+.cbrowact{display:flex;gap:3px;padding:0 6px;white-space:nowrap}
+.cbiconbtn{border:1px solid var(--bo);background:#fff;border-radius:4px;font-size:.62rem;padding:3px 6px;cursor:pointer;color:var(--mu);font-family:var(--sa);transition:.12s}
+.cbiconbtn:hover{border-color:var(--ac);color:var(--ac)}
+.cbiconbtn.del:hover{border-color:#c0392b;color:#c0392b}
+.cbcolhead{display:inline-flex;align-items:center;gap:3px}
+.cbcolhead .thii{position:relative;display:inline-flex;cursor:help;color:#b6b2a8;font-size:.8em}
+.cbcolhead .thii:hover .thtt{display:block}
+.cbrowbtns{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+.cbnav{display:flex;justify-content:flex-end;margin-top:1.8rem;gap:.6rem}
 .cbnav .sp{flex:1}
-.cbinfo{background:var(--al);border:1px solid #cfe3d7;border-radius:8px;padding:.9rem 1.1rem;font-family:var(--se);font-size:.8rem;line-height:1.65;color:var(--ac);margin-bottom:1.4rem}
-.cbrev{font-size:.76rem;font-family:var(--sa)}
-.cbrev .rrow{display:flex;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px dashed var(--bo)}
-.cbrev .rrow span:first-child{color:var(--mu)}
-.cbrev .rrow span:last-child{font-weight:500;text-align:right;max-width:60%}
-.cbmissing{background:#fdf3f2;border:1px solid #e8c3bd;color:#9c2f23;border-radius:7px;padding:.7rem .95rem;font-size:.74rem;margin-bottom:1rem;line-height:1.55;display:none}
+.cbmissing{background:#fdf3f2;border:1px solid #e8c3bd;color:#9c2f23;border-radius:7px;padding:.7rem .95rem;font-size:.75rem;margin-bottom:1rem;line-height:1.55;display:none}
 .cbmissing.show{display:block}
 .cbok{text-align:center;padding:2.5rem 1rem;display:none}
 .cbok.show{display:block}
 .cbok .okc{width:62px;height:62px;border-radius:50%;background:var(--al);color:var(--ac);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1.1rem}
-@media(max-width:680px){.cbgrid{grid-template-columns:1fr}}
 /* PARAMS */
 .ptwo{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
 .pb{margin-bottom:1.25rem}
@@ -775,130 +785,53 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 
 <!-- CONTRIBUTE -->
 <div id="page-contribute" class="page po">
-  <div class="phdr"><div><h2>Contribute a Sorbent</h2><p>Add a sorbent entry to the open database. Submissions are reviewed before publishing.</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
+  <div class="phdr"><div><h2>Contribute Sorbents</h2><p>Add the sorbent measurements from one paper to the open database. Submissions are reviewed before publishing.</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
   <div class="cbwrap">
-    <div class="cbinfo">Anyone can contribute. This guided form walks you through the same 18 parameters recorded for every entry. When you submit, your entry is sent to our team for review; once we confirm everything is recorded correctly, it is added to the public database. Fields marked <span style="color:#c0392b">*</span> are required. Use <strong>nr</strong> (not reported) or <strong>na</strong> (not applicable) where a value does not exist, just as in the database. Not sure what a field means? See the <span style="cursor:pointer;text-decoration:underline" onclick="goP('parameters')">parameter descriptions</span>.</div>
-
-    <div class="cbsteps" id="cb-steps">
-      <div class="cbstep act" onclick="cbGo(0)"><span class="cbsn">1</span>You &amp; Source</div>
-      <div class="cbstep" onclick="cbGo(1)"><span class="cbsn">2</span>Identity</div>
-      <div class="cbstep" onclick="cbGo(2)"><span class="cbsn">3</span>Performance</div>
-      <div class="cbstep" onclick="cbGo(3)"><span class="cbsn">4</span>Conditions</div>
-      <div class="cbstep" onclick="cbGo(4)"><span class="cbsn">5</span>Stability</div>
-      <div class="cbstep" onclick="cbGo(5)"><span class="cbsn">6</span>Review</div>
+    <div class="cbinfo">
+      <strong>How this works.</strong> One submission covers <strong>one paper</strong>. Enter the paper details once below, then add a row for each measurement.
+      <ul class="cbtips">
+        <li><strong>One row = one CO&#x2082; capacity measurement.</strong> If a paper reports the same material measured under several conditions (e.g. different temperatures or humidities), each of those is its own row.</li>
+        <li><strong>Degradation / cycling is not a separate row.</strong> A stability or cycling experiment belongs to the measurement it was run on, so record its results (cycles, degradation rate, cause) in that same row, not as an extra entry.</li>
+        <li><strong>Duplicate to save time.</strong> Use <em>Copy</em> on a row to clone it, then change only the values that differ. Great for the same material across conditions.</li>
+        <li><strong>Tell us where you found it.</strong> Every row needs a <em>Source location</em>: the figure, table, or section of text the value comes from (e.g. "Fig 3a", "Table 2", "text, Sec 3.1").</li>
+        <li>Use <strong>nr</strong> (not reported) or <strong>na</strong> (not applicable) where a value does not exist. Unsure what a column means? Hover its <span class="thii" style="position:relative;display:inline-flex">&#9432;</span> header, or see the <span style="cursor:pointer;text-decoration:underline" onclick="goP('parameters')">parameter descriptions</span>.</li>
+      </ul>
     </div>
 
+    <h3 class="cbsec">1 &middot; The paper</h3>
+    <div class="cbpaper">
+      <div class="cbf"><label>Your name<span class="req">*</span></label><input id="p-name" data-preq placeholder="Jane Smith"></div>
+      <div class="cbf"><label>Your email<span class="req">*</span></label><input id="p-email" type="email" data-preq placeholder="you@institution.edu"></div>
+      <div class="cbf"><label>DOI of paper<span class="req">*</span></label><input id="p-doi" data-preq placeholder="10.1021/jacs.xxxxxxx"></div>
+      <div class="cbf"><label>First author<span class="req">*</span></label><input id="p-author" data-preq placeholder="Smith"></div>
+      <div class="cbf"><label>Year<span class="req">*</span></label><input id="p-year" type="number" data-preq placeholder="2024"></div>
+    </div>
+
+    <h3 class="cbsec">2 &middot; The measurements <span class="cbcount" id="cb-count"></span></h3>
+    <p class="cbgridhint">Scroll the grid sideways to reach every column. Columns marked <span class="req">*</span> are required for each row.</p>
     <div class="cbmissing" id="cb-missing"></div>
-    <form id="cb-form" onsubmit="return false">
 
-    <!-- STEP 1: submitter + source -->
-    <div class="cbpanel act" data-step="0">
-      <h3>About you &amp; the source</h3>
-      <p class="cbintro">We use your contact details only to follow up about this submission. Every entry must be traceable to a peer-reviewed source.</p>
-      <div class="cbgrid">
-        <div class="cbf"><label>Your name<span class="req">*</span></label><input name="Submitter name" data-req></div>
-        <div class="cbf"><label>Your email<span class="req">*</span></label><input name="Submitter email" type="email" data-req placeholder="you@institution.edu"></div>
-        <div class="cbf full"><label>DOI of source paper<span class="req">*</span></label><span class="hint">The DOI lets us verify the data against the publication.</span><input name="DOI" data-req placeholder="10.1021/jacs.xxxxxxx"></div>
-        <div class="cbf"><label>Year of publication<span class="req">*</span></label><input name="Year" type="number" data-req placeholder="2024"></div>
-        <div class="cbf"><label>First author<span class="req">*</span></label><span class="hint">Last name of the first author.</span><input name="First author" data-req placeholder="Smith"></div>
-      </div>
+    <div class="cbgridwrap">
+      <table class="cbtable" id="cb-table">
+        <thead><tr id="cb-head"></tr></thead>
+        <tbody id="cb-rows"></tbody>
+      </table>
+    </div>
+    <div class="cbrowbtns">
+      <button class="bs ac2" onclick="cbAddRow()">&#43; Add measurement row</button>
+      <button class="bs" onclick="cbAddRow(true)">&#43; Add 5 rows</button>
     </div>
 
-    <!-- STEP 2: identity -->
-    <div class="cbpanel" data-step="1">
-      <h3>Sorbent identity</h3>
-      <p class="cbintro">How the material is named and classified.</p>
-      <div class="cbgrid">
-        <div class="cbf full"><label>Material (full name)<span class="req">*</span></label><input name="Material" data-req placeholder="e.g. Branched poly(ethylenimine) on silica"></div>
-        <div class="cbf"><label>Material abbreviation<span class="req">*</span></label><span class="hint">Short identifier, e.g. PEI/SiO2.</span><input name="Material abbreviation" data-req></div>
-        <div class="cbf"><label>Sorbent class<span class="req">*</span></label>
-          <select name="Sorbent Class" data-req>
-            <option value="">Select...</option>
-            <option>Amine</option><option>MOF</option><option>Metal oxide</option><option>Other</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 3: performance -->
-    <div class="cbpanel" data-step="2">
-      <h3>Performance metrics</h3>
-      <p class="cbintro">Capacity is the core metric. Report it in mmol CO&#x2082; per gram of sorbent. Breakthrough fields are only needed if measurement was by breakthrough column.</p>
-      <div class="cbgrid">
-        <div class="cbf"><label>CO&#x2082; adsorption capacity (mmol/g)<span class="req">*</span></label><span class="hint">At or near 400 ppm CO&#x2082; where possible.</span><input name="Adsorption capacity (mmol/g)" data-req placeholder="e.g. 1.85"></div>
-        <div class="cbf"><label>Capacity as reported</label><span class="hint">Original value &amp; units before conversion, e.g. "2.1 mol/kg".</span><input name="Adsorption Capacity (reported)" placeholder="optional"></div>
-        <div class="cbf"><label>CO&#x2082; measurement method<span class="req">*</span></label>
-          <select name="Method of CO2 capacity measurement (i.e. TGA)" data-req>
-            <option value="">Select...</option>
-            <option>TGA (gravimetric)</option><option>Breakthrough (packed bed)</option><option>Volumetric (isotherm)</option><option>Other</option>
-          </select>
-        </div>
-        <div class="cbf"><label>Gas flow rate during adsorption (mL/min)</label><span class="hint">na for isotherm measurements.</span><input name="Gas flow rate during adsorption (mL/min)" placeholder="e.g. 400"></div>
-        <div class="cbf"><label>t&#x2089;&#x2085; (min) &mdash; breakthrough only</label><span class="hint">Time for outlet CO&#x2082; to reach 95% of inlet. Used to compute normalized cycle time.</span><input name="Time to reach 95% outlet concentration  (min) - only for breakthrough" placeholder="nr / na if not breakthrough"></div>
-        <div class="cbf"><label>Column diameter (cm) &mdash; breakthrough only</label><input name="Column Diameter (cm) - only for breakthrough" placeholder="nr / na"></div>
-        <div class="cbf"><label>Mass of sorbent loaded (g)</label><input name="Mass of sorbent loaded in column/sample pan (g)" placeholder="e.g. 0.1"></div>
-      </div>
-    </div>
-
-    <!-- STEP 4: conditions -->
-    <div class="cbpanel" data-step="3">
-      <h3>Experimental conditions</h3>
-      <p class="cbintro">The conditions under which capacity was measured. These determine how comparable the entry is to others.</p>
-      <div class="cbgrid">
-        <div class="cbf"><label>Capture temperature (&deg;C)<span class="req">*</span></label><span class="hint">"Room temperature" / "ambient" = 25 &deg;C.</span><input name="Capture temperature (C)" data-req placeholder="e.g. 25"></div>
-        <div class="cbf"><label>Regeneration temperature (&deg;C)<span class="req">*</span></label><span class="hint">For vacuum swing, the temperature at which vacuum was applied.</span><input name="Release temperature (C)" data-req placeholder="e.g. 110"></div>
-        <div class="cbf"><label>CO&#x2082; concentration in capture gas (ppm)<span class="req">*</span></label><span class="hint">Ambient air &asymp; 425 ppm.</span><input name="CO2 Concentration (ppm)" data-req placeholder="e.g. 400"></div>
-        <div class="cbf"><label>Capture gas<span class="req">*</span></label><span class="hint">Gas during adsorption. Air contains O&#x2082;, which can drive oxidative degradation.</span>
-          <select name="Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)" data-req>
-            <option value="">Select...</option>
-            <option value="Y">Air (O&#x2082; present)</option>
-            <option value="N">Inert + CO&#x2082; (no O&#x2082;)</option>
-          </select>
-        </div>
-        <div class="cbf"><label>Relative humidity (%)<span class="req">*</span></label><span class="hint">0% = dry conditions.</span><input name="Moisture content (RH%)" data-req placeholder="e.g. 0"></div>
-        <div class="cbf"><label>Regeneration gas</label><span class="hint">Gas used during desorption: N2, He, Ar, vacuum, etc.</span><input name="Purging gas" placeholder="e.g. N2"></div>
-      </div>
-    </div>
-
-    <!-- STEP 5: stability -->
-    <div class="cbpanel" data-step="4">
-      <h3>Stability &amp; cycling</h3>
-      <p class="cbintro">Cycling data is severely under-reported but highly valuable. Enter what is available; use nr where the paper does not report it.</p>
-      <div class="cbgrid">
-        <div class="cbf"><label>Number of cycles tested</label><span class="hint">0 or nr if a single measurement.</span><input name="Capture-release cycles tested (#)" placeholder="e.g. 10"></div>
-        <div class="cbf"><label>Degradation rate (%/cycle)</label><span class="hint">Avg % capacity loss per cycle: [(q&#x2081;&minus;q_last)/q&#x2081;]&times;100/N.</span><input name="Degradation rate (%/cycle)" placeholder="nr if not reported"></div>
-        <div class="cbf"><label>Total degradation (%)</label><span class="hint">Total capacity lost across all cycles tested.</span><input name="Degradation rate (% total)" placeholder="optional"></div>
-        <div class="cbf"><label>Degradation cause</label>
-          <select name="Degradation cause (Category)">
-            <option value="">Select / nr</option>
-            <option>Thermal</option><option>Oxidation</option><option>Hydrolysis</option><option>CO2-catalyzed</option><option>Pore blockage</option><option>Structural</option><option>Negligible</option><option>None suggested</option>
-          </select>
-        </div>
-        <div class="cbf full"><label>Notes</label><span class="hint">Anything that helps us verify or contextualize the entry.</span><textarea name="Notes" placeholder="Optional notes for the reviewer..."></textarea></div>
-      </div>
-    </div>
-
-    <!-- STEP 6: review -->
-    <div class="cbpanel" data-step="5">
-      <h3>Review &amp; submit</h3>
-      <p class="cbintro">Check everything below. You can jump back to any step to edit. When you submit, this is sent to our team for verification before it is added to the database.</p>
-      <div class="cbrev" id="cb-review"></div>
-    </div>
-
-    </form>
-
-    <div class="cbnav" id="cb-nav">
-      <button class="bs" id="cb-prev" onclick="cbPrev()" style="visibility:hidden">&#x2190; Back</button>
+    <div class="cbnav">
       <div class="sp"></div>
-      <button class="bs ac2" id="cb-next" onclick="cbNext()">Next &rarr;</button>
-      <button class="bac" id="cb-submit" onclick="cbSubmit()" style="display:none">Submit for review</button>
+      <button class="bac" id="cb-submit" onclick="cbSubmit()">Submit paper for review</button>
     </div>
 
     <div class="cbok" id="cb-ok">
       <div class="okc">&#x2713;</div>
       <h3 style="font-family:var(--se);font-weight:400;margin-bottom:.5rem">Thank you for contributing!</h3>
-      <p style="font-family:var(--se);color:var(--mu);font-size:.88rem;line-height:1.7;max-width:440px;margin:0 auto 1.3rem">Your sorbent entry has been sent for review. We will verify the values against the source paper and add it to the public database. We may email you if we have questions.</p>
-      <button class="bs ac2" onclick="cbReset()">Submit another</button>
+      <p style="font-family:var(--se);color:var(--mu);font-size:.88rem;line-height:1.7;max-width:460px;margin:0 auto 1.3rem">Your measurements have been sent for review. We will verify the values against the paper and add them to the public database. We may email you if we have questions.</p>
+      <button class="bs ac2" onclick="cbReset()">Submit another paper</button>
     </div>
   </div>
 </div>
@@ -1519,102 +1452,158 @@ window.addEventListener('resize',()=>{
   el.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopPropagation();moved=false;}},true);
 })();
 
-// ===== CONTRIBUTE FORM =====
-// To receive submissions: create a free form endpoint (e.g. at formspree.io),
-// then paste its URL below. Until then, submissions fall back to opening an
-// email draft addressed to CONTRIB_EMAIL.
+// ===== CONTRIBUTE FORM (one paper, many measurement rows) =====
+// To receive submissions: create a free form endpoint (e.g. at formspree.io)
+// and paste its URL into CONTRIB_ENDPOINT. Until then, submitting opens a
+// pre-filled email draft to CONTRIB_EMAIL so nothing is lost.
 const CONTRIB_ENDPOINT=""; // e.g. "https://formspree.io/f/xxxxxxxx"
-const CONTRIB_EMAIL="your-email@institution.edu"; // fallback recipient
-let cbStep=0;
-const CB_LAST=5;
-function cbShow(n){
-  cbStep=Math.max(0,Math.min(CB_LAST,n));
-  document.querySelectorAll('#page-contribute .cbpanel').forEach(p=>p.classList.toggle('act',+p.dataset.step===cbStep));
-  document.querySelectorAll('#cb-steps .cbstep').forEach((s,i)=>{s.classList.toggle('act',i===cbStep);s.classList.toggle('done',i<cbStep);});
-  document.getElementById('cb-prev').style.visibility=cbStep===0?'hidden':'visible';
-  const last=cbStep===CB_LAST;
-  document.getElementById('cb-next').style.display=last?'none':'inline-block';
-  document.getElementById('cb-submit').style.display=last?'inline-block':'none';
-  document.getElementById('cb-missing').classList.remove('show');
-  if(last)cbBuildReview();
-  document.getElementById('page-contribute').scrollTop=0;window.scrollTo(0,0);
+const CONTRIB_EMAIL="your-email@institution.edu";
+
+// column definitions for one measurement row
+const CB_COLS=[
+  {f:'Material',l:'Material',req:1,cls:'cbcell-wide',ph:'Full material name',tip:'Full material name as given in the paper.'},
+  {f:'Material abbreviation',l:'Abbrev.',ph:'e.g. PEI/SiO\u2082',tip:'Short identifier used in the paper.'},
+  {f:'Sorbent Class',l:'Class',req:1,type:'select',opts:[['','...'],['Amine','Amine'],['MOF','MOF'],['Metal oxide','Metal oxide'],['Other','Other']],tip:'Amine, MOF, Metal oxide, or Other (COF, zeolite, etc.).'},
+  {f:'Adsorption capacity (mmol/g)',l:'CO\u2082 capacity (mmol/g)',req:1,ph:'mmol/g',tip:'CO\u2082 uptake in mmol per gram of sorbent, at or near the stated conditions.'},
+  {f:'Method of CO2 capacity measurement (i.e. TGA)',l:'Method',type:'select',opts:[['','...'],['TGA (gravimetric)','TGA'],['Breakthrough (packed bed)','Breakthrough'],['Volumetric (isotherm)','Volumetric'],['Other','Other']],tip:'How capacity was measured.'},
+  {f:'Capture temperature (C)',l:'Capture T (\u00b0C)',req:1,ph:'25',tip:'Temperature during adsorption. Room temp / ambient = 25.'},
+  {f:'Release temperature (C)',l:'Regen T (\u00b0C)',ph:'110',tip:'Temperature during regeneration / desorption.'},
+  {f:'CO2 Concentration (ppm)',l:'CO\u2082 conc. (ppm)',req:1,ph:'400',tip:'CO\u2082 concentration in the capture gas. Ambient air \u2248 425 ppm.'},
+  {f:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',req:1,type:'select',opts:[['','...'],['Y','Air (O\u2082)'],['N','Inert+CO\u2082']],tip:'Gas during adsorption: Air (O\u2082 present) or Inert+CO\u2082.'},
+  {f:'Moisture content (RH%)',l:'RH (%)',req:1,ph:'0',tip:'Relative humidity of the capture gas. 0 = dry.'},
+  {f:'Purging gas',l:'Regen gas',ph:'N2',tip:'Gas used during desorption (N2, He, Ar, vacuum, etc.).'},
+  {f:'Capture-release cycles tested (#)',l:'# cycles',ph:'nr',tip:'Number of adsorption-desorption cycles. Record cycling here, not as a separate row.'},
+  {f:'Degradation rate (%/cycle)',l:'Deg. rate (%/cycle)',ph:'nr',tip:'Average % capacity loss per cycle, if reported.'},
+  {f:'Degradation cause (Category)',l:'Deg. cause',type:'select',opts:[['','nr'],['Thermal','Thermal'],['Oxidation','Oxidation'],['Hydrolysis','Hydrolysis'],['CO2-catalyzed','CO2-catalyzed'],['Pore blockage','Pore blockage'],['Structural','Structural'],['Negligible','Negligible'],['None suggested','None suggested']],tip:'Reported mechanism of degradation, if any.'},
+  {f:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t\u2089\u2085 (min)',ph:'nr/na',tip:'Breakthrough only: time for outlet CO\u2082 to reach 95% of inlet. Used to compute normalized cycle time.'},
+  {f:'Gas flow rate during adsorption (mL/min)',l:'Flow (mL/min)',ph:'nr/na',tip:'Volumetric flow rate during adsorption. na for isotherms.'},
+  {f:'Mass of sorbent loaded in column/sample pan (g)',l:'Mass (g)',ph:'nr',tip:'Mass of sorbent in the column or TGA pan.'},
+  {f:'Source location',l:'Source location',req:1,cls:'cbcell-src',ph:'Fig 3a / Table 2 / text',tip:'Where in the paper this value comes from: figure, table, or section of text.'},
+];
+let cbRid=0;
+function cbEsc(x){return (x==null?'':String(x)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function cbBuildHead(){
+  let h='<th class="cbrownum">#</th><th></th>';
+  CB_COLS.forEach(c=>{
+    h+=`<th><span class="cbcolhead">${c.l}${c.req?'<span class="req">*</span>':''}<span class="thii">&#9432;<span class="thtt">${c.tip}</span></span></span></th>`;
+  });
+  document.getElementById('cb-head').innerHTML=h;
 }
-function cbValidateStep(n){
-  const panel=document.querySelector(`#page-contribute .cbpanel[data-step="${n}"]`);
+function cbCellHTML(c,val){
+  val=val||'';
+  if(c.type==='select'){
+    let o=c.opts.map(([v,t])=>`<option value="${cbEsc(v)}"${v===val?' selected':''}>${t}</option>`).join('');
+    return `<td class="${c.cls||''}"><select data-f="${cbEsc(c.f)}"${c.req?' data-rreq':''}>${o}</select></td>`;
+  }
+  return `<td class="${c.cls||''}"><input data-f="${cbEsc(c.f)}"${c.req?' data-rreq':''} value="${cbEsc(val)}" placeholder="${cbEsc(c.ph||'')}"></td>`;
+}
+function cbRowHTML(data){
+  cbRid++;
+  let cells=CB_COLS.map(c=>cbCellHTML(c,data?data[c.f]:'')).join('');
+  return `<tr data-rid="${cbRid}"><td class="cbrownum"></td><td class="cbrowact">`+
+    `<button class="cbiconbtn" title="Duplicate this row" onclick="cbDup(this)">Copy</button>`+
+    `<button class="cbiconbtn del" title="Delete this row" onclick="cbDel(this)">&#x2715;</button>`+
+    `</td>${cells}</tr>`;
+}
+function cbAddRow(many){
+  const tb=document.getElementById('cb-rows');
+  const n=many===true?5:1;
+  for(let i=0;i<n;i++)tb.insertAdjacentHTML('beforeend',cbRowHTML());
+  cbRenum();
+}
+function cbReadRow(tr){const d={};tr.querySelectorAll('[data-f]').forEach(el=>{d[el.dataset.f]=(el.value||'').trim();});return d;}
+function cbDup(btn){
+  const tr=btn.closest('tr');
+  const d=cbReadRow(tr);
+  tr.insertAdjacentHTML('afterend',cbRowHTML(d));
+  cbRenum();
+}
+function cbDel(btn){
+  const tb=document.getElementById('cb-rows');
+  if(tb.querySelectorAll('tr').length<=1){ // keep at least one row, just clear it
+    const tr=btn.closest('tr');tr.querySelectorAll('[data-f]').forEach(el=>el.value='');
+  }else{btn.closest('tr').remove();}
+  cbRenum();
+}
+function cbRenum(){
+  const rows=document.querySelectorAll('#cb-rows tr');
+  rows.forEach((tr,i)=>{tr.querySelector('.cbrownum').textContent=i+1;});
+  const c=document.getElementById('cb-count');
+  c.textContent=rows.length+(rows.length===1?' row':' rows');
+}
+function cbValidate(){
   const miss=[];
-  panel.querySelectorAll('[data-req]').forEach(el=>{
-    const ok=(el.value||'').trim()!=='';
-    el.classList.toggle('err',!ok);
-    if(!ok){const lbl=el.closest('.cbf').querySelector('label');miss.push((lbl?lbl.textContent:el.name).replace('*','').trim());}
+  // paper-level
+  const pmap={'p-name':'Your name','p-email':'Your email','p-doi':'DOI','p-author':'First author','p-year':'Year'};
+  Object.keys(pmap).forEach(id=>{
+    const el=document.getElementById(id);const ok=(el.value||'').trim()!=='';
+    el.classList.toggle('err',!ok);if(!ok)miss.push(pmap[id]);
+  });
+  // rows
+  let rowProblems=0;
+  document.querySelectorAll('#cb-rows tr').forEach((tr,i)=>{
+    let bad=false;
+    tr.querySelectorAll('[data-rreq]').forEach(el=>{
+      const ok=(el.value||'').trim()!=='';el.classList.toggle('err',!ok);if(!ok)bad=true;
+    });
+    if(bad){rowProblems++;}
   });
   const box=document.getElementById('cb-missing');
-  if(miss.length){box.innerHTML='Please complete the required field(s): '+miss.join(', ')+'.';box.classList.add('show');}
-  else box.classList.remove('show');
-  return miss.length===0;
+  let msg=[];
+  if(miss.length)msg.push('Paper details needed: '+miss.join(', ')+'.');
+  if(rowProblems)msg.push(rowProblems+' measurement row'+(rowProblems>1?'s have':' has')+' a missing required value (highlighted in red).');
+  if(msg.length){box.innerHTML=msg.join(' ');box.classList.add('show');box.scrollIntoView({behavior:'smooth',block:'center'});return false;}
+  box.classList.remove('show');return true;
 }
-function cbNext(){if(cbValidateStep(cbStep))cbShow(cbStep+1);}
-function cbPrev(){cbShow(cbStep-1);}
-function cbGo(n){ // allow jumping; validate everything up to target
-  if(n>cbStep){for(let i=cbStep;i<n;i++){if(!cbValidateStep(i)){cbShow(i);return;}}}
-  cbShow(n);
-}
-function cbData(){
-  const d={};
-  document.querySelectorAll('#cb-form [name]').forEach(el=>{d[el.name]=(el.value||'').trim();});
-  return d;
-}
-const CB_REVIEW_LABELS=[
-  ['Submitter name','Your name'],['Submitter email','Your email'],['DOI','DOI'],['Year','Year'],['First author','First author'],
-  ['Material','Material'],['Material abbreviation','Abbreviation'],['Sorbent Class','Class'],
-  ['Adsorption capacity (mmol/g)','Capacity (mmol/g)'],['Method of CO2 capacity measurement (i.e. TGA)','Measurement method'],
-  ['Capture temperature (C)','Capture temp (\u00b0C)'],['Release temperature (C)','Regen. temp (\u00b0C)'],
-  ['CO2 Concentration (ppm)','CO\u2082 conc. (ppm)'],['Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)','Capture gas'],
-  ['Moisture content (RH%)','Relative humidity (%)'],['Purging gas','Regeneration gas'],
-  ['Capture-release cycles tested (#)','Cycles tested'],['Degradation rate (%/cycle)','Deg. rate (%/cycle)'],['Degradation cause (Category)','Degradation cause'],['Notes','Notes'],
-];
-function cbBuildReview(){
-  const d=cbData();
-  const rows=CB_REVIEW_LABELS.map(([k,l])=>{
-    let v=d[k]||'';
-    if(k.startsWith('Simulated air'))v=v==='Y'?'Air (O\u2082 present)':v==='N'?'Inert + CO\u2082':v;
-    return `<div class="rrow"><span>${l}</span><span>${v?v.replace(/</g,'&lt;'):'<em style="color:#b9b5ab">empty</em>'}</span></div>`;
-  }).join('');
-  document.getElementById('cb-review').innerHTML=rows;
+function cbCollect(){
+  const paper={
+    'Submitter name':document.getElementById('p-name').value.trim(),
+    'Submitter email':document.getElementById('p-email').value.trim(),
+    'DOI':document.getElementById('p-doi').value.trim(),
+    'First author':document.getElementById('p-author').value.trim(),
+    'Year':document.getElementById('p-year').value.trim(),
+  };
+  const entries=[...document.querySelectorAll('#cb-rows tr')].map(cbReadRow);
+  return {paper,entries};
 }
 async function cbSubmit(){
-  // final required-field sweep across all steps
-  for(let i=0;i<=CB_LAST;i++){if(!cbValidateStep(i)){cbShow(i);return;}}
-  const d=cbData();
+  if(!cbValidate())return;
+  const payload=cbCollect();
   const btn=document.getElementById('cb-submit');btn.disabled=true;btn.textContent='Submitting...';
   let sent=false;
   if(CONTRIB_ENDPOINT){
-    try{
-      const res=await fetch(CONTRIB_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(d)});
-      sent=res.ok;
-    }catch(e){sent=false;}
+    try{const res=await fetch(CONTRIB_ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(payload)});sent=res.ok;}catch(e){sent=false;}
   }
   if(!sent){
-    // Fallback: open a pre-filled email draft so nothing is lost
-    const body=Object.entries(d).map(([k,v])=>`${k}: ${v}`).join('\n');
-    const subj=`DAC sorbent submission: ${d['Material abbreviation']||d['Material']||'new entry'}`;
+    let body='PAPER\n';
+    Object.entries(payload.paper).forEach(([k,v])=>body+=`${k}: ${v}\n`);
+    payload.entries.forEach((e,i)=>{
+      body+=`\nMEASUREMENT ${i+1}\n`;
+      Object.entries(e).forEach(([k,v])=>{if(v)body+=`${k}: ${v}\n`;});
+    });
+    const subj=`DAC sorbent submission: ${payload.paper['First author']||''} ${payload.paper['Year']||''} (${payload.entries.length} entries)`;
     window.location.href=`mailto:${CONTRIB_EMAIL}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
   }
-  btn.disabled=false;btn.textContent='Submit for review';
-  document.getElementById('cb-form').style.display='none';
-  document.getElementById('cb-nav').style.display='none';
-  document.getElementById('cb-steps').style.display='none';
+  btn.disabled=false;btn.textContent='Submit paper for review';
+  ['cb-table','cb-missing'].forEach(id=>{const el=document.getElementById(id);});
   document.querySelector('#page-contribute .cbinfo').style.display='none';
+  document.querySelectorAll('#page-contribute .cbsec, #page-contribute .cbpaper, #page-contribute .cbgridhint, #page-contribute .cbgridwrap, #page-contribute .cbrowbtns, #page-contribute .cbnav').forEach(el=>el.style.display='none');
   document.getElementById('cb-ok').classList.add('show');
+  window.scrollTo(0,0);
 }
 function cbReset(){
-  document.getElementById('cb-form').reset();
-  document.getElementById('cb-form').style.display='block';
-  document.getElementById('cb-nav').style.display='flex';
-  document.getElementById('cb-steps').style.display='flex';
-  document.querySelector('#page-contribute .cbinfo').style.display='block';
+  document.getElementById('p-name').value='';document.getElementById('p-email').value='';
+  document.getElementById('p-doi').value='';document.getElementById('p-author').value='';document.getElementById('p-year').value='';
+  document.getElementById('cb-rows').innerHTML='';cbAddRow(true);
+  document.querySelector('#page-contribute .cbinfo').style.display='';
+  document.querySelectorAll('#page-contribute .cbsec, #page-contribute .cbpaper, #page-contribute .cbgridhint, #page-contribute .cbgridwrap, #page-contribute .cbrowbtns, #page-contribute .cbnav').forEach(el=>el.style.display='');
   document.getElementById('cb-ok').classList.remove('show');
-  cbShow(0);
+  document.getElementById('cb-missing').classList.remove('show');
+  window.scrollTo(0,0);
 }
+// initialise the grid on first load
+cbBuildHead();
+(function(){const tb=document.getElementById('cb-rows');for(let i=0;i<3;i++)tb.insertAdjacentHTML('beforeend',cbRowHTML());cbRenum();})();
 
 loadData();
 </script>
