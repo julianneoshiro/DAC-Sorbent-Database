@@ -361,6 +361,13 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 .cbcolhead .thii{position:relative;display:inline-flex;cursor:help;color:#b6b2a8;font-size:.8em}
 .cbcolhead .thii:hover .thtt{display:block}
 .cbrowbtns{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+.cbundo{display:none;align-items:center;gap:.5rem;margin-top:.7rem;background:#fff7e6;border:1px solid #f0d9a8;color:#8a6d1f;border-radius:7px;padding:.5rem .8rem;font-size:.75rem}
+.cbundo.show{display:flex}
+.cbundobtn{border:1px solid #d9b84e;background:#fff;color:#8a6d1f;border-radius:4px;padding:3px 10px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--sa)}
+.cbundobtn:hover{background:#fbeecb}
+.cbundokey{color:#b09a55;font-size:.68rem}
+.cbnote{width:100%;max-width:100%;border:1px solid var(--bo);border-radius:8px;padding:.7rem .85rem;font-family:var(--sa);font-size:.8rem;line-height:1.5;background:#fff;color:var(--tx);outline:none;resize:vertical;min-height:80px}
+.cbnote:focus{border-color:var(--ac)}
 .cbnav{display:flex;justify-content:flex-end;margin-top:1.8rem;gap:.6rem}
 .cbnav .sp{flex:1}
 .cbmissing{background:#fdf3f2;border:1px solid #e8c3bd;color:#9c2f23;border-radius:7px;padding:.7rem .95rem;font-size:.75rem;margin-bottom:1rem;line-height:1.55;display:none}
@@ -432,7 +439,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
           <div class="hrcta">
             <button class="bw" onclick="goP('metrics')">Explore the Database &rarr;</button>
             <button class="bol" onclick="goP('browse')">Browse Sorbents</button>
-            <button class="bol" onclick="goP('guidelines')">Guidelines</button>
+            <button class="bol" onclick="goP('contribute')">Submit Sorbents</button>
           </div>
         </div>
         <div class="hrart" aria-hidden="true">
@@ -792,9 +799,12 @@ tr:hover td{background:#faf9f6;cursor:pointer}
       <ul class="cbtips">
         <li><strong>One row = one CO&#x2082; capacity measurement.</strong> If a paper reports the same material measured under several conditions (e.g. different temperatures or humidities), each of those is its own row.</li>
         <li><strong>Degradation / cycling is not a separate row.</strong> A stability or cycling experiment belongs to the measurement it was run on, so record its results (cycles, degradation rate, cause) in that same row, not as an extra entry.</li>
-        <li><strong>Duplicate to save time.</strong> Use <em>Copy</em> on a row to clone it, then change only the values that differ. Great for the same material across conditions.</li>
+        <li><strong>Duplicate to save time.</strong> Use <em>Duplicate</em> on a row to clone it, then change only the values that differ. Great for the same material across conditions.</li>
         <li><strong>Tell us where you found it.</strong> Every row needs a <em>Source location</em>: the figure, table, or section of text the value comes from (e.g. "Fig 3a", "Table 2", "text, Sec 3.1").</li>
-        <li>Use <strong>nr</strong> (not reported) or <strong>na</strong> (not applicable) where a value does not exist. Unsure what a column means? Hover its <span class="thii" style="position:relative;display:inline-flex">&#9432;</span> header, or see the <span style="cursor:pointer;text-decoration:underline" onclick="goP('parameters')">parameter descriptions</span>.</li>
+        <li><strong>Choose a unique abbreviation.</strong> We identify a unique sorbent by its abbreviated name, so give each distinct material an abbreviation that is not already used for a different sorbent.</li>
+        <li><strong>Every cell needs a value.</strong> All columns except <em>Notes</em> are required. Where a value does not exist, enter <strong>nr</strong> (not reported) or <strong>na</strong> (not applicable) rather than leaving it blank.</li>
+        <li><strong>Deleted a row by accident?</strong> Press <strong>Ctrl/Cmd&#43;Z</strong> or use the <em>Undo</em> button to bring it back.</li>
+        <li>Unsure what a column means? Hover its <span class="thii" style="position:relative;display:inline-flex">&#9432;</span> header, or see the <span style="cursor:pointer;text-decoration:underline" onclick="goP('parameters')">parameter descriptions</span>.</li>
       </ul>
     </div>
 
@@ -821,6 +831,11 @@ tr:hover td{background:#faf9f6;cursor:pointer}
       <button class="bs ac2" onclick="cbAddRow()">&#43; Add measurement row</button>
       <button class="bs" onclick="cbAddRow(true)">&#43; Add 5 rows</button>
     </div>
+    <div class="cbundo" id="cb-undobar"><span>Row deleted.</span> <button class="cbundobtn" onclick="cbUndo()">Undo</button> <span class="cbundokey">(or press Ctrl/Cmd&#43;Z)</span></div>
+
+    <h3 class="cbsec">3 &middot; Notes to us <span class="cbcount">optional</span></h3>
+    <p class="cbgridhint">Anything that applies to the whole paper, or a note that did not fit in a single row. Per-row notes go in the Notes column above.</p>
+    <textarea id="p-note" class="cbnote" placeholder="Optional note to the review team about this paper or any of its measurements..."></textarea>
 
     <div class="cbnav">
       <div class="sp"></div>
@@ -1334,7 +1349,7 @@ function drawChart(svgId,legId,cntId,pts,yl,type){
   const svgEl=document.getElementById(svgId);if(!svgEl)return;
   const container=svgEl.parentElement;
   const W=Math.max(340,container?container.offsetWidth-4:600);
-  const H=Math.round(W*0.56);
+  const H=Math.round(W*0.70);
   const PAD={t:18,r:20,b:62,l:84};
   const cw=W-PAD.l-PAD.r,ch=H-PAD.t-PAD.b;
   svgEl.setAttribute('width',W);svgEl.setAttribute('height',H);svgEl.setAttribute('viewBox',`0 0 ${W} ${H}`);
@@ -1405,12 +1420,50 @@ function showT(e,idx,type){
   tip.innerHTML=`<strong>${name}</strong>`+
     `<div class="ttauth">${r['First author']||''} (${r['Year']||''})</div>`+
     fields.filter(([,v])=>v&&v!=='na'&&v!=='nr').map(([l,v])=>`<div class="ttr"><span>${l}</span><span>${v}</span></div>`).join('');
+  // cache this chart's data-point coordinates (SVG user units) for quadrant selection
+  tipSvg=e.target&&e.target.ownerSVGElement?e.target.ownerSVGElement:null;
+  tipPts=tipSvg?[...tipSvg.querySelectorAll('circle')].map(c=>({x:+c.getAttribute('cx'),y:+c.getAttribute('cy')})):[];
   tip.style.display='block';mvT(e);
 }
+let tipSvg=null,tipPts=[];
 function mvT(e){
   const tip=document.getElementById('tooltip');
-  const x=e.clientX+14,y=e.clientY-10,tw=tip.offsetWidth||240;
-  tip.style.left=(x+tw>window.innerWidth?x-tw-28:x)+'px';tip.style.top=y+'px';
+  const tw=tip.offsetWidth||220,th=tip.offsetHeight||120,gap=14;
+  const mx=e.clientX,my=e.clientY,vw=window.innerWidth,vh=window.innerHeight;
+  // four candidate top-left positions, one per quadrant around the cursor
+  const cands=[
+    {l:mx+gap,    t:my-th-gap, rx:1, ry:-1}, // up-right
+    {l:mx+gap,    t:my+gap,    rx:1, ry:1 }, // down-right
+    {l:mx-tw-gap, t:my-th-gap, rx:-1,ry:-1}, // up-left
+    {l:mx-tw-gap, t:my+gap,    rx:-1,ry:1 }, // down-left
+  ];
+  // map the tooltip's screen rectangle into SVG user units, count data points inside
+  let ctm=null;
+  if(tipSvg&&tipPts.length){try{ctm=tipSvg.getScreenCTM();}catch(_){ctm=null;}}
+  function obscured(l,t){
+    if(!ctm)return 0;
+    const inv=ctm.inverse(),p=tipSvg.createSVGPoint();
+    p.x=l;p.y=t;const a=p.matrixTransform(inv);
+    p.x=l+tw;p.y=t+th;const b=p.matrixTransform(inv);
+    const x0=Math.min(a.x,b.x),x1=Math.max(a.x,b.x),y0=Math.min(a.y,b.y),y1=Math.max(a.y,b.y);
+    let n=0;for(const pt of tipPts){if(pt.x>=x0&&pt.x<=x1&&pt.y>=y0&&pt.y<=y1)n++;}
+    return n;
+  }
+  // open space available in each quadrant direction (normalised 0..100), used as tie-breaker
+  function room(rx,ry){
+    const h=rx>0?(vw-mx):mx, v=ry>0?(vh-my):my;
+    return (h+v)/(vw+vh)*100;
+  }
+  let best=null;
+  for(const c of cands){
+    const off=(c.l<4?1:0)+(c.t<4?1:0)+(c.l+tw>vw-4?1:0)+(c.t+th>vh-4?1:0);
+    // 1) stay on-screen, 2) cover the fewest points, 3) prefer the roomier quadrant
+    const score=off*1e6 + obscured(c.l,c.t)*1e3 - room(c.rx,c.ry);
+    if(!best||score<best.score)best={...c,score};
+  }
+  const left=Math.max(4,Math.min(best.l,vw-tw-4));
+  const top=Math.max(4,Math.min(best.t,vh-th-4));
+  tip.style.left=left+'px';tip.style.top=top+'px';
 }
 function hideT(){document.getElementById('tooltip').style.display='none';}
 document.addEventListener('mousemove',e=>{if(document.getElementById('tooltip').style.display==='block')mvT(e);});
@@ -1461,24 +1514,25 @@ const CONTRIB_EMAIL="your-email@institution.edu";
 
 // column definitions for one measurement row
 const CB_COLS=[
-  {f:'Material',l:'Material',req:1,cls:'cbcell-wide',ph:'Full material name',tip:'Full material name as given in the paper.'},
-  {f:'Material abbreviation',l:'Abbrev.',ph:'e.g. PEI/SiO\u2082',tip:'Short identifier used in the paper.'},
-  {f:'Sorbent Class',l:'Class',req:1,type:'select',opts:[['','...'],['Amine','Amine'],['MOF','MOF'],['Metal oxide','Metal oxide'],['Other','Other']],tip:'Amine, MOF, Metal oxide, or Other (COF, zeolite, etc.).'},
-  {f:'Adsorption capacity (mmol/g)',l:'CO\u2082 capacity (mmol/g)',req:1,ph:'mmol/g',tip:'CO\u2082 uptake in mmol per gram of sorbent, at or near the stated conditions.'},
-  {f:'Method of CO2 capacity measurement (i.e. TGA)',l:'Method',type:'select',opts:[['','...'],['TGA (gravimetric)','TGA'],['Breakthrough (packed bed)','Breakthrough'],['Volumetric (isotherm)','Volumetric'],['Other','Other']],tip:'How capacity was measured.'},
+  {f:'Material',l:'Sorbent name',req:1,cls:'cbcell-wide',ph:'Full material name',tip:'Full sorbent name as given in the paper.'},
+  {f:'Material abbreviation',l:'Sorbent name abbrev.',req:1,ph:'e.g. PEI/SiO\u2082',tip:'Short identifier for the sorbent. We define a unique sorbent by its abbreviation, so please choose one that is unique and not already used for a different material.'},
+  {f:'Sorbent Class',l:'Sorbent class',req:1,type:'select',opts:[['','...'],['Amine','Amine'],['MOF','MOF'],['Metal oxide','Metal oxide'],['Other','Other']],tip:'Amine, MOF, Metal oxide, or Other (COF, zeolite, etc.).'},
+  {f:'Adsorption capacity (mmol/g)',l:'Equilibrium CO\u2082 capacity (mmol/g)',req:1,cls:'cbcell-wide',ph:'mmol/g',tip:'Equilibrium CO\u2082 uptake in mmol per gram of sorbent, at or near the stated conditions.'},
+  {f:'Method of CO2 capacity measurement (i.e. TGA)',l:'CO\u2082 measurement method',req:1,type:'select',opts:[['','...'],['TGA (gravimetric)','TGA'],['Breakthrough (packed bed)','Breakthrough'],['Volumetric (isotherm)','Volumetric'],['Other','Other']],tip:'How the CO\u2082 capacity was measured.'},
   {f:'Capture temperature (C)',l:'Capture T (\u00b0C)',req:1,ph:'25',tip:'Temperature during adsorption. Room temp / ambient = 25.'},
-  {f:'Release temperature (C)',l:'Regen T (\u00b0C)',ph:'110',tip:'Temperature during regeneration / desorption.'},
+  {f:'Release temperature (C)',l:'Regen T (\u00b0C)',req:1,ph:'110',tip:'Temperature during regeneration / desorption.'},
   {f:'CO2 Concentration (ppm)',l:'CO\u2082 conc. (ppm)',req:1,ph:'400',tip:'CO\u2082 concentration in the capture gas. Ambient air \u2248 425 ppm.'},
   {f:'Simulated air? (Y/N) during adsorption (Y = O2 is present during adsorption phase)',l:'Capture gas',req:1,type:'select',opts:[['','...'],['Y','Air (O\u2082)'],['N','Inert+CO\u2082']],tip:'Gas during adsorption: Air (O\u2082 present) or Inert+CO\u2082.'},
   {f:'Moisture content (RH%)',l:'RH (%)',req:1,ph:'0',tip:'Relative humidity of the capture gas. 0 = dry.'},
-  {f:'Purging gas',l:'Regen gas',ph:'N2',tip:'Gas used during desorption (N2, He, Ar, vacuum, etc.).'},
-  {f:'Capture-release cycles tested (#)',l:'# cycles',ph:'nr',tip:'Number of adsorption-desorption cycles. Record cycling here, not as a separate row.'},
-  {f:'Degradation rate (%/cycle)',l:'Deg. rate (%/cycle)',ph:'nr',tip:'Average % capacity loss per cycle, if reported.'},
-  {f:'Degradation cause (Category)',l:'Deg. cause',type:'select',opts:[['','nr'],['Thermal','Thermal'],['Oxidation','Oxidation'],['Hydrolysis','Hydrolysis'],['CO2-catalyzed','CO2-catalyzed'],['Pore blockage','Pore blockage'],['Structural','Structural'],['Negligible','Negligible'],['None suggested','None suggested']],tip:'Reported mechanism of degradation, if any.'},
-  {f:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t\u2089\u2085 (min)',ph:'nr/na',tip:'Breakthrough only: time for outlet CO\u2082 to reach 95% of inlet. Used to compute normalized cycle time.'},
-  {f:'Gas flow rate during adsorption (mL/min)',l:'Flow (mL/min)',ph:'nr/na',tip:'Volumetric flow rate during adsorption. na for isotherms.'},
-  {f:'Mass of sorbent loaded in column/sample pan (g)',l:'Mass (g)',ph:'nr',tip:'Mass of sorbent in the column or TGA pan.'},
+  {f:'Purging gas',l:'Regen gas',req:1,type:'select',opts:[['','...'],['Inert','Inert'],['+O2','+O\u2082'],['+H2O','+H\u2082O'],['+CO2','+CO\u2082'],['Other','Other'],['Not reported','Not reported']],tip:'Composition of the regeneration / purge gas relative to an inert base.'},
+  {f:'Capture-release cycles tested (#)',l:'# cycles',req:1,ph:'e.g. 10 or nr',tip:'Number of adsorption-desorption cycles tested. Record cycling here, not as a separate row.'},
+  {f:'Degradation rate (%/cycle)',l:'Deg. rate (%/cycle)',req:1,ph:'nr if not reported',tip:'Average % capacity loss per cycle, defined as [(q\u2081 \u2212 q_last) / q\u2081] \u00d7 100 / N, where q\u2081 = first-cycle capacity, q_last = last-cycle capacity, and N = number of cycles.'},
+  {f:'Degradation cause (Category)',l:'Deg. cause',req:1,type:'select',opts:[['','...'],['Thermal','Thermal'],['Oxidation','Oxidation'],['Hydrolysis','Hydrolysis'],['CO2-catalyzed','CO2-catalyzed'],['Pore blockage','Pore blockage'],['Negligible','Negligible'],['None suggested','None suggested'],['Not reported','Not reported']],tip:'Reported mechanism of degradation, if any.'},
+  {f:'Time to reach 95% outlet concentration  (min) - only for breakthrough',l:'t\u2089\u2085 (min)',req:1,ph:'nr/na',tip:'Breakthrough only: time for outlet CO\u2082 to reach 95% of inlet. Used to compute normalized cycle time. Use na if not a breakthrough measurement.'},
+  {f:'Gas flow rate during adsorption (mL/min)',l:'Gas flow rate (mL/min)',req:1,ph:'nr/na',tip:'Volumetric gas flow rate during adsorption. Use na for isotherm measurements.'},
+  {f:'Mass of sorbent loaded in column/sample pan (g)',l:'Sample mass loading (g)',req:1,ph:'nr',tip:'Mass of sorbent loaded in the breakthrough column or TGA / sample pan.'},
   {f:'Source location',l:'Source location',req:1,cls:'cbcell-src',ph:'Fig 3a / Table 2 / text',tip:'Where in the paper this value comes from: figure, table, or section of text.'},
+  {f:'Notes (row)',l:'Notes',cls:'cbcell-wide',ph:'Optional note for this row',tip:'Optional. Anything specific to this measurement that helps us verify or interpret it. The only field that can be left blank.'},
 ];
 let cbRid=0;
 function cbEsc(x){return (x==null?'':String(x)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -1501,7 +1555,7 @@ function cbRowHTML(data){
   cbRid++;
   let cells=CB_COLS.map(c=>cbCellHTML(c,data?data[c.f]:'')).join('');
   return `<tr data-rid="${cbRid}"><td class="cbrownum"></td><td class="cbrowact">`+
-    `<button class="cbiconbtn" title="Duplicate this row" onclick="cbDup(this)">Copy</button>`+
+    `<button class="cbiconbtn" title="Duplicate this row" onclick="cbDup(this)">Duplicate</button>`+
     `<button class="cbiconbtn del" title="Delete this row" onclick="cbDel(this)">&#x2715;</button>`+
     `</td>${cells}</tr>`;
 }
@@ -1518,13 +1572,48 @@ function cbDup(btn){
   tr.insertAdjacentHTML('afterend',cbRowHTML(d));
   cbRenum();
 }
+const cbUndoStack=[];
 function cbDel(btn){
   const tb=document.getElementById('cb-rows');
-  if(tb.querySelectorAll('tr').length<=1){ // keep at least one row, just clear it
-    const tr=btn.closest('tr');tr.querySelectorAll('[data-f]').forEach(el=>el.value='');
-  }else{btn.closest('tr').remove();}
+  const rows=[...tb.querySelectorAll('tr')];
+  const tr=btn.closest('tr');
+  const idx=rows.indexOf(tr);
+  const data=cbReadRow(tr);
+  if(rows.length<=1){ // keep at least one row visible; clear it but still allow undo of its contents
+    tr.querySelectorAll('[data-f]').forEach(el=>el.value='');
+  }else{
+    tr.remove();
+  }
+  cbUndoStack.push({data,idx});
   cbRenum();
+  cbShowUndo();
 }
+function cbShowUndo(){
+  const bar=document.getElementById('cb-undobar');
+  if(!bar)return;
+  bar.classList.add('show');
+  clearTimeout(cbShowUndo._t);
+  cbShowUndo._t=setTimeout(()=>bar.classList.remove('show'),8000);
+}
+function cbUndo(){
+  if(!cbUndoStack.length)return;
+  const {data,idx}=cbUndoStack.pop();
+  const tb=document.getElementById('cb-rows');
+  const rows=[...tb.querySelectorAll('tr')];
+  const html=cbRowHTML(data);
+  if(idx>=rows.length||rows.length===0){tb.insertAdjacentHTML('beforeend',html);}
+  else{rows[idx].insertAdjacentHTML('beforebegin',html);}
+  cbRenum();
+  if(!cbUndoStack.length){const bar=document.getElementById('cb-undobar');if(bar)bar.classList.remove('show');}
+}
+// Ctrl/Cmd+Z restores the most recently deleted row (when not editing a field)
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&(e.key==='z'||e.key==='Z')&&!e.shiftKey){
+    const onContribute=document.getElementById('page-contribute').classList.contains('act');
+    const t=e.target,inField=t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT');
+    if(onContribute&&cbUndoStack.length&&!inField){e.preventDefault();cbUndo();}
+  }
+});
 function cbRenum(){
   const rows=document.querySelectorAll('#cb-rows tr');
   rows.forEach((tr,i)=>{tr.querySelector('.cbrownum').textContent=i+1;});
@@ -1564,7 +1653,8 @@ function cbCollect(){
     'Year':document.getElementById('p-year').value.trim(),
   };
   const entries=[...document.querySelectorAll('#cb-rows tr')].map(cbReadRow);
-  return {paper,entries};
+  const note=document.getElementById('p-note').value.trim();
+  return {paper,entries,note};
 }
 async function cbSubmit(){
   if(!cbValidate())return;
@@ -1581,24 +1671,27 @@ async function cbSubmit(){
       body+=`\nMEASUREMENT ${i+1}\n`;
       Object.entries(e).forEach(([k,v])=>{if(v)body+=`${k}: ${v}\n`;});
     });
+    if(payload.note)body+=`\nOVERALL NOTE\n${payload.note}\n`;
     const subj=`DAC sorbent submission: ${payload.paper['First author']||''} ${payload.paper['Year']||''} (${payload.entries.length} entries)`;
     window.location.href=`mailto:${CONTRIB_EMAIL}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
   }
   btn.disabled=false;btn.textContent='Submit paper for review';
-  ['cb-table','cb-missing'].forEach(id=>{const el=document.getElementById(id);});
+  document.getElementById('cb-undobar').classList.remove('show');
   document.querySelector('#page-contribute .cbinfo').style.display='none';
-  document.querySelectorAll('#page-contribute .cbsec, #page-contribute .cbpaper, #page-contribute .cbgridhint, #page-contribute .cbgridwrap, #page-contribute .cbrowbtns, #page-contribute .cbnav').forEach(el=>el.style.display='none');
+  document.querySelectorAll('#page-contribute .cbsec, #page-contribute .cbpaper, #page-contribute .cbgridhint, #page-contribute .cbgridwrap, #page-contribute .cbrowbtns, #page-contribute .cbnote, #page-contribute .cbnav').forEach(el=>el.style.display='none');
   document.getElementById('cb-ok').classList.add('show');
   window.scrollTo(0,0);
 }
 function cbReset(){
   document.getElementById('p-name').value='';document.getElementById('p-email').value='';
   document.getElementById('p-doi').value='';document.getElementById('p-author').value='';document.getElementById('p-year').value='';
-  document.getElementById('cb-rows').innerHTML='';cbAddRow(true);
+  document.getElementById('p-note').value='';
+  document.getElementById('cb-rows').innerHTML='';cbUndoStack.length=0;cbAddRow(true);
   document.querySelector('#page-contribute .cbinfo').style.display='';
-  document.querySelectorAll('#page-contribute .cbsec, #page-contribute .cbpaper, #page-contribute .cbgridhint, #page-contribute .cbgridwrap, #page-contribute .cbrowbtns, #page-contribute .cbnav').forEach(el=>el.style.display='');
+  document.querySelectorAll('#page-contribute .cbsec, #page-contribute .cbpaper, #page-contribute .cbgridhint, #page-contribute .cbgridwrap, #page-contribute .cbrowbtns, #page-contribute .cbnote, #page-contribute .cbnav').forEach(el=>el.style.display='');
   document.getElementById('cb-ok').classList.remove('show');
   document.getElementById('cb-missing').classList.remove('show');
+  document.getElementById('cb-undobar').classList.remove('show');
   window.scrollTo(0,0);
 }
 // initialise the grid on first load
