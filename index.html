@@ -421,7 +421,6 @@ tr:hover td{background:#faf9f6;cursor:pointer}
       </div>
     </div>
     <button class="nl" onclick="goP('about')" id="nav-about">About</button>
-    <button class="nl" onclick="goP('contribute')" id="nav-contribute">Contribute</button>
     <button class="nl" onclick="goP('contact')" id="nav-contact">Contact</button>
   </div>
   <span class="nb">BETA &middot; 2025</span>
@@ -433,13 +432,13 @@ tr:hover td{background:#faf9f6;cursor:pointer}
     <div class="hero">
       <div class="hrin">
         <div class="hrl">
-          <div class="hrey">Open-access research database</div>
+          <div class="hrey">Data availability</div>
           <h1 class="hrh1">The DAC Solid Sorbent<br><strong>Benchmarking Database</strong></h1>
-          <p class="hrp">A curated, open-access dataset of solid direct air capture sorbents, built to support systematic comparison of sorbent performance across material classes.</p>
+          <p class="hrp">The complete dataset accompanying our study on benchmarking solid direct air capture sorbents. Explore the measurements through interactive plots, filter and browse the full table, and download the data below.</p>
           <div class="hrcta">
-            <button class="bw" onclick="goP('metrics')">Explore the Database &rarr;</button>
+            <button class="bw" onclick="goP('metrics')">Explore the Data &rarr;</button>
             <button class="bol" onclick="goP('browse')">Browse Sorbents</button>
-            <button class="bol" onclick="goP('contribute')">Submit Sorbents</button>
+            <button class="bol" onclick="openDL()">Download Dataset</button>
           </div>
         </div>
         <div class="hrart" aria-hidden="true">
@@ -572,7 +571,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 
   <div class="dv"></div>
   <div class="hfoot">
-    <p>Compiled as part of a study on benchmarking strategies for solid DAC sorbents. The database will be continuously updated; anyone can <strong class="lk" onclick="goP('contribute')">contribute a sorbent</strong>. Questions or corrections? Feel free to <strong class="lk" onclick="goP('contact')">contact us</strong>.</p>
+    <p>This site accompanies our study on benchmarking strategies for solid DAC sorbents and serves as the data-availability resource for that work. The dataset can be explored, filtered, and downloaded above. Questions or corrections? Feel free to <strong class="lk" onclick="goP('contact')">contact us</strong>.</p>
   </div>
 </div><!-- end home -->
 
@@ -745,7 +744,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
         <div class="bmc"><div class="bmcn">&#x3b3;-Al&#x2082;O&#x2083;</div><span class="bmct to">Metal oxide</span><div class="bmcd">Widely available metal oxide support with well-documented CO&#x2082; adsorption properties under DAC conditions.</div></div>
         <div class="bmc"><div class="bmcn">Zeolite 13X</div><span class="bmct td2">Other</span><div class="bmcd">Commercially available sodium aluminosilicate zeolite, well-characterized for CO&#x2082; adsorption.</div></div>
       </div>
-      <div class="infob"><p>If you have tested any of these materials under standard conditions and would like to contribute data, please <span style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="goP('contact')">contact us</span>.</p></div>
+      <div class="infob"><p>If you have tested any of these materials under standard conditions and would like to share your results, please <span style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="goP('contact')">contact us</span>.</p></div>
     </div></div>
   </div>
 </div>
@@ -757,7 +756,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
     <div class="abtg">
       <div class="abtc">
         <h3>The Database</h3>
-        <p>This database was compiled as part of a study on benchmarking strategies for solid DAC sorbents. Rather than scraping values automatically, every entry was manually curated from peer-reviewed literature: each parameter was read from the source publication, recorded, and checked by hand to ensure consistent, comparable values across studies. It is a <strong>representative sample</strong>, not a complete catalog, and will be continuously updated.</p>
+        <p>This database was compiled as part of a study on benchmarking strategies for solid DAC sorbents. Rather than scraping values automatically, every entry was manually curated from peer-reviewed literature: each parameter was read from the source publication, recorded, and checked by hand to ensure consistent, comparable values across studies. It represents the dataset associated with that work and is provided as a fixed, citable snapshot rather than a continuously updated catalog.</p>
         <h3 style="margin-top:1.6rem">Team</h3>
         <div class="tg">
   <div class="tc"><div class="tn">Julianne Oshiro</div><div class="tr2">UCLA</div></div>
@@ -782,8 +781,8 @@ tr:hover td{background:#faf9f6;cursor:pointer}
       <div class="abtc">
         <h3>Data Collection</h3>
         <p>Text and numerical values were extracted from each paper; graphical data was digitized using WebPlotDigitizer. Each entry was independently checked by a second team member.</p>
-        <h3 style="margin-top:1.6rem">Contribute Data</h3>
-        <p>We welcome contributions from the research community: new papers to add, corrections to existing entries, or questions about methodology.</p>
+        <h3 style="margin-top:1.6rem">Questions &amp; Corrections</h3>
+        <p>This dataset accompanies a published study and is not crowd-sourced. If you spot an error in an entry or have a question about the methodology, please reach out and we will look into it.</p>
         <button class="ba" onclick="goP('contact')" style="margin-top:.5rem">Contact Us &rarr;</button>
       </div>
     </div>
@@ -791,7 +790,9 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 </div>
 
 <!-- CONTRIBUTE -->
+<!-- CONTRIBUTE PAGE: disabled for the static data-availability build. It is unlinked from the nav and routing, so it never appears in normal use. To restore the community submission feature later, re-add: (1) the Contribute nav button, (2) 'page-contribute' to PIDS, (3) contribute:'nav-contribute' to NM, and (4) a hero/footer link. The markup and its JS below are left intact. -->
 <div id="page-contribute" class="page po">
+
   <div class="phdr"><div><h2>Contribute Sorbents</h2><p>Add the sorbent measurements from one paper to the open database. Submissions are reviewed before publishing.</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
   <div class="cbwrap">
     <div class="cbinfo">
@@ -855,7 +856,7 @@ tr:hover td{background:#faf9f6;cursor:pointer}
 <div id="page-contact" class="page po">
   <div class="phdr"><div><h2>Contact &amp; Contribute</h2><p>Submit a new paper, report a data error, or ask a question about the database.</p></div><div class="phdrr"><button class="bb" onclick="goP('home')">&#x2190; Home</button></div></div>
   <div class="abto" style="max-width:700px">
-    <p style="font-family:var(--se);font-size:.9rem;line-height:1.8;color:var(--mu);margin-bottom:1.25rem">We welcome contributions from the research community. Email us directly at <strong style="color:var(--tx)">[email address]</strong>.</p>
+    <p style="font-family:var(--se);font-size:.9rem;line-height:1.8;color:var(--mu);margin-bottom:1.25rem">For questions about the dataset or methodology, or to flag a correction, email us directly at <strong style="color:var(--tx)">[email address]</strong>.</p>
     <div style="background:#fff;border:1px solid var(--bo);border-radius:8px;padding:1.35rem;max-width:500px">
       <div class="fr"><label>Your name</label><input type="text" placeholder="Jane Smith"></div>
       <div class="fr"><label>Your email</label><input type="text" placeholder="you@institution.edu"></div>
@@ -887,8 +888,8 @@ let ALL=[];
 window.addEventListener('load',()=>setTimeout(()=>document.body.classList.add('loaded'),55));
 
 // PAGE NAVIGATION
-const PIDS=['page-home','page-metrics','page-browse','page-parameters','page-guidelines','page-about','page-contribute','page-contact'];
-const NM={home:'nav-home',metrics:'nav-metrics',browse:'nav-browse',parameters:'nav-parameters',guidelines:'nav-guidelines',about:'nav-about',contribute:'nav-contribute',contact:'nav-contact'};
+const PIDS=['page-home','page-metrics','page-browse','page-parameters','page-guidelines','page-about','page-contact'];
+const NM={home:'nav-home',metrics:'nav-metrics',browse:'nav-browse',parameters:'nav-parameters',guidelines:'nav-guidelines',about:'nav-about',contact:'nav-contact'};
 
 function goP(id,push=true){
   PIDS.forEach(p=>document.getElementById(p).classList.remove('act'));
@@ -1609,7 +1610,8 @@ function cbUndo(){
 // Ctrl/Cmd+Z restores the most recently deleted row (when not editing a field)
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&(e.key==='z'||e.key==='Z')&&!e.shiftKey){
-    const onContribute=document.getElementById('page-contribute').classList.contains('act');
+    const pcEl=document.getElementById('page-contribute');
+    const onContribute=pcEl&&pcEl.classList.contains('act');
     const t=e.target,inField=t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT');
     if(onContribute&&cbUndoStack.length&&!inField){e.preventDefault();cbUndo();}
   }
